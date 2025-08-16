@@ -19,6 +19,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(creds) {
         if (!creds?.email || !creds?.password) return null;
+        console.log("\nHandmatige log in\n");
         const user = await prisma.user.findUnique({ where: { email: creds.email } });
         if (!user || !user.password || user.deletedAt) return null;
 

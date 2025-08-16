@@ -19,11 +19,12 @@ export async function POST(req: Request) {
     }
 
     const hashed = await hash(password, 10)
+    console.log("User registered:", { name, email })
     await prisma.user.create({
       data: {
         name,
         email,
-        password: hashed, // password is optioneel in schema, maar hier vullen we hem
+        password: hashed, // password is optioneel in schema, maar hier vullen we hem want user had dit ingevuld en voor handmatige logins.
         verified: true,
       },
     })

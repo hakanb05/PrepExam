@@ -1,11 +1,31 @@
 import { PrismaClient } from "@prisma/client"
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient | undefined }
+const prisma = new PrismaClient({
+  log: ["query", "info", "warn", "error"], // standaard logging
+})
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
-  })
+// Debug helper: voeg context toe aan queries
+function logWithContext(action: string, query: string) {
+  console.log(`🟢 [Prisma Action] ${action}`)
+  console.log(`   SQL: ${query}\n`)
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+// Event listener voor alle queries
+prisma.$on("query", (e) => {
+  // Hier kun je heuristieken toevoegen
+  if (e.query.includes(`FROM "public"."User"`)) {
+    logWithContext("Fetching user (probably during login/session)", e.query)
+  } else if (e.query.includes(`FROM "public"."Account"`)) {
+    logWithContext("Checking OAuth account link", e.query)
+  } else if (e.query.startsWith("INSERT INTO")) {
+    logWithContext("Creating new record", e.query)
+  } else if (e.query.startsWith("UPDATE")) {
+    logWithContext("Updating record", e.query)
+  } else if (e.query.startsWith("DELETE")) {
+    logWithContext("Deleting record", e.query)
+  } else {
+    logWithContext("Other Prisma query", e.query)
+  }
+})
+
+export { prisma }
