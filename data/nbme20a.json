@@ -1,0 +1,338 @@
+{
+  "examId": "nbme20a",
+  "title": "NBME 20A Practice Exam",
+  "version": 1,
+  "sections": [
+    {
+      "sectionId": "s1",
+      "title": "Section 1",
+      "questions": [
+        {
+          "qid": "s1q1",
+          "number": 1,
+          "stem": "A 14-year-old girl is brought to the physician because of a 1-month history of migraine-like headaches, vomiting, and multiple left-sided focal seizures. She has had hearing loss since the age of 11 years. Her mother and maternal grandmother have high-tone deafness. Physical examination shows loss of vision in one half of the visual field of the right eye and weakness of the right upper and lower extremities. Serum and cerebrospinal fluid concentrations of lactic acid are increased. This patient most likely has a mutation of which of the following?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Endoplasmic reticulum glycosyltransferase"
+            },
+            {
+              "id": "B",
+              "text": "Lysosomal α-glucosidase"
+            },
+            {
+              "id": "C",
+              "text": "Mitochondrial tRNA Leu"
+            },
+            {
+              "id": "D",
+              "text": "Nuclear proteasome activator"
+            },
+            {
+              "id": "E",
+              "text": "Peroxisomal catalase"
+            }
+          ],
+          "correctOptionId": "C",
+          "explanation": "Page 59 discusses MELAS. Mutations in MT-TL1 (Mitochondrially encoded tRNA leucine 1). A common mutation is A3243G. Can result in multiple mitochondrial deficiencies and associated disorders. It is associated with: Mitochondrial encephalomyopathy, Lactic acidosis, Stroke-like episodes (MELAS). MELAS is a rare mitochondrial disorder known to affect many parts of the body, especially the nervous system and the brain. Symptoms of MELAS include: Recurrent severe headaches, Muscle weakness (myopathy), Hearing loss, Stroke-like episodes with a loss of consciousness, seizures, and other problems affecting the nervous system."
+        },
+        {
+          "qid": "s1q2",
+          "number": 2,
+          "stem": "A 32-year-old woman has had fecal incontinence since giving birth to her first child 1 year ago. Which of the following is the most likely cause of the fecal incontinence in this patient?",
+          "image": [
+            {
+              "path": "path1",
+              "alt": "Types of obstetric lacerations"
+            },
+            {
+              "path": "path2",
+              "alt": "Female pelvic floor anatomy"
+            }
+          ],
+          "options": [
+            {
+              "id": "A",
+              "text": "Damage to the anal sphincter"
+            },
+            {
+              "id": "B",
+              "text": "Achalasia of the internal anal sphincter"
+            },
+            {
+              "id": "C",
+              "text": "Increased pressure of the anal sphincter"
+            },
+            {
+              "id": "D",
+              "text": "Spastic contraction of the puborectalis muscle"
+            },
+            {
+              "id": "E",
+              "text": "Spastic external anal sphincter"
+            }
+          ],
+          "correctOptionId": "A",
+          "explanation": "UWORLD = 28yo woman, g1p0, goes into labor at 38 weeks gestation. During the second stage, as the patient is pushing, the fetus develops a non-reassuring fetal heart rate. A midline episiotomy is performed to expedite delivery. A vertical, midline incision is made at the posterior vaginal opening through the vaginal and subvaginal mucosa. Which structure is most likely involved in this incision? Perineal body. It is essential to the integrity of the pelvic floor and cut in a midline episiotomy. AMBOSS explains that fecal incontinence is a common complication of 3rd degree perineal lacerations from the posterior vaginal wall to the external anal sphincter, and in severe cases possibly the internal anal sphincter. Injury to the pudendal nerve (S2-S4) is also related."
+        },
+        {
+          "qid": "s1q3",
+          "number": 3,
+          "stem": "A 17-year-old girl comes to the emergency department because of a swollen tender ankle. An x-ray of the ankle is strongly suggestive of osteosarcoma. She and her parents are told only that 'further evaluation is needed.' Which of the following next steps is most appropriate?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Request that an oncologist discuss the findings with them immediately"
+            },
+            {
+              "id": "B",
+              "text": "Request the presence of the hospital chaplain, then discuss the findings"
+            },
+            {
+              "id": "C",
+              "text": "Speak with the parents alone about the findings"
+            },
+            {
+              "id": "D",
+              "text": "Speak with the patient alone about the findings"
+            },
+            {
+              "id": "E",
+              "text": "Speak with the patient and her parents about the findings"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Physicians should always encourage healthy minor-guardian communication. Also you're going to do some serious things to cure this girl's disease, leading up to amputation. You can't hide that from her."
+        }
+      ]
+    },
+    {
+      "sectionId": "s2",
+      "title": "Section 2",
+      "questions": [
+        {
+          "qid": "s2q1",
+          "number": 1,
+          "stem": "A 12-year-old girl is brought to the physician for a follow-up examination. Three months ago, she sustained a complex fracture of the left tibia, which required cast immobilization. The cast is removed. Examination of the left calf shows that it is smaller than the right calf. Which of the following processes in this patient's myocytes is the most likely cause of these findings?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Anaerobic glycolysis"
+            },
+            {
+              "id": "B",
+              "text": "Fatty acid degradation"
+            },
+            {
+              "id": "C",
+              "text": "Glycogenolysis"
+            },
+            {
+              "id": "D",
+              "text": "Oxidative phosphorylation"
+            },
+            {
+              "id": "E",
+              "text": "Polyubiquitination"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Atrophy is a decrease in tissue mass due to a decrease in size. She has increased cytoskeleton degradation via the ubiquitin-proteasome pathway and autophagy plus decreased protein synthesis. Causes include disuse (her case), denervation, loss of blood supply, loss of hormonal stimulation, or poor nutrition."
+        },
+        {
+          "qid": "s2q2",
+          "number": 2,
+          "stem": "A 56-year-old man is brought to the emergency department 30 minutes after the onset of severe chest pain while mowing his lawn. His pulse is 110/min, respirations are 20/min, and blood pressure is 105/70 mm Hg. Physical examination shows cool, clammy, diaphoretic skin. Two hours after admission, pulmonary catheterization shows a pulmonary artery pressure of 40/25 mm Hg; the left atrial pressure is 25 mm Hg. Compared with a healthy person, which of the following sets of pulmonary pressure changes is most likely in this patient?",
+          "matrix": {
+            "columns": ["Capillary Hydrostatic", "Interstitial Hydrostatic", "Interstitial Oncotic"],
+"rows": [
+  {
+    "name": "A",
+    "options": [
+      { "id": "A1", "text": "↑" },
+      { "id": "A2", "text": "↑" },
+      { "id": "A3", "text": "↑" }
+    ]
+  },
+  {
+    "name": "B",
+    "options": [
+      { "id": "B1", "text": "↑" },
+      { "id": "B2", "text": "↑" },
+      { "id": "B3", "text": "↓" }
+    ]
+  },
+  {
+    "name": "C",
+    "options": [
+      { "id": "C1", "text": "↑" },
+      { "id": "C2", "text": "↓" },
+      { "id": "C3", "text": "↑" }
+    ]
+  },
+  {
+    "name": "D",
+    "options": [
+      { "id": "D1", "text": "↑" },
+      { "id": "D2", "text": "↓" },
+      { "id": "D3", "text": "↓" }
+    ]
+  },
+  {
+    "name": "E",
+    "options": [
+      { "id": "E1", "text": "↓" },
+      { "id": "E2", "text": "↑" },
+      { "id": "E3", "text": "↑" }
+    ]
+  },
+  {
+    "name": "F",
+    "options": [
+      { "id": "F1", "text": "↓" },
+      { "id": "F2", "text": "↑" },
+      { "id": "F3", "text": "↓" }
+    ]
+  }
+]
+
+          },
+          "correctOptionId": "B",
+          "explanation": "Page 331 discusses shock. Page 313 discusses capillary fluid exchange. This patient has cardiogenic shock. Poor forward flow decreases CO increases the SVR, PCWP, and CVP. The extra blood increases capillary hydrostatic pressure, driving fluid into the interstitial space. Compared to the alveoli, the interstitial space now has more fluid so there is more hydrostatic pressure and less oncotic pressure. Now, fluid moves into the alveoli, causing pulmonary edema."
+        }
+      ]
+    },
+    {
+      "sectionId": "s3",
+      "title": "Section 3",
+      "questions": [
+        {
+          "qid": "s3q1",
+          "number": 1,
+          "stem": "A 50-year-old man is brought to the physician by his wife because of personality changes for 2 years and cognitive decline for 3 months. His wife says, 'He used to be such a kind and shy man, but now he screams at strangers for no apparent reason.' Neurologic examination shows a palmomental reflex and hyperreflexia throughout the upper and lower extremities. His mood appears normal except for occasional inappropriate cursing at the physician. His Mini-Mental State Examination score is 21/30. A CT scan of the head shows disproportionate atrophy of the frontal lobes bilaterally. Which of the following is the most likely diagnosis?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Dementia, Alzheimer type"
+            },
+            {
+              "id": "B",
+              "text": "Huntington disease"
+            },
+            {
+              "id": "C",
+              "text": "Multi-infarct (vascular) dementia"
+            },
+            {
+              "id": "D",
+              "text": "Parkinson disease"
+            },
+            {
+              "id": "E",
+              "text": "Pick disease"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Page 564 discusses Pick disease. Frontotemporal dementia (formerly known as Pick disease): Early changes in personality and behavior (behavioral variant), or aphasia (primary progressive aphasia). May have associated movement disorders (eg, parkinsonism)."
+        },
+        {
+          "qid": "s3q2",
+          "number": 2,
+          "stem": "A 72-year-old woman with dysphagia is undergoing surgical evaluation of a mass in the posterior mediastinum. During this procedure, the thoracic duct is inadvertently damaged near the mass. This injury is most likely to impair the normal lymphatic return of which of the following structures?",
+          "image": {
+            "path": "path",
+            "alt": "Thoracic duct anatomy"
+          },
+          "options": [
+            {
+              "id": "A",
+              "text": "Heart"
+            },
+            {
+              "id": "B",
+              "text": "Left breast"
+            },
+            {
+              "id": "C",
+              "text": "Left upper extremity"
+            },
+            {
+              "id": "D",
+              "text": "Right kidney"
+            },
+            {
+              "id": "E",
+              "text": "Right lung"
+            }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Page 96 discusses lymphatic drainage and the thoracic duct. The left upper extremity and breast are drained by the axillary lymph node. The kidney is drained by the thoracic duct."
+        }
+      ]
+    },
+    {
+      "sectionId": "s4",
+      "title": "Section 4",
+      "questions": [
+        {
+          "qid": "s4q1",
+          "number": 1,
+          "stem": "A 65-year-old woman who has a 25-year history of chronic alcoholism is brought to the emergency department because she is vomiting blood. She eats little more than an occasional sandwich. Examination of the legs shows perifollicular hyperkeratosis and hemorrhage. Abnormally decreased function of which of the following metabolic pathways is most likely in this patient?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Carboxylation of pyruvic acid"
+            },
+            {
+              "id": "B",
+              "text": "Decarboxylation of pyruvic acid"
+            },
+            {
+              "id": "C",
+              "text": "Decarboxylation of 2-ketoisocaproic acid"
+            },
+            {
+              "id": "D",
+              "text": "Hydroxylation of proline"
+            },
+            {
+              "id": "E",
+              "text": "Synthesis of porphyrin"
+            }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Page 69 discusses Vitamin C deficiency. She has a vitamin C deficiency. Scurvy features swollen gums, easy bruising, petechiae, perifollicular and subperiosteal hemorrhages."
+        },
+        {
+          "qid": "s4q2",
+          "number": 2,
+          "stem": "A 33-year-old woman with HIV infection is brought to the emergency department 30 minutes after she had a generalized tonic-clonic seizure. She also has a 2-month history of daily headaches. Physical examination shows no signs of meningismus. Muscle strength is 3/5 in the left upper extremity and 5/5 in the right upper extremity. Serologic studies show a positive IgG antibody titer to Toxoplasma gondii. Treatment with pyrimethamine and sulfadiazine is initiated. Which of the following is the most likely cause of this mass?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Bacterial abscess"
+            },
+            {
+              "id": "B",
+              "text": "Cerebral toxoplasmosis"
+            },
+            {
+              "id": "C",
+              "text": "Glioblastoma"
+            },
+            {
+              "id": "D",
+              "text": "Metastatic disease"
+            },
+            {
+              "id": "E",
+              "text": "Non-Hodgkin lymphoma"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Page 462 discusses PCNSL. This is a primary central nervous system lymphoma. Most commonly associated with HIV/AIDS; pathogenesis involves EBV infection. Needs to be distinguished from toxoplasmosis via CSF analysis or other lab tests."
+        }
+      ]
+    }
+  ]
+}

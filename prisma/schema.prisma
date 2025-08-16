@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String?
+  name          String
+  image         String?
+  verified      Boolean  @default(false)
+  emailOptIn    Boolean  @default(true)
+  deletedAt     DateTime?
+  emailVerified DateTime?   // <-- MOET bestaan
+
+  purchases  Purchase[]
+  attempts   Attempt[]
+  accounts   Account[]
+  sessions   Session[]
+
+  @@index([deletedAt])
+}
+
+
+
+
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Purchase {
+  id           String   @id @default(cuid())
+  userId       String
+  examId       String
+  purchaseDate DateTime @default(now())
+  validUntil   DateTime
+  canceledAt   DateTime?
+  user         User     @relation(fields: [userId], references: [id])
+  exam         Exam     @relation(fields: [examId], references: [id])
+
+  @@index([userId, examId, purchaseDate])
+  @@unique([userId, examId, purchaseDate])
+}
+
+model Exam {
+  id        String     @id // e.g. "nbme20a"
+  title     String
+  version   Int
+  sections  Section[]
+  questions Question[]
+  attempts  Attempt[]
+  Purchase  Purchase[]
+}
+
+model Section {
+  id             String           @id @default(cuid())
+  sectionId      String // "s1", "s2", ...
+  title          String
+  index          Int
+  examId         String
+  exam           Exam             @relation(fields: [examId], references: [id])
+  questions      Question[]
+  AttemptSection AttemptSection[]
+
+  @@unique([examId, sectionId])
+}
+
+model Question {
+  id              String             @id @default(cuid())
+  qid             String
+  number          Int
+  stem            String
+  images          Json?
+  correctOptionId String?
+  explanation     String?
+  matrix          Json?
+  sectionId       String
+  section         Section            @relation(fields: [sectionId], references: [id])
+  examId          String
+  exam            Exam               @relation(fields: [examId], references: [id])
+  options         Option[]
+  categories      QuestionCategory[]
+  responses       Response[]
+
+  @@unique([examId, qid])
+}
+
+model Option {
+  id         String   @id @default(cuid())
+  letter     String
+  text       String
+  value      Int?
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+}
+
+model Category {
+  id        String             @id // e.g. "neuro_mito"
+  name      String
+  questions QuestionCategory[]
+}
+
+model QuestionCategory {
+  questionId String
+  categoryId String
+  question   Question @relation(fields: [questionId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([questionId, categoryId])
+}
+
+model Attempt {
+  id         String           @id @default(cuid())
+  userId     String
+  examId     String
+  version    Int
+  startedAt  DateTime         @default(now())
+  finishedAt DateTime?
+  user       User             @relation(fields: [userId], references: [id])
+  exam       Exam             @relation(fields: [examId], references: [id])
+  sections   AttemptSection[]
+}
+
+model AttemptSection {
+  id         String     @id @default(cuid())
+  attemptId  String
+  sectionId  String
+  startedAt  DateTime   @default(now())
+  finishedAt DateTime?
+  locked     Boolean    @default(false)
+  attempt    Attempt    @relation(fields: [attemptId], references: [id])
+  section    Section    @relation(fields: [sectionId], references: [id])
+  responses  Response[]
+
+  @@unique([attemptId, sectionId])
+}
+
+model Response {
+  id               String         @id @default(cuid())
+  attemptSectionId String
+  questionId       String
+  answer           Json? // MCQ: "C"; Matrix: { col1:"↑", col2:"↑", col3:"↓", _row:"B" }
+  isCorrect        Boolean?
+  flagged          Boolean        @default(false)
+  note             String?
+  attemptSection   AttemptSection @relation(fields: [attemptSectionId], references: [id])
+  question         Question       @relation(fields: [questionId], references: [id])
+
+  @@unique([attemptSectionId, questionId])
+}
