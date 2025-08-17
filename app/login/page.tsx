@@ -36,59 +36,61 @@ export default function LoginPage() {
   const { login, register, loginWithOAuth, forgotPassword, isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated - maar niet als we net gaan redirecten
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    if (!isLoading && isAuthenticated && !loading) {
       router.push("/")
     }
-  }, [isAuthenticated, isLoading, router])
+  }, [isAuthenticated, isLoading, router, loading])
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setError("")
-  setLoading(true)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
 
-  try {
-    if (isLogin) {
-      const success = await login(email, password)
-      if (!success) {
-        setError("Invalid email or password")
-      } else {
-        router.push("/") // jij beslist wanneer je navigeert
+    try {
+      if (isLogin) {
+        const success = await login(email, password)
+        if (!success) {
+          setError("Invalid email or password")
+        } else {
+          console.log('Login succesvol, redirect naar /')
+          router.push("/")
+        }
+        return
       }
-      return
-    }
 
-    // Sign up flow
-    if (password !== confirmPassword) {
-      setError("Passwords do not match")
-      return
+      // Sign up flow
+      if (password !== confirmPassword) {
+        setError("Passwords do not match")
+        return
+      }
+      const success = await register(name, email, password)
+      if (!success) {
+        setError("Registration failed. Email may already be in use.")
+      } else {
+        console.log('Registratie succesvol, redirect naar /')
+        router.push("/")
+      }
+    } catch {
+      setError("An unexpected error occurred")
+    } finally {
+      setLoading(false)
     }
-    const success = await register(name, email, password)
-    if (!success) {
-      setError("Registration failed. Email may already be in use.")
-    } else {
-      router.push("/")
-    }
-  } catch {
-    setError("An unexpected error occurred")
-  } finally {
-    setLoading(false)
   }
-}
 
-const handleOAuthLogin = async (provider: string) => {
-  setError("")
-  setLoading(true)
-  try {
-    // met redirect door provider; geen foutmelding hier nodig
-    await loginWithOAuth(provider)
-  } catch {
-    setError("OAuth login failed")
-  } finally {
-    setLoading(false)
+  const handleOAuthLogin = async (provider: string) => {
+    setError("")
+    setLoading(true)
+    try {
+      // met redirect door provider; geen foutmelding hier nodig
+      await loginWithOAuth(provider)
+    } catch {
+      setError("OAuth login failed")
+    } finally {
+      setLoading(false)
+    }
   }
-}
 
   const handleForgotPassword = async () => {
     if (!forgotEmail) return

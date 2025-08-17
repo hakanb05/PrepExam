@@ -1,7 +1,13 @@
 import { PrismaClient } from "@prisma/client"
 
-export const prisma = new PrismaClient()
+// Create a single Prisma client instance in dev to avoid exhausting connections
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient }
 
-afterAll(async () => {
-  await prisma.$disconnect()
-})
+export const prisma =
+  globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma
+}
+
+export default prisma

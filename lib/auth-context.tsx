@@ -21,52 +21,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data: session, status, update } = useSession()
   const router = useRouter()
 
-const login = async (email: string, password: string): Promise<boolean> => {
-  try {
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,   // <<< belangrijk
-    })
-    // res kan { ok, status, error, url } bevatten
-    if (res?.error) return false
-    // geen redirect door NextAuth → jij beslist:
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,   // <<< belangrijk
+      })
+      // res kan { ok, status, error, url } bevatten
+      if (res?.error) return false
+      // geen redirect door NextAuth → jij beslist:
+      return true
+    } catch (e) {
+      console.error("Login error:", e)
+      return false
+    }
+  }
+
+  const loginWithOAuth = async (provider: string): Promise<boolean> => {
+    // Eenvoudigste: laat provider redirecten
+    await signIn(provider, { callbackUrl: "/" }) // redirect = true (default)
     return true
-  } catch (e) {
-    console.error("Login error:", e)
-    return false
+    // Als je error‑handling wil zonder hard redirect:
+    // const res = await signIn(provider, { redirect: false })
+    // if (res?.error) return false
+    // if (res?.url) router.push(res.url)
+    // return true
   }
-}
 
-const loginWithOAuth = async (provider: string): Promise<boolean> => {
-  // Eenvoudigste: laat provider redirecten
-  await signIn(provider, { callbackUrl: "/" }) // redirect = true (default)
-  return true
-  // Als je error‑handling wil zonder hard redirect:
-  // const res = await signIn(provider, { redirect: false })
-  // if (res?.error) return false
-  // if (res?.url) router.push(res.url)
-  // return true
-}
+  const register = async (name: string, email: string, password: string): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      })
 
-const register = async (name: string, email: string, password: string): Promise<boolean> => {
-  try {
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    })
+      if (!res.ok) return false
 
-    if (!res.ok) return false
+      // Mark this as a new registration
+      localStorage.setItem('justRegistered', 'true')
 
-    // direct inloggen na registratie, ook zonder auto-redirect
-    const ok = await login(email, password)
-    return ok
-  } catch (e) {
-    console.error("Registration error:", e)
-    return false
+      // direct inloggen na registratie, ook zonder auto-redirect
+      const ok = await login(email, password)
+      return ok
+    } catch (e) {
+      console.error("Registration error:", e)
+      return false
+    }
   }
-}
 
 
   const logout = () => signOut({ redirect: true, callbackUrl: "/login" })

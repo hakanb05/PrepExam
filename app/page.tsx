@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -13,12 +13,41 @@ import { PurchaseDialog } from "@/components/purchase-dialog"
 import { useAuth } from "@/lib/auth-context"
 import type { User as UserType } from "@/lib/types"
 
-export default function Dashboard() {
+function DashboardContent() {
   const [showPurchaseDialog, setShowPurchaseDialog] = useState(false)
   const { isAuthenticated, isLoading, user: authUser } = useAuth()
   const router = useRouter()
   const examData = getExamData()
   const examAccess = hasExamAccess(examData.examId)
+
+  // Check if user just registered
+  const [isNewUser, setIsNewUser] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
+    // Check localStorage for new registration (only client-side)
+    const justRegistered = localStorage.getItem('justRegistered')
+    if (justRegistered === 'true') {
+      setIsNewUser(true)
+      // Clean up the flag but DON'T change the message
+      setTimeout(() => {
+        localStorage.removeItem('justRegistered')
+      }, 1000) // Just remove the flag after 1 second
+    }
+  }, [mounted])
+
+  // Debug logging (only client-side)
+  useEffect(() => {
+    if (mounted) {
+      console.log('Dashboard Debug:', { isNewUser, justRegistered: localStorage.getItem('justRegistered') })
+    }
+  }, [isNewUser, mounted])
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -67,7 +96,9 @@ export default function Dashboard() {
               <User className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <CardTitle>Welcome back, {authUser.name || 'User'}</CardTitle>
+              <CardTitle>
+                {isNewUser ? `Welcome, ${authUser.name || 'User'}!` : `Welcome back, ${authUser.name || 'User'}!`}
+              </CardTitle>
               <CardDescription>{authUser.email}</CardDescription>
             </div>
           </div>
@@ -188,5 +219,21 @@ export default function Dashboard() {
         onPurchaseComplete={handlePurchaseComplete}
       />
     </div>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={
+      <div className="space-y-6">
+        <div className="h-32 bg-muted animate-pulse rounded-lg" />
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="h-64 bg-muted animate-pulse rounded-lg" />
+          <div className="h-64 bg-muted animate-pulse rounded-lg" />
+        </div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   )
 }
