@@ -13,7 +13,8 @@
     "test:hard-reset": "bash scripts/reset-test-db.sh",
     "test": "PRISMA_IGNORE_ENV_FILES=1 dotenv -e .env.test -- vitest run",
     "test:watch": "PRISMA_IGNORE_ENV_FILES=1 dotenv -e .env.test -- vitest",
-    "studio:test": "PRISMA_IGNORE_ENV_FILES=1 dotenv -e .env.test -- prisma studio"
+    "studio:test": "PRISMA_IGNORE_ENV_FILES=1 dotenv -e .env.test -- prisma studio",
+    "test:full": "pnpm test:hard-reset && pnpm test"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

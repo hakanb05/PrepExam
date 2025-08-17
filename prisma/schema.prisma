@@ -26,10 +26,6 @@ model User {
   @@index([deletedAt])
 }
 
-
-
-
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
