@@ -104,12 +104,12 @@ export function PurchaseDialog({ open, onOpenChange, examId, examTitle, onPurcha
               </>
             ) : (
               <>
-                <CreditCard className="mr-2 h-4 w-4" />
+                <CreditCard className="mr-2 h-4 w-4 hover:cursor-pointer" />
                 Purchase for ${price}
               </>
             )}
           </Button>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isProcessing} className="w-full">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isProcessing} className="w-full hover:cursor-pointer">
             Cancel
           </Button>
         </DialogFooter>

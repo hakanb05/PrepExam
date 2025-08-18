@@ -11,11 +11,30 @@ export async function POST(req: Request) {
     }
 
     const existing = await prisma.user.findUnique({ where: { email } })
+
     if (existing) {
-      return NextResponse.json(
-        { error: "User already exists", code: "EMAIL_TAKEN" },
-        { status: 409 }
-      )
+      // If user exists but is deleted, allow reactivation
+      if (existing.deletedAt) {
+        const hashed = await hash(password, 10)
+        console.log("Reactivating deleted user:", { name, email })
+
+        await prisma.user.update({
+          where: { email },
+          data: {
+            name,
+            password: hashed,
+            verified: false, // Reset verification for manual registration
+            deletedAt: null, // Reactivate account
+          },
+        })
+
+        return NextResponse.json({ ok: true, reactivated: true })
+      } else {
+        return NextResponse.json(
+          { error: "User already exists", code: "EMAIL_TAKEN" },
+          { status: 409 }
+        )
+      }
     }
 
     const hashed = await hash(password, 10)
@@ -25,7 +44,7 @@ export async function POST(req: Request) {
         name,
         email,
         password: hashed, // password is optioneel in schema, maar hier vullen we hem want user had dit ingevuld en voor handmatige logins.
-        verified: true,
+        verified: false, // Manual registration requires email verification
       },
     })
 

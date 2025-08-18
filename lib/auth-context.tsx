@@ -13,6 +13,7 @@ interface AuthContextType {
   register: (name: string, email: string, password: string) => Promise<boolean>
   logout: () => void
   forgotPassword: (email: string) => Promise<boolean>
+  refreshSession: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -74,6 +75,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => signOut({ redirect: true, callbackUrl: "/login" })
   const forgotPassword = async () => true
+  const refreshSession = async () => {
+    await update()
+  }
 
   // Debug logging
   console.log("Auth context:", {
@@ -93,6 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         register,
         logout,
         forgotPassword,
+        refreshSession,
       }}
     >
       {children}

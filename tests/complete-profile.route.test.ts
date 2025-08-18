@@ -10,13 +10,15 @@ vi.mock("next-auth", async () => {
 
 describe("POST /api/auth/complete-profile", () => {
   it("zet naam voor OAuth user zonder naam", async () => {
+    console.log("Testing: Complete profile should set name for OAuth user and mark as verified")
+
     const user = await prisma.user.create({
       data: { email: "oauth@example.com", name: "", image: "https://picsum.photos/96", verified: false },
     })
 
-    ;(getServerSession as any).mockResolvedValue({
-      user: { id: user.id, email: user.email, name: user.name ?? "" },
-    })
+      ; (getServerSession as any).mockResolvedValue({
+        user: { id: user.id, email: user.email, name: user.name ?? "" },
+      })
 
     const req = new Request("http://localhost/api/auth/complete-profile", {
       method: "POST",

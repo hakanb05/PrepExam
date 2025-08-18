@@ -52,8 +52,34 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         if (!user?.email) return false;
+
+        // Check if user is deleted before proceeding
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+          select: { deletedAt: true, name: true }
+        });
+
+        // If user exists and is deleted, redirect to recovery page
+        if (existingUser?.deletedAt) {
+          const params = new URLSearchParams({
+            email: user.email,
+            name: user.name || "",
+            image: user.image || "",
+            provider: account.provider
+          });
+          return `/auth/oauth-recovery?${params.toString()}`;
+        }
+
         if (!user.name || user.name.trim() === "") {
           return "/auth/complete-profile";
+        }
+
+        // Set verified=true for OAuth users (after recovery check)
+        if (existingUser) {
+          await prisma.user.update({
+            where: { email: user.email },
+            data: { verified: true }
+          });
         }
       }
       return true;
@@ -82,5 +108,25 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+  },
+
+  events: {
+    async createUser({ user }) {
+      // If user was created via OAuth, set verified to true
+      // This runs after user creation by PrismaAdapter
+      if (user?.email) {
+        // Check if this user has an associated OAuth account
+        const account = await prisma.account.findFirst({
+          where: { userId: user.id }
+        });
+
+        if (account?.provider === "google") {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { verified: true }
+          });
+        }
+      }
+    }
   },
 };

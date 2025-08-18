@@ -11,23 +11,22 @@ export default function ResultsPage() {
     return (
       <div className="max-w-2xl mx-auto text-center space-y-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold">Mijn gemaakte toetsen</h1>
-          <p className="text-muted-foreground">Hier vind je al je voltooide examens en resultaten</p>
+          <h1 className="text-3xl font-bold">My Completed Exams</h1>
+          <p className="text-muted-foreground">Here you can find all your completed exams and results</p>
         </div>
-
         <Card className="p-12">
           <div className="space-y-4">
             <div className="p-4 bg-muted/50 rounded-full w-fit mx-auto">
               <BookOpen className="h-8 w-8 text-muted-foreground" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-semibold">Nog geen gemaakte toetsen</h3>
+              <h3 className="text-xl font-semibold">No completed exams yet</h3>
               <p className="text-muted-foreground">
-                Je hebt nog geen examens voltooid. Start je eerste examen om je resultaten hier te zien.
+                You haven't completed any exams yet. Start your first exam to see your results here.
               </p>
             </div>
             <Button asChild>
-              <a href="/exams">Naar Toetsen</a>
+              <a href="/exams">Go to Exams</a>
             </Button>
           </div>
         </Card>
@@ -38,8 +37,8 @@ export default function ResultsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Mijn gemaakte toetsen</h1>
-        <p className="text-muted-foreground">Overzicht van al je voltooide examens</p>
+        <h1 className="text-3xl font-bold">My Completed Exams</h1>
+        <p className="text-muted-foreground">Overview of all your completed exams</p>
       </div>
 
       <div className="grid gap-6">
@@ -56,7 +55,7 @@ export default function ResultsPage() {
                     <CardDescription className="flex items-center space-x-4">
                       <span className="flex items-center space-x-1">
                         <Calendar className="h-4 w-4" />
-                        <span>{new Date(result.completedAt).toLocaleDateString("nl-NL")}</span>
+                        <span>{new Date(result.completedAt).toLocaleDateString("en-US")}</span>
                       </span>
                       <span className="flex items-center space-x-1">
                         <TrendingUp className="h-4 w-4" />
@@ -71,14 +70,14 @@ export default function ResultsPage() {
                       result.overallPercent >= 80
                         ? "default"
                         : result.overallPercent >= 50
-                          ? "secondary"
-                          : "destructive"
+                        ? "secondary"
+                        : "destructive"
                     }
                   >
                     {result.overallPercent}%
                   </Badge>
                   <Button asChild>
-                    <a href={`/exam/${result.examId}/results`}>Bekijk resultaten</a>
+                    <a href={`/exam/${result.examId}/results`}>View Results</a>
                   </Button>
                 </div>
               </div>

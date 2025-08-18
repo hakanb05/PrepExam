@@ -17,6 +17,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 
@@ -32,6 +42,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [forgotEmail, setForgotEmail] = useState("")
   const [forgotSuccess, setForgotSuccess] = useState(false)
+  const [showRecoverDialog, setShowRecoverDialog] = useState(false)
+  const [deletedUserName, setDeletedUserName] = useState("")
 
   const { login, register, loginWithOAuth, forgotPassword, isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
@@ -50,6 +62,22 @@ export default function LoginPage() {
 
     try {
       if (isLogin) {
+        // First check if user is deleted
+        const checkResponse = await fetch('/api/auth/check-deleted', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        })
+
+        const checkData = await checkResponse.json()
+
+        if (checkData.userExists && checkData.isDeleted) {
+          setDeletedUserName(checkData.userName)
+          setShowRecoverDialog(true)
+          setLoading(false)
+          return
+        }
+
         const success = await login(email, password)
         if (!success) {
           setError("Invalid email or password")
@@ -98,6 +126,29 @@ export default function LoginPage() {
     const success = await forgotPassword(forgotEmail)
     if (success) {
       setForgotSuccess(true)
+    }
+  }
+
+  const handleRecoverAccount = async () => {
+    try {
+      const response = await fetch('/api/auth/recover-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+
+      if (response.ok) {
+        setShowRecoverDialog(false)
+        // Now try to log in normally
+        const success = await login(email, password)
+        if (success) {
+          router.push("/")
+        }
+      } else {
+        setError("Failed to recover account")
+      }
+    } catch (err) {
+      setError("An error occurred while recovering your account")
     }
   }
 
@@ -312,6 +363,25 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Account Recovery Dialog */}
+      <AlertDialog open={showRecoverDialog} onOpenChange={setShowRecoverDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Account Recovery</AlertDialogTitle>
+            <AlertDialogDescription>
+              We found an account for <strong>{deletedUserName}</strong> that was previously deleted.
+              Would you like to recover your account and restore your data?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>No, go back</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRecoverAccount}>
+              Yes, recover my account
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

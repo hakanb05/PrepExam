@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -16,6 +17,17 @@ interface AppHeaderProps {
 export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
   const { user, logout, isLoading } = useAuth()
   const router = useRouter()
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  // Listen for profile refresh events
+  useEffect(() => {
+    const handleProfileRefresh = () => {
+      setRefreshKey(prev => prev + 1)
+    }
+
+    window.addEventListener('profileRefresh', handleProfileRefresh)
+    return () => window.removeEventListener('profileRefresh', handleProfileRefresh)
+  }, [])
 
   const handleLogout = () => {
     logout()

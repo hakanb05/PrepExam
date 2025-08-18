@@ -2,17 +2,18 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { User, Mail, Camera, Save, RotateCcw, Trash2 } from "lucide-react"
-import { getUserProfile, saveUserProfile, resetUserProfile } from "@/lib/user-storage"
-import type { User as UserType } from "@/lib/types"
+import { Switch } from "@/components/ui/switch"
+import { User, Mail, Camera, Save, Trash2, Upload, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { useProfile } from "@/hooks/use-profile"
+import { useAuth } from "@/lib/auth-context"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,47 +27,59 @@ import {
 } from "@/components/ui/alert-dialog"
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<UserType | null>(null)
+  const { isAuthenticated, isLoading: authLoading } = useAuth()
+  const { profile, loading, error, updateProfile, uploadAvatar, removeAvatar, deleteAccount } = useProfile()
   const [isEditing, setIsEditing] = useState(false)
-  const [editedUser, setEditedUser] = useState<UserType | null>(null)
+  const [editedName, setEditedName] = useState("")
+  const [editedEmailOptIn, setEditedEmailOptIn] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Initialize edited values when profile loads
   useEffect(() => {
-    const profile = getUserProfile()
-    setUser(profile)
-    setEditedUser(profile)
-  }, [])
+    if (profile) {
+      setEditedName(profile.name)
+      setEditedEmailOptIn(profile.emailOptIn)
+    }
+  }, [profile])
 
-  const handleSave = () => {
-    if (editedUser) {
-      saveUserProfile(editedUser)
-      setUser(editedUser)
+  const handleSave = async () => {
+    if (!profile) return
+
+    try {
+      setSaving(true)
+      await updateProfile({
+        name: editedName,
+        emailOptIn: editedEmailOptIn
+      })
       setIsEditing(false)
+    } catch (err) {
+      console.error("Failed to save profile:", err)
+    } finally {
+      setSaving(false)
     }
   }
 
   const handleCancel = () => {
-    setEditedUser(user)
+    if (profile) {
+      setEditedName(profile.name)
+      setEditedEmailOptIn(profile.emailOptIn)
+    }
     setIsEditing(false)
   }
 
-  const handleReset = () => {
-    resetUserProfile()
-    const defaultProfile = getUserProfile()
-    setUser(defaultProfile)
-    setEditedUser(defaultProfile)
-    setIsEditing(false)
-  }
-
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (file && editedUser) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        setEditedUser({ ...editedUser, avatar: result })
-      }
-      reader.readAsDataURL(file)
+    if (!file) return
+
+    try {
+      setUploadingAvatar(true)
+      await uploadAvatar(file)
+    } catch (err) {
+      console.error("Failed to upload avatar:", err)
+    } finally {
+      setUploadingAvatar(false)
     }
   }
 
@@ -74,15 +87,51 @@ export default function ProfilePage() {
     fileInputRef.current?.click()
   }
 
-  const handleDeleteAccount = () => {
-    // Clear all user data
-    localStorage.clear()
-    // Redirect to login
-    window.location.href = "/login"
+  const handleRemoveAvatar = async () => {
+    try {
+      setUploadingAvatar(true)
+      await removeAvatar()
+    } catch (err) {
+      console.error("Failed to remove avatar:", err)
+    } finally {
+      setUploadingAvatar(false)
+    }
   }
 
-  if (!user || !editedUser) {
-    return <div>Loading...</div>
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteAccount()
+    } catch (err) {
+      console.error("Failed to delete account:", err)
+    }
+  }
+
+  if (authLoading || loading) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="h-32 bg-muted animate-pulse rounded-lg" />
+        <div className="h-64 bg-muted animate-pulse rounded-lg" />
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-12">
+        <p>Please log in to view your profile.</p>
+      </div>
+    )
+  }
+
+  if (error || !profile) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-12">
+        <p className="text-red-500">Error loading profile: {error}</p>
+        <Button onClick={() => window.location.reload()} className="mt-4">
+          Retry
+        </Button>
+      </div>
+    )
   }
 
   return (
@@ -101,9 +150,9 @@ export default function ProfilePage() {
           {/* Avatar Section */}
           <div className="flex items-center space-x-4">
             <Avatar className="h-20 w-20">
-              <AvatarImage src={editedUser.avatar || "/default-user-avatar.png"} alt={editedUser.name} />
+              <AvatarImage src={profile.image || "/default-user-avatar.png"} alt={profile.name} />
               <AvatarFallback className="text-lg">
-                {editedUser.name
+                {profile.name
                   .split(" ")
                   .map((n) => n[0])
                   .join("")
@@ -112,12 +161,36 @@ export default function ProfilePage() {
             </Avatar>
             <div className="space-y-2">
               <h3 className="font-medium">Profile Photo</h3>
-              <p className="text-sm text-muted-foreground">Upload a new profile photo</p>
-              <Button variant="outline" size="sm" onClick={handlePhotoClick} disabled={!isEditing}>
-                <Camera className="mr-2 h-4 w-4" />
-                Change Photo
-              </Button>
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+              <p className="text-sm text-muted-foreground">Upload a new profile photo (max 2MB)</p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePhotoClick}
+                  disabled={uploadingAvatar}
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  {uploadingAvatar ? "Uploading..." : "Upload Photo"}
+                </Button>
+                {profile.image && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRemoveAvatar}
+                    disabled={uploadingAvatar}
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Remove
+                  </Button>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
             </div>
           </div>
 
@@ -132,12 +205,13 @@ export default function ProfilePage() {
                 {isEditing ? (
                   <Input
                     id="name"
-                    value={editedUser.name}
-                    onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })}
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
                     className="flex-1"
+                    placeholder="Enter your full name"
                   />
                 ) : (
-                  <span className="flex-1">{user.name}</span>
+                  <span className="flex-1">{profile.name}</span>
                 )}
               </div>
             </div>
@@ -146,43 +220,36 @@ export default function ProfilePage() {
               <Label htmlFor="email">Email Address</Label>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-muted-foreground" />
-                {isEditing ? (
-                  <Input
-                    id="email"
-                    type="email"
-                    value={editedUser.email}
-                    onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
-                    className="flex-1"
-                  />
-                ) : (
-                  <span className="flex-1">{user.email}</span>
+                <span className="flex-1 text-muted-foreground">{profile.email}</span>
+                {profile.verified && (
+                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                    Verified
+                  </span>
                 )}
               </div>
+              <p className="text-xs text-muted-foreground">
+                Email cannot be changed. Contact support if needed.
+              </p>
             </div>
           </div>
 
           <Separator />
 
           {/* Action Buttons */}
-          <div className="flex justify-between">
-            <Button variant="outline" onClick={handleReset}>
-              <RotateCcw className="mr-2 h-4 w-4" />
-              Reset to Default
-            </Button>
-
+          <div className="flex justify-end">
             <div className="space-x-2">
               {isEditing ? (
                 <>
-                  <Button variant="outline" onClick={handleCancel}>
+                  <Button variant="outline" onClick={handleCancel} disabled={saving}>
                     Cancel
                   </Button>
-                  <Button onClick={handleSave}>
+                  <Button onClick={handleSave} disabled={saving || !editedName.trim()}>
                     <Save className="mr-2 h-4 w-4" />
-                    Save
+                    {saving ? "Saving..." : "Save"}
                   </Button>
                 </>
               ) : (
-                <Button onClick={() => setIsEditing(true)}>Edit</Button>
+                <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>
               )}
             </div>
           </div>
@@ -200,11 +267,13 @@ export default function ProfilePage() {
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="font-medium">Email Notifications</h4>
-                <p className="text-sm text-muted-foreground">Receive updates about your exams</p>
+                <p className="text-sm text-muted-foreground">Receive updates about your exams and progress</p>
               </div>
-              <Button variant="outline" size="sm" disabled>
-                Enabled
-              </Button>
+              <Switch
+                checked={isEditing ? editedEmailOptIn : profile.emailOptIn}
+                onCheckedChange={setEditedEmailOptIn}
+                disabled={!isEditing}
+              />
             </div>
             <Separator />
             <div className="flex items-center justify-between">
@@ -227,16 +296,16 @@ export default function ProfilePage() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary">0</div>
+              <div className="text-2xl font-bold text-primary">{profile.stats.completedExams}</div>
               <div className="text-sm text-muted-foreground">Completed Exams</div>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary">0%</div>
-              <div className="text-sm text-muted-foreground">Average Score</div>
+              <div className="text-2xl font-bold text-primary">{profile.stats.totalAttempts}</div>
+              <div className="text-sm text-muted-foreground">Total Attempts</div>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary">0h</div>
-              <div className="text-sm text-muted-foreground">Study Time</div>
+              <div className="text-2xl font-bold text-primary">{profile.stats.purchasedExams}</div>
+              <div className="text-sm text-muted-foreground">Purchased Exams</div>
             </div>
           </div>
         </CardContent>
@@ -250,7 +319,7 @@ export default function ProfilePage() {
         <CardContent>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="w-full">
+              <Button variant="destructive" className="w-full text-white">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete Account
               </Button>
@@ -267,10 +336,10 @@ export default function ProfilePage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel className="hover:cursor-pointer">Cancel</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDeleteAccount}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 text-white hover:cursor-pointer"
                 >
                   Yes, delete my account
                 </AlertDialogAction>
