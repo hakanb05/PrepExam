@@ -96,15 +96,39 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
 
-    // And expose that on session.user
+    // And expose that on session.user (always fetch fresh from DB)
     async session({ session, token }) {
       if (token && session.user) {
-        (session.user as any) = {
-          id: (token as any).id,
-          email: token.email,
-          name: token.name,
-          image: (token as any).image ?? null,
-        };
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: (token as any).id },
+            select: { id: true, email: true, name: true, image: true, verified: true },
+          });
+
+          if (dbUser) {
+            (session.user as any) = {
+              id: dbUser.id,
+              email: dbUser.email,
+              name: dbUser.name,
+              image: dbUser.image ?? null,
+              verified: dbUser.verified,
+            };
+          } else {
+            (session.user as any) = {
+              id: (token as any).id,
+              email: token.email,
+              name: token.name,
+              image: (token as any).image ?? null,
+            };
+          }
+        } catch {
+          (session.user as any) = {
+            id: (token as any).id,
+            email: token.email,
+            name: token.name,
+            image: (token as any).image ?? null,
+          };
+        }
       }
       return session;
     },
