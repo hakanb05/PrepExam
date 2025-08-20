@@ -168,6 +168,7 @@ export default function ProfilePage() {
                   size="sm"
                   onClick={handlePhotoClick}
                   disabled={uploadingAvatar}
+                  className="hover:cursor-pointer"
                 >
                   <Upload className="mr-2 h-4 w-4" />
                   {uploadingAvatar ? "Uploading..." : "Upload Photo"}
@@ -178,6 +179,7 @@ export default function ProfilePage() {
                     size="sm"
                     onClick={handleRemoveAvatar}
                     disabled={uploadingAvatar}
+                    className="hover:cursor-pointer"
                   >
                     <X className="mr-2 h-4 w-4" />
                     Remove
@@ -249,7 +251,7 @@ export default function ProfilePage() {
                   </Button>
                 </>
               ) : (
-                <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>
+                <Button className="hover:cursor-pointer" onClick={() => setIsEditing(true)}>Edit Profile</Button>
               )}
             </div>
           </div>
@@ -319,7 +321,7 @@ export default function ProfilePage() {
         <CardContent>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="w-full text-white">
+              <Button variant="destructive" className="w-full text-white hover:cursor-pointer hover:bg-destructive/90 hover:text-white hover:border-black">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete Account
               </Button>

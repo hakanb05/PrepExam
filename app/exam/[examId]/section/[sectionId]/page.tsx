@@ -15,143 +15,360 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Flag, StickyNote, Send, Clock, Play, Pause, Home } from "lucide-react"
-import { getExamData } from "@/lib/exam-data"
-import {
-  getExamProgress,
-  saveExamProgress,
-  toggleStrikethrough,
-  getTotalExamDuration,
-  pauseExamTimer,
-  resumeExamTimer,
-} from "@/lib/storage"
 import { QuestionDisplay } from "@/components/question-display"
 import { QuestionNavigation } from "@/components/question-navigation"
-import type { ExamProgress } from "@/lib/types"
+import { useAuth } from "@/lib/auth-context"
+import { useQuestionStats } from "@/hooks/use-question-stats"
 
 interface ExamRunnerProps {
-  params: { examId: string; sectionId: string }
+  params: Promise<{ examId: string; sectionId: string }>
+}
+
+interface Question {
+  id: string
+  stem: string
+  number: number
+  options: Array<{
+    id: string
+    text: string
+    letter: string
+  }>
+}
+
+interface Section {
+  id: string
+  sectionId: string
+  title: string
+  questions: Question[]
+}
+
+interface Response {
+  questionId: string
+  optionId?: string
+  answer?: any
+  isFlagged?: boolean
+  note?: string
+}
+
+interface SectionData {
+  section: Section
+  attempt: {
+    id: string
+    startedAt: string
+    pausedAt?: string
+    totalPausedTime?: number
+  }
+  sectionAttempt: {
+    id: string
+    responses: Response[]
+  }
 }
 
 export default function ExamRunner({ params }: ExamRunnerProps) {
   const router = useRouter()
-  const examData = getExamData()
-  const section = examData.sections.find((s) => s.sectionId === params.sectionId)
-  const sectionIndex = examData.sections.findIndex((s) => s.sectionId === params.sectionId)
+  const { isAuthenticated, isLoading: authLoading } = useAuth()
+
+  const [examId, setExamId] = useState<string>("")
+  const [sectionId, setSectionId] = useState<string>("")
+  const [sectionData, setSectionData] = useState<SectionData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [progress, setProgress] = useState<ExamProgress | null>(null)
   const [showNoteDialog, setShowNoteDialog] = useState(false)
   const [showSubmitDialog, setShowSubmitDialog] = useState(false)
   const [currentNote, setCurrentNote] = useState("")
   const [totalTime, setTotalTime] = useState<string>("0:00")
   const [isPaused, setIsPaused] = useState(false)
+  const [struckThroughOptions, setStruckThroughOptions] = useState<{ [questionId: string]: string[] }>({}) // Track strikethrough per question
 
+  // Get question statistics
+  const { questionStats } = useQuestionStats(examId)
+
+  // Helper function to get color classes based on success rate
+  const getSuccessRateColor = (percentage: number) => {
+    if (percentage >= 70) return 'text-green-600 bg-green-50 border-green-200'
+    if (percentage >= 40) return 'text-orange-600 bg-orange-50 border-orange-200'
+    return 'text-red-600 bg-red-50 border-red-200'
+  }
+
+  // Extract params
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null
+    const getParams = async () => {
+      const resolvedParams = await params
+      setExamId(resolvedParams.examId)
+      setSectionId(resolvedParams.sectionId)
+    }
+    getParams()
+  }, [params])
 
-    const currentProgress = getExamProgress(params.examId)
-    if (currentProgress) {
-      const isCurrentlyPaused = !!currentProgress.pausedAt || isPaused
-      setIsPaused(isCurrentlyPaused)
+  // Fetch section data
+  useEffect(() => {
+    if (!examId || !sectionId || !isAuthenticated) return
 
-      // Only start timer if not paused
-      if (!isCurrentlyPaused) {
-        timer = setInterval(() => {
-          const latestProgress = getExamProgress(params.examId)
-          if (latestProgress && !latestProgress.pausedAt) {
-            setTotalTime(getTotalExamDuration(latestProgress))
+    const fetchSectionData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        // Get section data (this will create attempt automatically if needed)
+        const sectionResponse = await fetch(`/api/exam/${examId}/section/${sectionId}`)
+
+        if (!sectionResponse.ok) {
+          throw new Error('Failed to fetch section data')
+        }
+
+        const data = await sectionResponse.json()
+        setSectionData(data)
+
+        // Check if this is a resume (timer was paused) - if so, automatically resume
+        const wasPaused = !!data.attempt.pausedAt
+        if (wasPaused) {
+          // Auto-resume the timer when coming back to exam
+          const resumeResponse = await fetch(`/api/exam/${examId}/attempt`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'resume' }),
+          })
+          if (resumeResponse.ok) {
+            setIsPaused(false)
+          } else {
+            setIsPaused(true)
           }
-        }, 1000)
+        } else {
+          setIsPaused(false)
+        }
+
+        // Resume at the saved question index
+        setCurrentQuestionIndex(data.sectionAttempt.currentQuestionIndex || 0)
+
+      } catch (err) {
+        console.error('Error fetching section data:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setLoading(false)
       }
+    }
+
+    fetchSectionData()
+  }, [examId, sectionId, isAuthenticated])
+
+  // Timer effect - only runs when NOT paused and attempt is NOT paused in database
+  useEffect(() => {
+    if (!sectionData?.attempt || isPaused || sectionData.attempt.pausedAt) return
+
+    const timer = setInterval(() => {
+      const startTime = new Date(sectionData.attempt.startedAt).getTime()
+      const now = new Date().getTime()
+      const pausedTime = sectionData.attempt.totalPausedTime || 0
+
+      // If attempt is paused in database, don't continue timer
+      if (sectionData.attempt.pausedAt) {
+        const pausedAtTime = new Date(sectionData.attempt.pausedAt).getTime()
+        const elapsed = pausedAtTime - startTime - pausedTime
+
+        const hours = Math.floor(elapsed / (1000 * 60 * 60))
+        const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((elapsed % (1000 * 60)) / 1000)
+
+        if (hours > 0) {
+          setTotalTime(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
+        } else {
+          setTotalTime(`${minutes}:${seconds.toString().padStart(2, '0')}`)
+        }
+        return
+      }
+
+      const elapsed = now - startTime - pausedTime
+
+      const hours = Math.floor(elapsed / (1000 * 60 * 60))
+      const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((elapsed % (1000 * 60)) / 1000)
+
+      if (hours > 0) {
+        setTotalTime(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
+      } else {
+        setTotalTime(`${minutes}:${seconds.toString().padStart(2, '0')}`)
+      }
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [sectionData, isPaused])
+
+  // Set initial paused state based on database
+  useEffect(() => {
+    if (sectionData?.attempt) {
+      setIsPaused(!!sectionData.attempt.pausedAt)
 
       // Set initial time display
-      setTotalTime(getTotalExamDuration(currentProgress))
-    }
+      const startTime = new Date(sectionData.attempt.startedAt).getTime()
+      const pausedTime = sectionData.attempt.totalPausedTime || 0
 
-    return () => {
-      if (timer) {
-        clearInterval(timer)
+      let displayTime: number
+      if (sectionData.attempt.pausedAt) {
+        // Use paused time if paused
+        const pausedAtTime = new Date(sectionData.attempt.pausedAt).getTime()
+        displayTime = pausedAtTime - startTime - pausedTime
+      } else {
+        // Use current time if not paused
+        const now = new Date().getTime()
+        displayTime = now - startTime - pausedTime
+      }
+
+      const hours = Math.floor(displayTime / (1000 * 60 * 60))
+      const minutes = Math.floor((displayTime % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((displayTime % (1000 * 60)) / 1000)
+
+      if (hours > 0) {
+        setTotalTime(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
+      } else {
+        setTotalTime(`${minutes}:${seconds.toString().padStart(2, '0')}`)
       }
     }
-  }, [progress?.pausedAt, isPaused, params.examId])
+  }, [sectionData])
 
-  useEffect(() => {
-    const savedProgress = getExamProgress(params.examId) || {
-      examId: params.examId,
-      answers: {},
-      flags: {},
-      notes: {},
-      strikethrough: {},
-      sectionStatus: {},
-      currentSectionId: params.sectionId,
-      currentQuestionIndex: 0,
-      startedAt: new Date().toISOString(),
+  const updateSection = async (action: string, data: any) => {
+    try {
+      const response = await fetch(`/api/exam/${examId}/section/${sectionId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, ...data }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update section')
+      }
+    } catch (err) {
+      console.error('Error updating section:', err)
     }
-
-    savedProgress.sectionStatus[params.sectionId] = "in-progress"
-    savedProgress.currentSectionId = params.sectionId
-
-    const isCurrentlyPaused = !!savedProgress.pausedAt
-    setIsPaused(isCurrentlyPaused)
-    setTotalTime(getTotalExamDuration(savedProgress))
-
-    setProgress(savedProgress)
-    setCurrentQuestionIndex(0)
-    saveExamProgress(savedProgress)
-  }, [params.examId, params.sectionId])
-
-  const handleAnswerChange = (answerId: string) => {
-    if (!progress) return
-
-    const newProgress = {
-      ...progress,
-      answers: { ...progress.answers, [questionId]: answerId },
-      currentQuestionIndex,
-      currentSectionId: params.sectionId,
-    }
-    setProgress(newProgress)
-    saveExamProgress(newProgress)
   }
 
-  const handleFlagToggle = () => {
-    if (!progress) return
+  const handleAnswerChange = async (answerId: string) => {
+    if (!sectionData?.section.questions[currentQuestionIndex]) return
 
-    const newProgress = {
-      ...progress,
-      flags: { ...progress.flags, [questionId]: !progress.flags[questionId] },
-    }
-    setProgress(newProgress)
-    saveExamProgress(newProgress)
+    const questionId = sectionData.section.questions[currentQuestionIndex].id
+    await updateSection('answer', { questionId, optionId: answerId })
+
+    // Update local state optimistically
+    setSectionData(prev => {
+      if (!prev) return prev
+      const newResponses = [...prev.sectionAttempt.responses]
+      const existingIndex = newResponses.findIndex(r => r.questionId === questionId)
+
+      if (existingIndex >= 0) {
+        (newResponses[existingIndex] as any).optionId = answerId
+          ; (newResponses[existingIndex] as any).answer = answerId
+      } else {
+        newResponses.push({ questionId, optionId: answerId } as any)
+      }
+
+      return {
+        ...prev,
+        sectionAttempt: {
+          ...prev.sectionAttempt,
+          responses: newResponses
+        }
+      }
+    })
   }
 
-  const handleNoteChange = (note: string) => {
-    if (!progress) return
+  const handleFlagToggle = async () => {
+    if (!sectionData?.section.questions[currentQuestionIndex]) return
 
-    const newProgress = {
-      ...progress,
-      notes: { ...progress.notes, [questionId]: note },
-    }
-    setProgress(newProgress)
-    saveExamProgress(newProgress)
+    const questionId = sectionData.section.questions[currentQuestionIndex].id
+    const currentResponse = sectionData.sectionAttempt.responses.find(r => r.questionId === questionId)
+    const newFlag = !currentResponse?.isFlagged
+
+    await updateSection('flag', { questionId, flag: newFlag })
+
+    // Update local state optimistically
+    setSectionData(prev => {
+      if (!prev) return prev
+      const newResponses = [...prev.sectionAttempt.responses]
+      const existingIndex = newResponses.findIndex(r => r.questionId === questionId)
+
+      if (existingIndex >= 0) {
+        newResponses[existingIndex] = { ...newResponses[existingIndex], isFlagged: newFlag, flagged: newFlag } as any
+      } else {
+        newResponses.push({ questionId, isFlagged: newFlag, flagged: newFlag } as any)
+      }
+
+      return {
+        ...prev,
+        sectionAttempt: {
+          ...prev.sectionAttempt,
+          responses: newResponses
+        }
+      }
+    })
+  }
+
+  const handleNoteChange = async (note: string) => {
+    if (!sectionData?.section.questions[currentQuestionIndex]) return
+
+    const questionId = sectionData.section.questions[currentQuestionIndex].id
+    await updateSection('note', { questionId, note })
+
+    // Update local state optimistically
+    setSectionData(prev => {
+      if (!prev) return prev
+      const newResponses = [...prev.sectionAttempt.responses]
+      const existingIndex = newResponses.findIndex(r => r.questionId === questionId)
+
+      if (existingIndex >= 0) {
+        newResponses[existingIndex] = { ...newResponses[existingIndex], note }
+      } else {
+        newResponses.push({ questionId, note })
+      }
+
+      return {
+        ...prev,
+        sectionAttempt: {
+          ...prev.sectionAttempt,
+          responses: newResponses
+        }
+      }
+    })
   }
 
   const handleToggleStrikethrough = (optionId: string) => {
-    if (!progress) return
+    if (!sectionData?.section.questions[currentQuestionIndex]) return
 
-    toggleStrikethrough(params.examId, questionId, optionId)
-    const updatedProgress = getExamProgress(params.examId)
-    if (updatedProgress) {
-      setProgress(updatedProgress)
-    }
+    const questionId = sectionData.section.questions[currentQuestionIndex].id
+
+    setStruckThroughOptions(prev => {
+      const currentStruckThrough = prev[questionId] || []
+      const isStruckThrough = currentStruckThrough.includes(optionId)
+
+      if (isStruckThrough) {
+        // Remove from struck through
+        return {
+          ...prev,
+          [questionId]: currentStruckThrough.filter(id => id !== optionId)
+        }
+      } else {
+        // Add to struck through
+        return {
+          ...prev,
+          [questionId]: [...currentStruckThrough, optionId]
+        }
+      }
+    })
   }
 
   const handleQuestionSelect = (questionNumber: number) => {
     setCurrentQuestionIndex(questionNumber - 1)
+    // Persist progress
+    updateSection('progress', { currentQuestionIndex: questionNumber - 1 })
   }
 
   const handleNext = () => {
-    if (currentQuestionIndex < section.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1)
+    if (!sectionData) return
+
+    if (currentQuestionIndex < sectionData.section.questions.length - 1) {
+      const nextIndex = currentQuestionIndex + 1
+      setCurrentQuestionIndex(nextIndex)
+      updateSection('progress', { currentQuestionIndex: nextIndex })
     } else {
       setShowSubmitDialog(true)
     }
@@ -159,12 +376,14 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1)
+      const prevIndex = currentQuestionIndex - 1
+      setCurrentQuestionIndex(prevIndex)
+      updateSection('progress', { currentQuestionIndex: prevIndex })
     }
   }
 
-  const handleSubmitSection = () => {
-    if (!progress) return
+  const handleSubmitSection = async () => {
+    if (!sectionData) return
 
     const unanswered = getUnansweredQuestions()
     if (unanswered.length > 0) {
@@ -172,29 +391,27 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
       return
     }
 
-    pauseExamTimer(params.examId)
-    setIsPaused(true)
+    // Complete this section
+    await updateSection('complete', {})
 
-    const completedProgress = {
-      ...progress,
-      sectionStatus: { ...progress.sectionStatus, [params.sectionId]: "completed" as const },
-    }
+    // Pause the exam timer
+    await fetch(`/api/exam/${examId}/attempt`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'pause' }),
+    })
 
-    const nextSection = examData.sections[sectionIndex + 1]
-    if (nextSection) {
-      saveExamProgress(completedProgress)
-      router.push(`/exam/${params.examId}/section/${params.sectionId}/break`)
-    } else {
-      completedProgress.completedAt = new Date().toISOString()
-      saveExamProgress(completedProgress)
-      router.push(`/exam/${params.examId}/results`)
-    }
+    // For now, let's assume there are more sections and go to break
+    // In a real implementation, you'd check if there are more sections
+    router.push(`/exam/${examId}/section/${sectionId}/break`)
   }
 
   const openNoteDialog = () => {
-    if (!progress) return
+    if (!sectionData?.section.questions[currentQuestionIndex]) return
 
-    setCurrentNote(progress.notes[questionId] || "")
+    const questionId = sectionData.section.questions[currentQuestionIndex].id
+    const response = sectionData.sectionAttempt.responses.find(r => r.questionId === questionId)
+    setCurrentNote(response?.note || "")
     setShowNoteDialog(true)
   }
 
@@ -203,62 +420,158 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
     setShowNoteDialog(false)
   }
 
-  const handlePauseResume = () => {
-    if (!progress) return
+  const handleLeaveForNow = async () => {
+    try {
+      // Save current progress
+      await updateSection('progress', { currentQuestionIndex })
 
-    if (isPaused || progress.pausedAt) {
-      resumeExamTimer(params.examId)
-      setIsPaused(false)
-      const updatedProgress = getExamProgress(params.examId)
-      if (updatedProgress) {
-        setProgress(updatedProgress)
+      // Pause the timer in database
+      const pauseResponse = await fetch(`/api/exam/${examId}/attempt`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'pause' }),
+      })
+
+      if (pauseResponse.ok) {
+        // Update local state immediately to stop timer
+        setIsPaused(true)
+        if (sectionData) {
+          setSectionData({
+            ...sectionData,
+            attempt: {
+              ...sectionData.attempt,
+              pausedAt: new Date().toISOString()
+            }
+          })
+        }
       }
-    } else {
-      pauseExamTimer(params.examId)
-      setIsPaused(true)
-      const updatedProgress = getExamProgress(params.examId)
-      if (updatedProgress) {
-        setProgress(updatedProgress)
+
+      router.push("/")
+    } catch (error) {
+      console.error('Error pausing exam:', error)
+      // Still navigate away even if pause fails
+      router.push("/")
+    }
+  }
+
+  const handlePauseResume = async () => {
+    if (!sectionData) return
+
+    try {
+      const action = isPaused ? 'resume' : 'pause'
+
+      const response = await fetch(`/api/exam/${examId}/attempt`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      })
+
+      if (response.ok) {
+        setIsPaused(!isPaused)
       }
+    } catch (err) {
+      console.error('Error toggling pause:', err)
     }
   }
 
   const getUnansweredQuestions = () => {
-    if (!progress || !section) return []
+    if (!sectionData) return []
 
-    return section.questions
+    return sectionData.section.questions
       .map((q, index) => ({ question: q, index }))
-      .filter(({ question }) => !progress.answers[question.qid])
+      .filter(({ question }) => {
+        return !sectionData.sectionAttempt.responses.find(r => r.questionId === question.id && r.answer)
+      })
       .map(({ index }) => index + 1)
   }
 
-  if (!section || !progress) {
-    return <div>Loading...</div>
+  // Loading states
+  if (authLoading || loading) {
+    return (
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div className="h-16 bg-muted animate-pulse rounded-lg" />
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2 h-96 bg-muted animate-pulse rounded-lg" />
+          <div className="h-96 bg-muted animate-pulse rounded-lg" />
+        </div>
+      </div>
+    )
   }
 
-  const currentQuestion = section.questions[currentQuestionIndex]
-  const questionId = currentQuestion.qid
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-6xl mx-auto text-center py-12">
+        <p>Please log in to access this exam.</p>
+        <Button asChild className="mt-4">
+          <a href="/login">Go to Login</a>
+        </Button>
+      </div>
+    )
+  }
 
-  const notesBoolean = Object.keys(progress.notes).reduce(
-    (acc, key) => {
-      acc[key] = !!progress.notes[key]
-      return acc
-    },
-    {} as Record<string, boolean>,
-  )
+  if (error || !sectionData) {
+    return (
+      <div className="max-w-6xl mx-auto text-center py-12">
+        <h1 className="text-2xl font-bold text-red-600">Section Not Found</h1>
+        <p className="text-muted-foreground mt-2">{error || "The requested section could not be found."}</p>
+        <Button asChild className="mt-4">
+          <a href="/">
+            <Home className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </a>
+        </Button>
+      </div>
+    )
+  }
+
+  const currentQuestion = sectionData.section.questions[currentQuestionIndex]
+  const currentResponse = sectionData.sectionAttempt.responses.find(r => r.questionId === currentQuestion.id)
+
+  // Create compatibility objects for existing components
+  const questionForDisplay = {
+    number: currentQuestion.number,
+    stem: currentQuestion.stem,
+    options: currentQuestion.options.map(opt => ({ id: opt.letter, text: opt.text })),
+    matrix: (currentQuestion as any).matrix || undefined,
+    image: (currentQuestion as any).images || undefined,
+  } as any
+
+  const answersForNav = sectionData.section.questions.reduce((acc, q) => {
+    const response = sectionData.sectionAttempt.responses.find(r => r.questionId === q.id)
+    const val = (response as any)?.answer
+    if (val) acc[q.id] = val as string
+    return acc
+  }, {} as Record<string, string>)
+
+  const flagsForNav = sectionData.section.questions.reduce((acc, q) => {
+    const response = sectionData.sectionAttempt.responses.find(r => r.questionId === q.id)
+    if ((response as any)?.flagged) {
+      acc[q.id] = true
+    }
+    return acc
+  }, {} as Record<string, boolean>)
+
+  const notesForNav = sectionData.section.questions.reduce((acc, q) => {
+    const response = sectionData.sectionAttempt.responses.find(r => r.questionId === q.id)
+    if (response?.note) {
+      acc[q.id] = true
+    }
+    return acc
+  }, {} as Record<string, boolean>)
+
+  const questionsForNav = sectionData.section.questions.map(q => ({ id: q.id }))
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">{examData.title}</h1>
-          <p className="text-muted-foreground">{section.title}</p>
+          <h1 className="text-2xl font-bold">Medical Exam</h1>
+          <p className="text-muted-foreground">{sectionData.section.title}</p>
         </div>
         <div className="flex items-center space-x-4">
           <div
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg border ${
-              isPaused ? "bg-orange-100 border-orange-300" : "bg-primary/10"
-            }`}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg border ${isPaused ? "bg-orange-100 border-orange-300" : "bg-primary/10"
+              }`}
           >
             <Clock className={`h-5 w-5 ${isPaused ? "text-orange-600" : "text-primary"}`} />
             <span className={`font-mono text-lg font-semibold ${isPaused ? "text-orange-600" : "text-primary"}`}>
@@ -269,7 +582,7 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
             </Button>
           </div>
           <Badge variant="outline">
-            Question {currentQuestionIndex + 1} of {section.questions.length}
+            Question {currentQuestionIndex + 1} of {sectionData.section.questions.length}
           </Badge>
         </div>
       </div>
@@ -277,10 +590,10 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <QuestionDisplay
-            question={currentQuestion}
-            selectedAnswer={progress.answers[questionId]}
+            question={questionForDisplay}
+            selectedAnswer={(currentResponse as any)?.answer}
             onAnswerChange={handleAnswerChange}
-            struckThroughOptions={progress.strikethrough?.[questionId] || []}
+            struckThroughOptions={struckThroughOptions[currentQuestion.id] || []}
             onToggleStrikethrough={handleToggleStrikethrough}
           />
         </div>
@@ -292,30 +605,30 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
             </CardHeader>
             <CardContent className="space-y-3">
               <Button
-                variant={progress.flags[questionId] ? "destructive" : "outline"}
-                className="w-full"
+                variant={(currentResponse as any)?.flagged ? "destructive" : "outline"}
+                className="w-full hover:cursor-pointer"
                 onClick={handleFlagToggle}
               >
-                <Flag className={`mr-2 h-4 w-4 ${progress.flags[questionId] ? "fill-current" : ""}`} />
-                {progress.flags[questionId] ? "Unflag" : "Flag"}
+                <Flag className={`mr-2 h-4 w-4 ${(currentResponse as any)?.flagged ? "fill-current" : ""}`} />
+                {(currentResponse as any)?.flagged ? "Unflag" : "Flag"}
               </Button>
               <Button
-                variant={progress.notes[questionId] ? "secondary" : "outline"}
-                className="w-full"
+                variant={(currentResponse as any)?.note ? "secondary" : "outline"}
+                className="w-full hover:cursor-pointer"
                 onClick={openNoteDialog}
               >
-                <StickyNote className={`mr-2 h-4 w-4 ${progress.notes[questionId] ? "fill-current" : ""}`} />
-                {progress.notes[questionId] ? "Edit Note" : "Add Note"}
+                <StickyNote className={`mr-2 h-4 w-4 ${(currentResponse as any)?.note ? "fill-current" : ""}`} />
+                {(currentResponse as any)?.note ? "Edit Note" : "Add Note"}
               </Button>
-              <Button className="w-full" onClick={() => setShowSubmitDialog(true)}>
+              <Button className="w-full hover:cursor-pointer" onClick={() => setShowSubmitDialog(true)}>
                 <Send className="mr-2 h-4 w-4" />
                 Submit Section
               </Button>
               <div className="pt-4 border-t">
                 <Button
                   variant="ghost"
-                  className="w-full text-muted-foreground hover:text-foreground"
-                  onClick={() => router.push("/")}
+                  className="w-full text-muted-foreground hover:text-foreground hover:cursor-pointer border dark:text-white dark:border-white text-black"
+                  onClick={handleLeaveForNow}
                 >
                   <Home className="mr-2 h-4 w-4" />
                   Come back later
@@ -325,13 +638,46 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
             </CardContent>
           </Card>
 
+          {/* Question Statistics */}
+          {currentQuestion && questionStats[currentQuestion.id] && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Question Statistics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Success Rate:</span>
+                    <Badge className={`px-2 py-1 ${getSuccessRateColor(questionStats[currentQuestion.id].percentage)}`}>
+                      {questionStats[currentQuestion.id].percentage}%
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Total Attempts:</span>
+                    <span className="text-sm font-medium">{questionStats[currentQuestion.id].total}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Correct:</span>
+                    <span className="text-sm font-medium text-green-600">{questionStats[currentQuestion.id].correct}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Incorrect:</span>
+                    <span className="text-sm font-medium text-red-600">
+                      {questionStats[currentQuestion.id].total - questionStats[currentQuestion.id].correct}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <QuestionNavigation
             currentQuestion={currentQuestionIndex + 1}
-            totalQuestions={section.questions.length}
-            questions={section.questions}
-            answers={progress.answers}
-            flags={progress.flags}
-            notes={notesBoolean}
+            totalQuestions={sectionData.section.questions.length}
+            questions={questionsForNav}
+            answers={answersForNav}
+            flags={flagsForNav}
+            notes={notesForNav}
             onQuestionSelect={handleQuestionSelect}
             onPrevious={handlePrevious}
             onNext={handleNext}
@@ -380,10 +726,10 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowSubmitDialog(false)}>
+            <Button variant="outline" className="hover:cursor-pointer" onClick={() => setShowSubmitDialog(false)}>
               Back
             </Button>
-            <Button onClick={handleSubmitSection}>Continue</Button>
+            <Button className="hover:cursor-pointer" onClick={handleSubmitSection}>Continue</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

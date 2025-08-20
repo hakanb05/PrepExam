@@ -5,8 +5,8 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Clock, Coffee, ArrowRight, Home } from "lucide-react"
-import { getExamProgress, getTotalExamDuration, resumeExamTimer } from "@/lib/storage" // Import resumeExamTimer
-import { getExamData } from "@/lib/exam-data"
+
+// Break page now uses server state via API rather than local storage
 
 export default function SectionBreakPage() {
   const params = useParams()
@@ -14,9 +14,9 @@ export default function SectionBreakPage() {
   const examId = params.examId as string
   const currentSectionId = params.sectionId as string
 
-  const [progress, setProgress] = useState<any>(null)
-  const [exam, setExam] = useState<any>(null)
+  const [attempt, setAttempt] = useState<any>(null)
   const [nextSection, setNextSection] = useState<any>(null)
+  const [totalTime, setTotalTime] = useState<string>("0:00")
 
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
@@ -34,42 +34,65 @@ export default function SectionBreakPage() {
   }, [])
 
   useEffect(() => {
-    const examData = getExamData(examId)
-    const progressData = getExamProgress(examId)
+    const load = async () => {
+      // fetch current attempt and section info
+      const sectionRes = await fetch(`/api/exam/${examId}/section/${currentSectionId}`)
+      if (sectionRes.ok) {
+        const data = await sectionRes.json()
+        setAttempt(data.attempt)
+        // compute next section based on returned section list from exam endpoint
+        const examRes = await fetch(`/api/exam/${examId}`)
+        if (examRes.ok) {
+          const exam = await examRes.json()
+          const idx = exam.sections.findIndex((s: any) => s.sectionId === currentSectionId)
+          if (idx >= 0 && idx < exam.sections.length - 1) setNextSection(exam.sections[idx + 1])
+        }
 
-    if (examData && progressData) {
-      setExam(examData)
-      setProgress(progressData)
+        // timer display based on Attempt - pause the timer automatically on break page
+        await fetch(`/api/exam/${examId}/attempt`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'pause' }),
+        })
 
-      // Find next section
-      const currentIndex = examData.sections.findIndex((s: any) => s.sectionId === currentSectionId)
-      if (currentIndex >= 0 && currentIndex < examData.sections.length - 1) {
-        setNextSection(examData.sections[currentIndex + 1])
+        // Show time up to the pause point (end of previous section)
+        const startTime = new Date(data.attempt.startedAt).getTime()
+        const pausedTime = data.attempt.totalPausedTime || 0
+        const now = new Date().getTime()
+        const elapsed = now - startTime - pausedTime
+        const hours = Math.floor(elapsed / 3600000)
+        const minutes = Math.floor((elapsed % 3600000) / 60000)
+        const seconds = Math.floor((elapsed % 60000) / 1000)
+        setTotalTime(hours > 0 ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}` : `${minutes}:${String(seconds).padStart(2, "0")}`)
       }
     }
+    load()
   }, [examId, currentSectionId])
 
-  const handleContinue = () => {
-    resumeExamTimer(examId)
+  const handleContinue = async () => {
+    // resume attempt timer
+    await fetch(`/api/exam/${examId}/attempt`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'resume' }),
+    })
 
-    if (nextSection) {
-      router.push(`/exam/${examId}/section/${nextSection.sectionId}`)
-    } else {
-      // Last section completed, go to results
-      router.push(`/exam/${examId}/results`)
-    }
+    if (nextSection) router.push(`/exam/${examId}/section/${nextSection.sectionId}`)
+    else router.push(`/exam/${examId}/results`)
   }
 
-  const handleLeaveForNow = () => {
+  const handleLeaveForNow = async () => {
+    // Pause the exam when leaving from break page
+    await fetch(`/api/exam/${examId}/attempt`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'pause' }),
+    })
+
     router.push("/")
   }
 
-  if (!progress || !exam) {
-    return <div>Loading...</div>
-  }
-
-  const totalTime = getTotalExamDuration(progress)
-  const completedSections = Object.values(progress.sectionStatus).filter((status) => status === "completed").length
+  const completedSections = 0
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
@@ -88,9 +111,8 @@ export default function SectionBreakPage() {
               <Clock className="w-4 h-4" />
               <span className="font-semibold">Timer Paused: {totalTime}</span>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {completedSections} of {exam.sections.length} sections completed
-            </p>
+            {/* We can enrich this later with real completed count */}
+            <p className="text-sm text-gray-600 dark:text-gray-400">Take a short break</p>
           </div>
 
           <div className="space-y-3">
@@ -98,10 +120,10 @@ export default function SectionBreakPage() {
               {nextSection ? `Ready to continue with ${nextSection.title}?` : "Ready to see your results?"}
             </p>
 
-            <Button onClick={handleContinue} className="w-full" size="lg">
+            <Button onClick={handleContinue} className="w-full hover:cursor-pointer" size="lg">
               {nextSection ? (
                 <>
-                  Continue to Next Section
+                  Continue to next section
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </>
               ) : (
@@ -113,7 +135,7 @@ export default function SectionBreakPage() {
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                 Your progress will be stored for when you come back
               </p>
-              <Button variant="outline" onClick={handleLeaveForNow} className="w-full bg-transparent" size="sm">
+              <Button variant="outline" onClick={handleLeaveForNow} className="w-full bg-transparent hover:cursor-pointer" size="sm">
                 <Home className="mr-2 h-4 w-4" />
                 Come back later
               </Button>

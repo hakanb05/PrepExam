@@ -42,6 +42,11 @@ export function QuestionDisplay({
               }
               alt={img.alt}
               className="max-w-full h-auto rounded"
+              onError={(e) => {
+                // Fallback to placeholder if image fails to load
+                const target = e.target as HTMLImageElement
+                target.src = `/placeholder.svg?height=200&width=300&query=${encodeURIComponent(img.alt)}`
+              }}
             />
             <p className="text-sm text-muted-foreground mt-2">{img.alt}</p>
           </div>

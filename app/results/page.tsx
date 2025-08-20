@@ -1,17 +1,106 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { BookOpen, Calendar, TrendingUp } from "lucide-react"
+import { BookOpen, Calendar, TrendingUp, Users, BarChart3, ArrowRight } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
+
+interface ExamData {
+  id: string
+  examId: string
+  title: string
+  description: string
+  completedAttempts: number
+  latestScore: number | null
+  latestAttemptDate: string | null
+}
 
 export default function ResultsPage() {
-  // In a real app, this would be called client-side
-  const results = [] // getExamResults() - mock empty for now
+  const router = useRouter()
+  const { isAuthenticated, isLoading: authLoading } = useAuth()
+  const [exams, setExams] = useState<ExamData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  if (results.length === 0) {
+  useEffect(() => {
+    if (authLoading) return
+
+    if (!isAuthenticated) {
+      router.push('/login')
+      return
+    }
+
+    const fetchExams = async () => {
+      try {
+        const response = await fetch('/api/exams', {
+          credentials: 'include'
+        })
+        if (!response.ok) {
+          throw new Error('Failed to fetch exams')
+        }
+
+        const data = await response.json()
+        setExams(data.exams)
+      } catch (err) {
+        console.error('Error fetching exams:', err)
+        setError('Failed to load exam data')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchExams()
+  }, [isAuthenticated, authLoading, router])
+
+  const getScoreColor = (score: number | null) => {
+    if (score === null) return 'text-gray-500'
+    if (score >= 70) return 'text-green-600'
+    if (score >= 40) return 'text-orange-600'
+    return 'text-red-600'
+  }
+
+  const getScoreBadgeVariant = (score: number | null) => {
+    if (score === null) return 'secondary'
+    if (score >= 70) return 'default'
+    if (score >= 40) return 'secondary'
+    return 'destructive'
+  }
+
+  if (authLoading || loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-2">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading your exam results...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
     return (
       <div className="max-w-2xl mx-auto text-center space-y-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold">My Completed Exams</h1>
+          <h1 className="text-3xl font-bold">My Exam Results</h1>
+          <p className="text-red-600">{error}</p>
+        </div>
+        <Button onClick={() => window.location.reload()}>
+          Try Again
+        </Button>
+      </div>
+    )
+  }
+
+  const examsWithAttempts = exams.filter(exam => exam.completedAttempts > 0)
+
+  if (examsWithAttempts.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto text-center space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold">My Exam Results</h1>
           <p className="text-muted-foreground">Here you can find all your completed exams and results</p>
         </div>
         <Card className="p-12">
@@ -37,13 +126,13 @@ export default function ResultsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">My Completed Exams</h1>
+        <h1 className="text-3xl font-bold">My Exam Results</h1>
         <p className="text-muted-foreground">Overview of all your completed exams</p>
       </div>
 
       <div className="grid gap-6">
-        {results.map((result) => (
-          <Card key={result.examId}>
+        {examsWithAttempts.map((exam) => (
+          <Card key={exam.examId} className="hover:shadow-md transition-shadow">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -51,33 +140,42 @@ export default function ResultsPage() {
                     <BookOpen className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <CardTitle>NBME 20A Practice Exam</CardTitle>
-                    <CardDescription className="flex items-center space-x-4">
-                      <span className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{new Date(result.completedAt).toLocaleDateString("en-US")}</span>
+                    <CardTitle className="text-lg">{exam.title}</CardTitle>
+                    <CardDescription className="flex items-center space-x-4 mt-1">
+                      <span key="attempts" className="flex items-center space-x-1">
+                        <Users className="h-4 w-4" />
+                        <span>{exam.completedAttempts} attempt{exam.completedAttempts !== 1 ? 's' : ''}</span>
                       </span>
-                      <span className="flex items-center space-x-1">
-                        <TrendingUp className="h-4 w-4" />
-                        <span>{result.overallPercent}%</span>
-                      </span>
+                      {exam.latestAttemptDate && (
+                        <span key="last-attempt" className="flex items-center space-x-1">
+                          <Calendar className="h-4 w-4" />
+                          <span>Last: {new Date(exam.latestAttemptDate).toLocaleDateString("en-US")}</span>
+                        </span>
+                      )}
+                      {exam.latestScore !== null && (
+                        <span key="latest-score" className="flex items-center space-x-1">
+                          <TrendingUp className="h-4 w-4" />
+                          <span className={getScoreColor(exam.latestScore)}>
+                            Latest: {exam.latestScore}%
+                          </span>
+                        </span>
+                      )}
                     </CardDescription>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Badge
-                    variant={
-                      result.overallPercent >= 80
-                        ? "default"
-                        : result.overallPercent >= 50
-                        ? "secondary"
-                        : "destructive"
-                    }
+                  {exam.latestScore !== null && (
+                    <Badge variant={getScoreBadgeVariant(exam.latestScore)}>
+                      {exam.latestScore}%
+                    </Badge>
+                  )}
+                  <Button
+                    onClick={() => router.push(`/results/${exam.examId}`)}
+                    className="flex items-center space-x-2 hover:cursor-pointer"
                   >
-                    {result.overallPercent}%
-                  </Badge>
-                  <Button asChild>
-                    <a href={`/exam/${result.examId}/results`}>View Results</a>
+                    <BarChart3 className="h-4 w-4" />
+                    <span>View all results</span>
+                    <ArrowRight className="h-4 w-4" />
                   </Button>
                 </div>
               </div>

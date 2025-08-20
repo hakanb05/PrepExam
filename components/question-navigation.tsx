@@ -8,7 +8,7 @@ import type { ExamQuestion } from "@/lib/types"
 interface QuestionNavigationProps {
   currentQuestion: number
   totalQuestions: number
-  questions: ExamQuestion[] // Added questions array to get actual qids
+  questions: { id: string }[] // minimal shape
   answers: Record<string, string>
   flags: Record<string, boolean>
   notes: Record<string, boolean> // Added notes tracking
@@ -38,7 +38,7 @@ export function QuestionNavigation({
       <div className="grid grid-cols-10 gap-15 p-4 border rounded-lg bg-muted/50">
         {Array.from({ length: totalQuestions }, (_, i) => {
           const questionNum = i + 1
-          const questionId = questions[i]?.qid // Use actual qid from question data
+          const questionId = questions[i]?.id ?? String(i + 1)
           const isAnswered = !!answers[questionId]
           const isFlagged = !!flags[questionId]
           const hasNote = !!notes[questionId] // Check for notes
@@ -66,12 +66,12 @@ export function QuestionNavigation({
 
       {/* Navigation Buttons */}
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onPrevious} disabled={!canGoPrevious}>
+        <Button variant="outline" className="hover:cursor-pointer" onClick={onPrevious} disabled={!canGoPrevious}>
           <ChevronLeft className="mr-2 h-4 w-4" />
-          Vorige
+          Previous
         </Button>
-        <Button onClick={onNext} disabled={!canGoNext}>
-          Volgende
+        <Button onClick={onNext} className="hover:cursor-pointer" disabled={!canGoNext}>
+          Next
           <ChevronRight className="ml-2 h-4 w-4" />
         </Button>
       </div>

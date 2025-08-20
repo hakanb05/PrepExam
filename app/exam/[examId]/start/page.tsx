@@ -5,39 +5,68 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { BookOpen, AlertTriangle, Home, Lock, ShoppingCart } from "lucide-react"
-import { getExamData } from "@/lib/exam-data"
-import { hasExamAccess } from "@/lib/purchase-manager"
+import { useExamData } from "@/hooks/use-exam-data"
+import { useAuth } from "@/lib/auth-context"
 import { PurchaseDialog } from "@/components/purchase-dialog"
 
 interface StartPageProps {
-  params: { examId: string }
+  params: Promise<{ examId: string }>
 }
 
 export default function ExamStartPage({ params }: StartPageProps) {
-  const [examAccess, setExamAccess] = useState(false)
+  const [examId, setExamId] = useState<string>("")
   const [showPurchaseDialog, setShowPurchaseDialog] = useState(false)
-  const examData = getExamData()
+  const { isAuthenticated, isLoading: authLoading } = useAuth()
+  const { examData, examAccess, loading: examLoading, error, refetch } = useExamData(examId)
 
   useEffect(() => {
-    setExamAccess(hasExamAccess(params.examId))
-
-    const handleProfileUpdate = () => {
-      setExamAccess(hasExamAccess(params.examId))
+    const getParams = async () => {
+      const resolvedParams = await params
+      setExamId(resolvedParams.examId)
     }
-
-    window.addEventListener("profileUpdated", handleProfileUpdate)
-    return () => window.removeEventListener("profileUpdated", handleProfileUpdate)
-  }, [params.examId])
+    getParams()
+  }, [params])
 
   const handlePurchaseComplete = () => {
-    setExamAccess(hasExamAccess(params.examId))
+    refetch()
   }
 
-  if (examData.examId !== params.examId) {
-    return <div>Examen niet gevonden</div>
+  if (authLoading || examLoading || !examId) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div className="h-32 bg-muted animate-pulse rounded-lg" />
+        <div className="h-64 bg-muted animate-pulse rounded-lg" />
+      </div>
+    )
   }
 
-  if (!examAccess) {
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-4xl mx-auto text-center py-12">
+        <p>Please log in to access this exam.</p>
+        <Button asChild className="mt-4">
+          <a href="/login">Go to Login</a>
+        </Button>
+      </div>
+    )
+  }
+
+  if (error || !examData) {
+    return (
+      <div className="max-w-4xl mx-auto text-center py-12">
+        <h1 className="text-2xl font-bold text-red-600">Exam Not Found</h1>
+        <p className="text-muted-foreground mt-2">The requested exam could not be found.</p>
+        <Button asChild className="mt-4">
+          <a href="/">
+            <Home className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </a>
+        </Button>
+      </div>
+    )
+  }
+
+  if (!examAccess?.hasAccess) {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center space-y-2">
@@ -59,17 +88,17 @@ export default function ExamStartPage({ params }: StartPageProps) {
         <Card className="border-2 border-dashed">
           <CardHeader className="text-center">
             <CardTitle>Unlock Full Access</CardTitle>
-            <CardDescription>Get access to all 4 sections with 200 practice questions</CardDescription>
+            <CardDescription>Get access to {examData.sections.length} sections with {examData.totalQuestions} practice questions</CardDescription>
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
-              {examData.sections.map((section, index) => (
+              {examData.sections.map((section) => (
                 <div key={section.sectionId} className="p-4 border border-border rounded-lg bg-muted/30">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-medium">{section.title}</h4>
                     <Lock className="h-4 w-4 text-muted-foreground" />
                   </div>
-                  <p className="text-sm text-muted-foreground">{section.questions.length} questions</p>
+                  <p className="text-sm text-muted-foreground">{section.questionCount} questions</p>
                 </div>
               ))}
             </div>
@@ -105,36 +134,36 @@ export default function ExamStartPage({ params }: StartPageProps) {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold">{examData.title}</h1>
-        <p className="text-muted-foreground">Bereid je voor op het examen</p>
+        <p className="text-muted-foreground">Prepare for your exam</p>
       </div>
 
       {/* Important Notice */}
       <Alert>
         <AlertTriangle className="h-4 w-4" />
         <AlertDescription>
-          <strong>Belangrijk:</strong> 50 vragen per sectie. Na doorgaan naar de volgende sectie kun je niet terug.
+          <strong>Important:</strong> Each section contains multiple questions. Once you proceed to the next section, you cannot go back.
         </AlertDescription>
       </Alert>
 
-      {/* Section Notes */}
+      {/* Section Overview */}
       <div className="grid gap-4 md:grid-cols-2">
         {examData.sections.map((section, index) => (
           <Card key={section.sectionId}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <BookOpen className="h-5 w-5" />
+                <BookOpen className="h-5 w-5" />``
                 <span>{section.title}</span>
               </CardTitle>
-              <CardDescription>{section.questions.length} vragen</CardDescription>
+              <CardDescription>{section.questionCount} questions</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <p className="text-sm text-muted-foreground">
-                  Sectie {index + 1} bevat {section.questions.length} vragen over verschillende medische onderwerpen.
+                  Section {index + 1} contains {section.questionCount} questions covering various medical topics.
                 </p>
                 <div className="p-3 bg-muted rounded-lg">
                   <p className="text-sm">
-                    <strong>Notitie:</strong> Focus op de klinische presentatie en differentiaaldiagnose.
+                    <strong>Note:</strong> Focus on clinical presentation and differential diagnosis.
                   </p>
                 </div>
               </div>
@@ -146,18 +175,8 @@ export default function ExamStartPage({ params }: StartPageProps) {
       {/* Start Button */}
       <div className="text-center">
         <Button size="lg" asChild>
-          <a href={`/exam/${examData.examId}/section/${examData.sections[0].sectionId}`}>Start Sectie 1</a>
+          <a href={`/exam/${examData.examId}/section/${examData.sections[0].sectionId}`}>Start Section 1</a>
         </Button>
-
-        <div className="mt-4 space-y-2">
-          <p className="text-xs text-gray-500">Your progress will be stored for when you come back</p>
-          <Button variant="outline" size="sm" asChild>
-            <a href="/">
-              <Home className="mr-2 h-4 w-4" />
-              Come back later
-            </a>
-          </Button>
-        </div>
       </div>
     </div>
   )

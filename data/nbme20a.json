@@ -42,11 +42,11 @@
           "stem": "A 32-year-old woman has had fecal incontinence since giving birth to her first child 1 year ago. Which of the following is the most likely cause of the fecal incontinence in this patient?",
           "image": [
             {
-              "path": "path1",
+              "path": "/images/nbme20/s1/obstetric.png",
               "alt": "Types of obstetric lacerations"
             },
             {
-              "path": "path2",
+              "path": "/images/nbme20/s1/female_pelvic.png",
               "alt": "Female pelvic floor anatomy"
             }
           ],
@@ -144,7 +144,7 @@
           "number": 2,
           "stem": "A 56-year-old man is brought to the emergency department 30 minutes after the onset of severe chest pain while mowing his lawn. His pulse is 110/min, respirations are 20/min, and blood pressure is 105/70 mm Hg. Physical examination shows cool, clammy, diaphoretic skin. Two hours after admission, pulmonary catheterization shows a pulmonary artery pressure of 40/25 mm Hg; the left atrial pressure is 25 mm Hg. Compared with a healthy person, which of the following sets of pulmonary pressure changes is most likely in this patient?",
           "matrix": {
-            "columns": ["Capillary Hydrostatic", "Interstitial Hydrostatic", "Interstitial Oncotic"],
+          "columns": ["Capillary Hydrostatic", "Interstitial Hydrostatic", "Interstitial Oncotic"],
 "rows": [
   {
     "name": "A",
@@ -240,7 +240,7 @@
           "number": 2,
           "stem": "A 72-year-old woman with dysphagia is undergoing surgical evaluation of a mass in the posterior mediastinum. During this procedure, the thoracic duct is inadvertently damaged near the mass. This injury is most likely to impair the normal lymphatic return of which of the following structures?",
           "image": {
-            "path": "path",
+            "path": "/images/nbme20/s3/thoracic.png",
             "alt": "Thoracic duct anatomy"
           },
           "options": [

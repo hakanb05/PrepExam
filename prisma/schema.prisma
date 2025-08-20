@@ -144,15 +144,17 @@ model QuestionCategory {
 }
 
 model Attempt {
-  id         String           @id @default(cuid())
-  userId     String
-  examId     String
-  version    Int
-  startedAt  DateTime         @default(now())
-  finishedAt DateTime?
-  user       User             @relation(fields: [userId], references: [id])
-  exam       Exam             @relation(fields: [examId], references: [id])
-  sections   AttemptSection[]
+  id               String           @id @default(cuid())
+  userId           String
+  examId           String
+  version          Int
+  startedAt        DateTime         @default(now())
+  finishedAt       DateTime?
+  pausedAt         DateTime?
+  totalPausedTime  Int              @default(0) // in milliseconds
+  user             User             @relation(fields: [userId], references: [id])
+  exam             Exam             @relation(fields: [examId], references: [id])
+  sections         AttemptSection[]
 }
 
 model AttemptSection {
@@ -162,6 +164,7 @@ model AttemptSection {
   startedAt  DateTime   @default(now())
   finishedAt DateTime?
   locked     Boolean    @default(false)
+  currentQuestionIndex Int @default(0)
   attempt    Attempt    @relation(fields: [attemptId], references: [id])
   section    Section    @relation(fields: [sectionId], references: [id])
   responses  Response[]

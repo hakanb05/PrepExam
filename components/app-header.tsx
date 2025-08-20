@@ -75,7 +75,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+            <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:cursor-pointer">
               <Avatar>
                 <AvatarImage src={user.image || "/default-user-avatar.png"} alt={user.name} />
                 <AvatarFallback>
@@ -89,7 +89,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem className="hover:cursor-pointer" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               Log Out
             </DropdownMenuItem>

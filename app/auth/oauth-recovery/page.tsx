@@ -1,13 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { AlertCircle, User } from "lucide-react"
 import { signIn } from "next-auth/react"
 
-export default function OAuthRecoveryPage() {
+function OAuthRecoveryContent() {
     const searchParams = useSearchParams()
     const router = useRouter()
     const [loading, setLoading] = useState(false)
@@ -119,5 +119,22 @@ export default function OAuthRecoveryPage() {
                 </CardContent>
             </Card>
         </div>
+    )
+}
+
+export default function OAuthRecoveryPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+                <Card className="w-full max-w-md">
+                    <CardContent className="p-6 text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                        <p className="text-muted-foreground">Loading...</p>
+                    </CardContent>
+                </Card>
+            </div>
+        }>
+            <OAuthRecoveryContent />
+        </Suspense>
     )
 }

@@ -23,23 +23,26 @@ export async function GET(
                         }
                     }
                 },
-                _count: {
-                    select: {
-                        questions: true
-                    }
+                questions: {
+                    select: { id: true }
                 }
             }
         })
 
         if (!exam) {
-            return NextResponse.json({ error: "Exam not found" }, { status: 404 })
+            return NextResponse.json({
+                error: "Exam not found",
+                examId
+            }, { status: 404 })
         }
 
         return NextResponse.json({
-            examId: exam.id,
+            id: exam.id,
+            examId: exam.id, // For backward compatibility
             title: exam.title,
+            description: `Practice exam with ${exam.sections.length} sections and ${exam.questions.length} questions`,
             version: exam.version,
-            totalQuestions: exam._count.questions,
+            totalQuestions: exam.questions.length,
             sections: exam.sections.map(section => ({
                 sectionId: section.sectionId,
                 title: section.title,
