@@ -103,6 +103,56 @@
           ],
           "correctOptionId": "E",
           "explanation": "Physicians should always encourage healthy minor-guardian communication. Also you're going to do some serious things to cure this girl's disease, leading up to amputation. You can't hide that from her."
+        },
+        {
+          "qid": "s1q4",
+          "number": 4,
+          "stem": "An otherwise healthy 16-year-old girl comes to the physician because of a 2-month history of episodes of wheezing and shortness of breath while participating in track meets with her high school team. Her respirations are 12/min. Physical examination shows no abnormalities. A diagnosis of exercise-induced asthma is made. Exposure to which of the following is most likely to precipitate a similar episode in this patient in the future?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Cold, dry air"
+            },
+            {
+              "id": "B",
+              "text": "Cold, moist air"
+            },
+            {
+              "id": "C",
+              "text": "Warm, dry air"
+            },
+            {
+              "id": "D",
+              "text": "Warm, moist air"
+            }
+          ],
+          "correctOptionId": "A",
+          "explanation": "Page 744 PDF. This girl has exercise induced asthma. It is not well understood why it happens but the triggers are recognized. Normally when breathing occurs, the nasal passages and turbinates act to humidify/warm the air. During exercise, mouth breathing predominates, bypassing this warming/humidifying step. Cold, dry air is the strongest external trigger of exercise-induced asthma."
+        },
+        {
+          "qid": "s1q5",
+          "number": 5,
+          "stem": "A study is conducted to assess the effect of a new screening test on the mortality rate of prostate cancer. Prior to implementation of screening, the overall 5-year survival rate was 70%. After initiating the screening in the randomly selected study population, the 5-year survival rate increases to 85%. During this time, there were no changes in the treatment of prostate cancer. The apparent decrease in mortality could be due to which of the following types of bias?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Compliance"
+            },
+            {
+              "id": "B",
+              "text": "Lead-time"
+            },
+            {
+              "id": "C",
+              "text": "Recall"
+            },
+            {
+              "id": "D",
+              "text": "Selection"
+            }
+          ],
+          "correctOptionId": "B",
+          "explanation": "Page 267. Lead-time bias occurs when earlier detection is mistaken for improved survival, but true survival is unchanged. Screening makes it appear patients live longer, even though disease course and mortality are unaffected."
         }
       ]
     },
@@ -145,56 +195,56 @@
           "stem": "A 56-year-old man is brought to the emergency department 30 minutes after the onset of severe chest pain while mowing his lawn. His pulse is 110/min, respirations are 20/min, and blood pressure is 105/70 mm Hg. Physical examination shows cool, clammy, diaphoretic skin. Two hours after admission, pulmonary catheterization shows a pulmonary artery pressure of 40/25 mm Hg; the left atrial pressure is 25 mm Hg. Compared with a healthy person, which of the following sets of pulmonary pressure changes is most likely in this patient?",
           "matrix": {
           "columns": ["Capillary Hydrostatic", "Interstitial Hydrostatic", "Interstitial Oncotic"],
-"rows": [
-  {
-    "name": "A",
-    "options": [
-      { "id": "A1", "text": "↑" },
-      { "id": "A2", "text": "↑" },
-      { "id": "A3", "text": "↑" }
-    ]
-  },
-  {
-    "name": "B",
-    "options": [
-      { "id": "B1", "text": "↑" },
-      { "id": "B2", "text": "↑" },
-      { "id": "B3", "text": "↓" }
-    ]
-  },
-  {
-    "name": "C",
-    "options": [
-      { "id": "C1", "text": "↑" },
-      { "id": "C2", "text": "↓" },
-      { "id": "C3", "text": "↑" }
-    ]
-  },
-  {
-    "name": "D",
-    "options": [
-      { "id": "D1", "text": "↑" },
-      { "id": "D2", "text": "↓" },
-      { "id": "D3", "text": "↓" }
-    ]
-  },
-  {
-    "name": "E",
-    "options": [
-      { "id": "E1", "text": "↓" },
-      { "id": "E2", "text": "↑" },
-      { "id": "E3", "text": "↑" }
-    ]
-  },
-  {
-    "name": "F",
-    "options": [
-      { "id": "F1", "text": "↓" },
-      { "id": "F2", "text": "↑" },
-      { "id": "F3", "text": "↓" }
-    ]
-  }
-]
+        "rows": [
+          {
+            "name": "A",
+            "options": [
+              { "id": "A1", "text": "↑" },
+              { "id": "A2", "text": "↑" },
+              { "id": "A3", "text": "↑" }
+            ]
+          },
+          {
+            "name": "B",
+            "options": [
+              { "id": "B1", "text": "↑" },
+              { "id": "B2", "text": "↑" },
+              { "id": "B3", "text": "↓" }
+            ]
+          },
+          {
+            "name": "C",
+            "options": [
+              { "id": "C1", "text": "↑" },
+              { "id": "C2", "text": "↓" },
+              { "id": "C3", "text": "↑" }
+            ]
+          },
+          {
+            "name": "D",
+            "options": [
+              { "id": "D1", "text": "↑" },
+              { "id": "D2", "text": "↓" },
+              { "id": "D3", "text": "↓" }
+            ]
+          },
+          {
+            "name": "E",
+            "options": [
+              { "id": "E1", "text": "↓" },
+              { "id": "E2", "text": "↑" },
+              { "id": "E3", "text": "↑" }
+            ]
+          },
+          {
+            "name": "F",
+            "options": [
+              { "id": "F1", "text": "↓" },
+              { "id": "F2", "text": "↑" },
+              { "id": "F3", "text": "↓" }
+            ]
+          }
+        ]
 
           },
           "correctOptionId": "B",

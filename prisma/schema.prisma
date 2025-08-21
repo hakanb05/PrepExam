@@ -153,8 +153,8 @@ model Attempt {
   version          Int
   startedAt        DateTime         @default(now())
   finishedAt       DateTime?
-  pausedAt         DateTime?
-  totalPausedTime  Int              @default(0) // in milliseconds
+  elapsedSeconds   Int              @default(0) // Total seconds spent on exam
+  isPaused         Boolean          @default(false) // Simple paused state
   user             User             @relation(fields: [userId], references: [id])
   exam             Exam             @relation(fields: [examId], references: [id])
   sections         AttemptSection[]

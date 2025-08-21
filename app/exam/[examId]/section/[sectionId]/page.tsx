@@ -78,13 +78,26 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
   const [showNoteDialog, setShowNoteDialog] = useState(false)
   const [showSubmitDialog, setShowSubmitDialog] = useState(false)
   const [currentNote, setCurrentNote] = useState("")
-  const [totalTime, setTotalTime] = useState<string>("0:00")
+  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0)
   const [isPaused, setIsPaused] = useState(false)
   const [struckThroughOptions, setStruckThroughOptions] = useState<{ [questionId: string]: string[] }>({}) // Track strikethrough per question
   const [showStatistics, setShowStatistics] = useState(false) // Toggle for question statistics
 
   // Get question statistics
   const { questionStats } = useQuestionStats(examId)
+
+  // Helper function to format seconds to time string
+  const formatTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    } else {
+      return `${minutes}:${secs.toString().padStart(2, '0')}`
+    }
+  }
 
   // Helper function to get color classes based on success rate
   const getSuccessRateColor = (percentage: number) => {
@@ -122,22 +135,21 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
         const data = await sectionResponse.json()
         setSectionData(data)
 
-        // Check if this is a resume (timer was paused) - if so, automatically resume
-        const wasPaused = !!data.attempt.pausedAt
-        if (wasPaused) {
-          // Auto-resume the timer when coming back to exam
+        // Set initial timer state from database
+        setElapsedSeconds(data.attempt.elapsedSeconds || 0)
+        setIsPaused(data.attempt.isPaused || false)
+
+        // If exam is paused, auto-resume when user returns
+        if (data.attempt.isPaused) {
           const resumeResponse = await fetch(`/api/exam/${examId}/attempt`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'resume' }),
           })
+
           if (resumeResponse.ok) {
             setIsPaused(false)
-          } else {
-            setIsPaused(true)
           }
-        } else {
-          setIsPaused(false)
         }
 
         // Resume at the saved question index
@@ -155,99 +167,34 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
   }, [examId, sectionId, isAuthenticated])
 
   // Timer effect - only runs when NOT paused and attempt is NOT paused in database
+  // Simple timer effect - just count seconds
   useEffect(() => {
-    if (!sectionData?.attempt || isPaused || sectionData.attempt.pausedAt) return
+    if (isPaused) return
 
     const timer = setInterval(() => {
-      const startTime = new Date(sectionData.attempt.startedAt).getTime()
-      const now = new Date().getTime()
-      const pausedTime = sectionData.attempt.totalPausedTime || 0
+      setElapsedSeconds(prev => {
+        const newSeconds = prev + 1
 
-      // If attempt is paused in database, don't continue timer
-      if (sectionData.attempt.pausedAt) {
-        const pausedAtTime = new Date(sectionData.attempt.pausedAt).getTime()
-        const elapsed = pausedAtTime - startTime - pausedTime
-
-        const hours = Math.floor(elapsed / (1000 * 60 * 60))
-        const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60))
-        const seconds = Math.floor((elapsed % (1000 * 60)) / 1000)
-
-        if (hours > 0) {
-          setTotalTime(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
-        } else {
-          setTotalTime(`${minutes}:${seconds.toString().padStart(2, '0')}`)
+        // Save to database every 10 seconds to reduce API calls
+        if (newSeconds % 10 === 0) {
+          fetch(`/api/exam/${examId}/attempt`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'updateTime',
+              elapsedSeconds: newSeconds
+            }),
+          }).catch(console.error)
         }
-        return
-      }
 
-      const elapsed = now - startTime - pausedTime
-
-      const hours = Math.floor(elapsed / (1000 * 60 * 60))
-      const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60))
-      const seconds = Math.floor((elapsed % (1000 * 60)) / 1000)
-
-      if (hours > 0) {
-        setTotalTime(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
-      } else {
-        setTotalTime(`${minutes}:${seconds.toString().padStart(2, '0')}`)
-      }
+        return newSeconds
+      })
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [sectionData, isPaused])
+  }, [isPaused, examId])
 
-  // Set initial paused state and auto-resume if needed
-  useEffect(() => {
-    if (sectionData?.attempt) {
-      const wasInitiallyPaused = !!sectionData.attempt.pausedAt
-      setIsPaused(wasInitiallyPaused)
 
-      // Set initial time display - use exact paused time if available
-      const startTime = new Date(sectionData.attempt.startedAt).getTime()
-      const pausedTime = sectionData.attempt.totalPausedTime || 0
-
-      let displayTime: number
-      if (sectionData.attempt.pausedAt) {
-        // Use exact paused time - this is when user clicked "come back later"
-        const pausedAtTime = new Date(sectionData.attempt.pausedAt).getTime()
-        displayTime = pausedAtTime - startTime - pausedTime
-      } else {
-        // Use current time if not paused
-        const now = new Date().getTime()
-        displayTime = now - startTime - pausedTime
-      }
-
-      const hours = Math.floor(displayTime / (1000 * 60 * 60))
-      const minutes = Math.floor((displayTime % (1000 * 60 * 60)) / (1000 * 60))
-      const seconds = Math.floor((displayTime % (1000 * 60)) / 1000)
-
-      if (hours > 0) {
-        setTotalTime(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
-      } else {
-        setTotalTime(`${minutes}:${seconds.toString().padStart(2, '0')}`)
-      }
-
-      // If exam was paused and user is resuming, auto-resume timer
-      if (wasInitiallyPaused) {
-        const autoResume = async () => {
-          try {
-            await fetch(`/api/exam/${examId}/attempt`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ action: 'resume' }),
-            })
-
-            // Clear pause state to start timer immediately
-            setIsPaused(false)
-          } catch (error) {
-            console.error('Error auto-resuming:', error)
-          }
-        }
-
-        autoResume()
-      }
-    }
-  }, [sectionData, examId])
 
   const updateSection = async (action: string, data: any) => {
     try {
@@ -416,11 +363,14 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
     // Complete this section
     await updateSection('complete', {})
 
-    // Pause the exam timer
+    // Pause the exam timer and save elapsed time
     await fetch(`/api/exam/${examId}/attempt`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'pause' }),
+      body: JSON.stringify({
+        action: 'pause',
+        elapsedSeconds
+      }),
     })
 
     // For now, let's assume there are more sections and go to break
@@ -444,31 +394,19 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
 
   const handleLeaveForNow = async () => {
     try {
-      // IMMEDIATELY stop timer to prevent time drift
-      const exactPauseTime = new Date().toISOString()
+      // Stop timer immediately
       setIsPaused(true)
-
-      // Update local state immediately with exact pause time
-      if (sectionData) {
-        setSectionData({
-          ...sectionData,
-          attempt: {
-            ...sectionData.attempt,
-            pausedAt: exactPauseTime
-          }
-        })
-      }
 
       // Save current progress
       await updateSection('progress', { currentQuestionIndex })
 
-      // Pause in database with exact same timestamp
+      // Pause in database with current elapsed time
       await fetch(`/api/exam/${examId}/attempt`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'pause',
-          pausedAt: exactPauseTime // Send exact timestamp
+          elapsedSeconds
         }),
       })
 
@@ -480,22 +418,30 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
   }
 
   const handlePauseResume = async () => {
-    if (!sectionData) return
-
     try {
-      const action = isPaused ? 'resume' : 'pause'
+      const newPausedState = !isPaused
 
+      // Update UI immediately
+      setIsPaused(newPausedState)
+
+      // Save to database
       const response = await fetch(`/api/exam/${examId}/attempt`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action }),
+        body: JSON.stringify({
+          action: newPausedState ? 'pause' : 'resume',
+          elapsedSeconds
+        }),
       })
 
-      if (response.ok) {
-        setIsPaused(!isPaused)
+      if (!response.ok) {
+        // Revert UI if database save failed
+        setIsPaused(!newPausedState)
       }
     } catch (err) {
       console.error('Error toggling pause:', err)
+      // Revert UI state on error
+      setIsPaused(!isPaused)
     }
   }
 
@@ -600,7 +546,7 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
           >
             <Clock className={`h-5 w-5 ${isPaused ? "text-orange-600" : "text-primary"}`} />
             <span className={`font-mono text-lg font-semibold ${isPaused ? "text-orange-600" : "text-primary"}`}>
-              {totalTime} {isPaused && "(PAUSED)"}
+              {formatTime(elapsedSeconds)} {isPaused && "(PAUSED)"}
             </span>
             <Button variant="ghost" size="sm" onClick={handlePauseResume} className="ml-2 p-1 h-8 w-8">
               {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}

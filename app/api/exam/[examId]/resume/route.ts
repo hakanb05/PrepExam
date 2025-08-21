@@ -46,15 +46,12 @@ export async function GET(
         const currentSection = attempt.sections[0]
         const currentQuestionIndex = currentSection.currentQuestionIndex || 0
 
-        // Calculate elapsed time
-        const startTime = new Date(attempt.startedAt).getTime()
-        const pausedTime = attempt.totalPausedTime || 0
-        const now = new Date().getTime()
-        const elapsed = now - startTime - pausedTime
+        // Format elapsed time from database
+        const totalSeconds = attempt.elapsedSeconds || 0
+        const hours = Math.floor(totalSeconds / 3600)
+        const minutes = Math.floor((totalSeconds % 3600) / 60)
+        const seconds = totalSeconds % 60
 
-        const hours = Math.floor(elapsed / 3600000)
-        const minutes = Math.floor((elapsed % 3600000) / 60000)
-        const seconds = Math.floor((elapsed % 60000) / 1000)
         const timeDisplay = hours > 0
             ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
             : `${minutes}:${String(seconds).padStart(2, "0")}`

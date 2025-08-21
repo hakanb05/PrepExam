@@ -79,7 +79,7 @@ export function QuestionDisplay({
                   !isReviewMode && "hover:bg-muted/50",
                 )}
               >
-                <RadioGroupItem value={option.id} id={option.id} className="mt-1" disabled={isReviewMode} />
+                <RadioGroupItem value={option.id} id={option.id} className="mt-1 hover:cursor-pointer" disabled={isReviewMode} />
                 <Label htmlFor={option.id} className="flex-1 cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div>
@@ -149,7 +149,7 @@ export function QuestionDisplay({
                       <td className="border border-border p-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value={row.name} id={row.name} disabled={isReviewMode} />
+                            <RadioGroupItem value={row.name} id={row.name} className="hover:cursor-pointer" disabled={isReviewMode} />
                             <Label htmlFor={row.name} className="font-medium cursor-pointer">
                               <span
                                 className={cn(

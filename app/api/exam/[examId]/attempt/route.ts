@@ -98,7 +98,7 @@ export async function PATCH(
 
         const { examId } = await params
         const userId = session.user.id
-        const { action, data, pausedAt } = await request.json()
+        const { action, elapsedSeconds } = await request.json()
 
         // Find the current attempt
         const attempt = await prisma.attempt.findFirst({
@@ -115,32 +115,44 @@ export async function PATCH(
 
         switch (action) {
             case 'pause':
-                // Use provided pausedAt timestamp or current time
-                const pauseTime = pausedAt ? new Date(pausedAt) : new Date()
                 await prisma.attempt.update({
                     where: { id: attempt.id },
-                    data: { pausedAt: pauseTime },
+                    data: {
+                        isPaused: true,
+                        elapsedSeconds: elapsedSeconds || attempt.elapsedSeconds || 0
+                    },
                 })
                 break
 
             case 'resume':
-                const pausedTime = attempt.pausedAt
-                    ? new Date().getTime() - new Date(attempt.pausedAt).getTime()
-                    : 0
-
                 await prisma.attempt.update({
                     where: { id: attempt.id },
                     data: {
-                        pausedAt: null,
-                        totalPausedTime: attempt.totalPausedTime + pausedTime,
+                        isPaused: false
                     },
                 })
+                break
+
+            case 'updateTime':
+                // Only update time if not paused
+                if (!attempt.isPaused) {
+                    await prisma.attempt.update({
+                        where: { id: attempt.id },
+                        data: {
+                            elapsedSeconds: elapsedSeconds || 0
+                        },
+                    })
+                }
                 break
 
             case 'finish':
                 await prisma.attempt.update({
                     where: { id: attempt.id },
-                    data: { finishedAt: new Date() },
+                    data: {
+                        finishedAt: new Date(),
+                        isPaused: true, // Stop timer when finished
+                        elapsedSeconds: elapsedSeconds || attempt.elapsedSeconds || 0
+                    },
                 })
                 break
 

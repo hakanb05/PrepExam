@@ -4,7 +4,8 @@ import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, Coffee, ArrowRight, Home } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Clock, Coffee, ArrowRight, Home, BookOpen, Play } from "lucide-react"
 
 // Break page now uses server state via API rather than local storage
 
@@ -17,6 +18,20 @@ export default function SectionBreakPage() {
   const [attempt, setAttempt] = useState<any>(null)
   const [nextSection, setNextSection] = useState<any>(null)
   const [totalTime, setTotalTime] = useState<string>("0:00")
+  const [showResumeDialog, setShowResumeDialog] = useState(false)
+
+  // Helper function to format seconds to time string
+  const formatTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    } else {
+      return `${minutes}:${secs.toString().padStart(2, '0')}`
+    }
+  }
 
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
@@ -48,22 +63,20 @@ export default function SectionBreakPage() {
           if (idx >= 0 && idx < exam.sections.length - 1) setNextSection(exam.sections[idx + 1])
         }
 
-        // timer display based on Attempt - pause the timer automatically on break page
-        await fetch(`/api/exam/${examId}/attempt`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'pause' }),
-        })
+        // Set time display from database
+        setTotalTime(formatTime(data.attempt.elapsedSeconds || 0))
 
-        // Show time up to the pause point (end of previous section)
-        const startTime = new Date(data.attempt.startedAt).getTime()
-        const pausedTime = data.attempt.totalPausedTime || 0
-        const now = new Date().getTime()
-        const elapsed = now - startTime - pausedTime
-        const hours = Math.floor(elapsed / 3600000)
-        const minutes = Math.floor((elapsed % 3600000) / 60000)
-        const seconds = Math.floor((elapsed % 60000) / 1000)
-        setTotalTime(hours > 0 ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}` : `${minutes}:${String(seconds).padStart(2, "0")}`)
+        // Ensure the exam attempt is paused when on break page
+        if (!data.attempt.isPaused) {
+          await fetch(`/api/exam/${examId}/attempt`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'pause',
+              elapsedSeconds: data.attempt.elapsedSeconds || 0
+            }),
+          })
+        }
       }
     }
     load()
@@ -82,12 +95,17 @@ export default function SectionBreakPage() {
   }
 
   const handleLeaveForNow = async () => {
-    // Pause the exam when leaving from break page
-    await fetch(`/api/exam/${examId}/attempt`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'pause' }),
-    })
+    // Ensure exam is paused when leaving from break page
+    if (attempt) {
+      await fetch(`/api/exam/${examId}/attempt`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'pause',
+          elapsedSeconds: attempt.elapsedSeconds || 0
+        }),
+      })
+    }
 
     router.push("/")
   }
@@ -143,6 +161,56 @@ export default function SectionBreakPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Resume Dialog - exact same as dashboard */}
+      <Dialog open={showResumeDialog} onOpenChange={setShowResumeDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Resume Exam</DialogTitle>
+            <DialogDescription>
+              You have an unfinished exam. Would you like to continue where you left off?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-muted p-4 rounded-lg space-y-2">
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-4 w-4" />
+                <span className="font-medium">{nextSection?.title || "Next Section"}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Question 1</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Clock className="h-4 w-4" />
+                <span>Time elapsed: {totalTime}</span>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowResumeDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={() => {
+                  setShowResumeDialog(false)
+                  // Go to next section, question 1
+                  if (nextSection) {
+                    router.push(`/exam/${examId}/section/${nextSection.sectionId}`)
+                  } else {
+                    router.push(`/exam/${examId}/results`)
+                  }
+                }}
+              >
+                Yes, Resume
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
