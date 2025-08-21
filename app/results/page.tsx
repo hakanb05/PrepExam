@@ -140,7 +140,14 @@ export default function ResultsPage() {
                     <BookOpen className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg">{exam.title}</CardTitle>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      {exam.title}
+                      {exam.isExpired && (
+                        <Badge variant="destructive" className="text-xs">
+                          Expired
+                        </Badge>
+                      )}
+                    </CardTitle>
                     <CardDescription className="flex items-center space-x-4 mt-1">
                       <span key="attempts" className="flex items-center space-x-1">
                         <Users className="h-4 w-4" />
@@ -158,6 +165,11 @@ export default function ResultsPage() {
                           <span className={getScoreColor(exam.latestScore)}>
                             Latest: {exam.latestScore}%
                           </span>
+                        </span>
+                      )}
+                      {exam.isExpired && exam.expiresAt && (
+                        <span key="expired-date" className="flex items-center space-x-1 text-red-600">
+                          <span>Expired: {new Date(exam.expiresAt).toLocaleDateString("en-US")}</span>
                         </span>
                       )}
                     </CardDescription>

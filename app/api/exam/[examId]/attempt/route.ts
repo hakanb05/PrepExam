@@ -21,8 +21,11 @@ export async function POST(
             where: {
                 userId,
                 examId,
-                validUntil: { gte: new Date() },
                 canceledAt: null,
+                OR: [
+                    { expiresAt: null }, // Lifetime access
+                    { expiresAt: { gte: new Date() } } // Valid until expiry
+                ]
             },
         })
 
@@ -95,7 +98,7 @@ export async function PATCH(
 
         const { examId } = await params
         const userId = session.user.id
-        const { action, data } = await request.json()
+        const { action, data, pausedAt } = await request.json()
 
         // Find the current attempt
         const attempt = await prisma.attempt.findFirst({
@@ -112,9 +115,11 @@ export async function PATCH(
 
         switch (action) {
             case 'pause':
+                // Use provided pausedAt timestamp or current time
+                const pauseTime = pausedAt ? new Date(pausedAt) : new Date()
                 await prisma.attempt.update({
                     where: { id: attempt.id },
-                    data: { pausedAt: new Date() },
+                    data: { pausedAt: pauseTime },
                 })
                 break
 

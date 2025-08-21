@@ -187,6 +187,16 @@ function DashboardContent() {
                   </div>
                   <p className="text-sm text-muted-foreground mb-3">
                     {examData.sections.length} sections • {examData.totalQuestions} questions
+                    {examAccess?.hasAccess && (
+                      <span className="ml-2 text-green-600">
+                        • {examAccess.expiresAt ? `Valid until ${new Date(examAccess.expiresAt).toLocaleDateString()}` : '1 Year Access'}
+                      </span>
+                    )}
+                    {!examAccess?.hasAccess && examAccess?.expiresAt && (
+                      <span className="ml-2 text-red-600">
+                        • Expired on {new Date(examAccess.expiresAt).toLocaleDateString()}
+                      </span>
+                    )}
                   </p>
 
                   {!examAccess?.hasAccess && (

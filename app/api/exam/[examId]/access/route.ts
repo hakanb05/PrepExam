@@ -17,21 +17,24 @@ export async function GET(
         const { examId } = await params
         const userId = session.user.id
 
-        // Check if user has valid purchase for this exam
+        // Check if user has any purchase for this exam (valid or expired)
         const purchase = await prisma.purchase.findFirst({
             where: {
                 userId,
                 examId,
                 canceledAt: null,
-                validUntil: {
-                    gte: new Date() // Still valid
-                }
             }
         })
 
+        // Determine if access is still valid
+        const hasAccess = purchase && (
+            !purchase.expiresAt || // Lifetime access
+            purchase.expiresAt >= new Date() // Not yet expired
+        )
+
         return NextResponse.json({
-            hasAccess: !!purchase,
-            validUntil: purchase?.validUntil || null
+            hasAccess: !!hasAccess,
+            expiresAt: purchase?.expiresAt || null
         })
 
     } catch (error) {

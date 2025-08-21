@@ -21,9 +21,10 @@ export async function GET(
             where: {
                 examId,
                 canceledAt: null,
-                validUntil: {
-                    gte: new Date()
-                }
+                OR: [
+                    { expiresAt: null }, // Lifetime access
+                    { expiresAt: { gte: new Date() } } // Valid until expiry
+                ]
             }
         })
 

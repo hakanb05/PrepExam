@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CreditCard, Lock, CheckCircle, Loader2 } from "lucide-react"
-import { purchaseExam, getExamPrice } from "@/lib/purchase-manager"
+import { getStripe } from "@/lib/stripe"
 
 interface PurchaseDialogProps {
   open: boolean
@@ -26,23 +26,64 @@ interface PurchaseDialogProps {
 export function PurchaseDialog({ open, onOpenChange, examId, examTitle, onPurchaseComplete }: PurchaseDialogProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [purchaseComplete, setPurchaseComplete] = useState(false)
-  const price = getExamPrice()
+  const price = 25 // $25
 
   const handlePurchase = async () => {
     setIsProcessing(true)
     try {
-      const success = await purchaseExam(examId, examTitle)
-      if (success) {
-        setPurchaseComplete(true)
-        setTimeout(() => {
-          onPurchaseComplete()
-          onOpenChange(false)
-          setPurchaseComplete(false)
-        }, 2000)
+      // Create payment intent
+      const response = await fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          examId,
+          examTitle,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create payment intent')
+      }
+
+      const { clientSecret } = await response.json()
+
+      // Redirect to Stripe Checkout
+      const stripe = await getStripe()
+      if (!stripe) {
+        throw new Error('Stripe failed to load')
+      }
+
+      // Create checkout session instead of using payment intent directly
+      const checkoutResponse = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          examId,
+          examTitle,
+        }),
+      })
+
+      if (!checkoutResponse.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { sessionId } = await checkoutResponse.json()
+
+      // Redirect to Stripe Checkout
+      const { error } = await stripe.redirectToCheckout({
+        sessionId,
+      })
+
+      if (error) {
+        console.error('Stripe checkout error:', error)
+        throw error
       }
     } catch (error) {
       console.error("Purchase failed:", error)
-    } finally {
       setIsProcessing(false)
     }
   }
@@ -95,7 +136,7 @@ export function PurchaseDialog({ open, onOpenChange, examId, examTitle, onPurcha
           </CardContent>
         </Card>
 
-        <DialogFooter className="flex-col gap-2">
+        <DialogFooter className="flex flex-col gap-2 mt-4">
           <Button onClick={handlePurchase} disabled={isProcessing} className="w-full" size="lg">
             {isProcessing ? (
               <>
@@ -104,12 +145,12 @@ export function PurchaseDialog({ open, onOpenChange, examId, examTitle, onPurcha
               </>
             ) : (
               <>
-                <CreditCard className="mr-2 h-4 w-4 hover:cursor-pointer" />
+                <CreditCard className="mr-2 h-4 w-4" />
                 Purchase for ${price}
               </>
             )}
           </Button>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isProcessing} className="w-full hover:cursor-pointer">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isProcessing} className="w-full">
             Cancel
           </Button>
         </DialogFooter>

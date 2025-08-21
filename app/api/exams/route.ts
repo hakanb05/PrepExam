@@ -12,11 +12,10 @@ export async function GET(request: NextRequest) {
 
         const userId = session.user.id
 
-        // Get all exams the user has purchased
+        // Get all exams the user has purchased (including expired ones)
         const purchases = await prisma.purchase.findMany({
             where: {
                 userId,
-                validUntil: { gte: new Date() },
                 canceledAt: null,
             },
             include: {
@@ -78,6 +77,9 @@ export async function GET(request: NextRequest) {
                     latestScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0
                 }
 
+                // Check if access is expired
+                const isExpired = purchase.expiresAt && purchase.expiresAt < new Date()
+
                 return {
                     id: purchase.exam.id,
                     examId: purchase.exam.id, // Use id as examId since they're the same
@@ -86,6 +88,8 @@ export async function GET(request: NextRequest) {
                     completedAttempts,
                     latestScore,
                     latestAttemptDate: latestAttempt?.finishedAt,
+                    isExpired,
+                    expiresAt: purchase.expiresAt,
                 }
             })
         )

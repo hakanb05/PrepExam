@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Flag, StickyNote, Send, Clock, Play, Pause, Home } from "lucide-react"
+import { Flag, StickyNote, Send, Clock, Play, Pause, Home, Eye, EyeOff } from "lucide-react"
 import { QuestionDisplay } from "@/components/question-display"
 import { QuestionNavigation } from "@/components/question-navigation"
 import { useAuth } from "@/lib/auth-context"
@@ -81,6 +81,7 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
   const [totalTime, setTotalTime] = useState<string>("0:00")
   const [isPaused, setIsPaused] = useState(false)
   const [struckThroughOptions, setStruckThroughOptions] = useState<{ [questionId: string]: string[] }>({}) // Track strikethrough per question
+  const [showStatistics, setShowStatistics] = useState(false) // Toggle for question statistics
 
   // Get question statistics
   const { questionStats } = useQuestionStats(examId)
@@ -195,18 +196,19 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
     return () => clearInterval(timer)
   }, [sectionData, isPaused])
 
-  // Set initial paused state based on database
+  // Set initial paused state and auto-resume if needed
   useEffect(() => {
     if (sectionData?.attempt) {
-      setIsPaused(!!sectionData.attempt.pausedAt)
+      const wasInitiallyPaused = !!sectionData.attempt.pausedAt
+      setIsPaused(wasInitiallyPaused)
 
-      // Set initial time display
+      // Set initial time display - use exact paused time if available
       const startTime = new Date(sectionData.attempt.startedAt).getTime()
       const pausedTime = sectionData.attempt.totalPausedTime || 0
 
       let displayTime: number
       if (sectionData.attempt.pausedAt) {
-        // Use paused time if paused
+        // Use exact paused time - this is when user clicked "come back later"
         const pausedAtTime = new Date(sectionData.attempt.pausedAt).getTime()
         displayTime = pausedAtTime - startTime - pausedTime
       } else {
@@ -224,8 +226,28 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
       } else {
         setTotalTime(`${minutes}:${seconds.toString().padStart(2, '0')}`)
       }
+
+      // If exam was paused and user is resuming, auto-resume timer
+      if (wasInitiallyPaused) {
+        const autoResume = async () => {
+          try {
+            await fetch(`/api/exam/${examId}/attempt`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: 'resume' }),
+            })
+
+            // Clear pause state to start timer immediately
+            setIsPaused(false)
+          } catch (error) {
+            console.error('Error auto-resuming:', error)
+          }
+        }
+
+        autoResume()
+      }
     }
-  }, [sectionData])
+  }, [sectionData, examId])
 
   const updateSection = async (action: string, data: any) => {
     try {
@@ -422,35 +444,38 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
 
   const handleLeaveForNow = async () => {
     try {
+      // IMMEDIATELY stop timer to prevent time drift
+      const exactPauseTime = new Date().toISOString()
+      setIsPaused(true)
+
+      // Update local state immediately with exact pause time
+      if (sectionData) {
+        setSectionData({
+          ...sectionData,
+          attempt: {
+            ...sectionData.attempt,
+            pausedAt: exactPauseTime
+          }
+        })
+      }
+
       // Save current progress
       await updateSection('progress', { currentQuestionIndex })
 
-      // Pause the timer in database
-      const pauseResponse = await fetch(`/api/exam/${examId}/attempt`, {
+      // Pause in database with exact same timestamp
+      await fetch(`/api/exam/${examId}/attempt`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'pause' }),
+        body: JSON.stringify({
+          action: 'pause',
+          pausedAt: exactPauseTime // Send exact timestamp
+        }),
       })
-
-      if (pauseResponse.ok) {
-        // Update local state immediately to stop timer
-        setIsPaused(true)
-        if (sectionData) {
-          setSectionData({
-            ...sectionData,
-            attempt: {
-              ...sectionData.attempt,
-              pausedAt: new Date().toISOString()
-            }
-          })
-        }
-      }
 
       router.push("/")
     } catch (error) {
       console.error('Error pausing exam:', error)
-      // Still navigate away even if pause fails
-      router.push("/")
+      router.push("/") // Still navigate away even if pause fails
     }
   }
 
@@ -638,12 +663,22 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
             </CardContent>
           </Card>
 
-          {/* Question Statistics */}
-          {currentQuestion && questionStats[currentQuestion.id] && (
-            <Card>
-              <CardHeader>
+          {/* Question Statistics Toggle */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Question Statistics</CardTitle>
-              </CardHeader>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowStatistics(!showStatistics)}
+                  className="ml-2"
+                >
+                  {showStatistics ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+            </CardHeader>
+            {showStatistics && currentQuestion && questionStats[currentQuestion.id] && (
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -668,8 +703,8 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          )}
+            )}
+          </Card>
 
           <QuestionNavigation
             currentQuestion={currentQuestionIndex + 1}

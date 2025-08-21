@@ -63,17 +63,20 @@ model VerificationToken {
 }
 
 model Purchase {
-  id           String   @id @default(cuid())
-  userId       String
-  examId       String
-  purchaseDate DateTime @default(now())
-  validUntil   DateTime
-  canceledAt   DateTime?
-  user         User     @relation(fields: [userId], references: [id])
-  exam         Exam     @relation(fields: [examId], references: [id])
+  id                     String   @id @default(cuid())
+  userId                 String
+  examId                 String
+  purchasedAt            DateTime @default(now())
+  expiresAt              DateTime?
+  canceledAt             DateTime?
+  amount                 Int      @default(2500) // Amount in cents ($25.00)
+  currency               String   @default("usd")
+  stripePaymentIntentId  String?  // For tracking Stripe payments
+  user                   User     @relation(fields: [userId], references: [id])
+  exam                   Exam     @relation(fields: [examId], references: [id])
 
-  @@index([userId, examId, purchaseDate])
-  @@unique([userId, examId, purchaseDate])
+  @@index([userId, examId, purchasedAt])
+  @@unique([userId, examId])
 }
 
 model Exam {
