@@ -107,7 +107,9 @@ model Question {
   qid             String
   number          Int
   stem            String
-  images          Json?
+  info            String?            // Info/context text (e.g., "A new antiplatelet agent...")
+  infoImages      Json?              // Images for info section (e.g., results.png)
+  images          Json?              // Images for the main question
   correctOptionId String?
   explanation     String?
   matrix          Json?

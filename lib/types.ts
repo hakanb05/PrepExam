@@ -18,6 +18,8 @@ export interface ExamQuestion {
   qid: string
   number: number
   stem: string
+  info?: string
+  infoImages?: { path: string; alt: string } | { path: string; alt: string }[]
   image?: { path: string; alt: string } | { path: string; alt: string }[]
   options?: { id: string; text: string }[]
   matrix?: {

@@ -10,7 +10,14 @@
         {
           "qid": "s1q1",
           "number": 1,
-          "stem": "A 14-year-old girl is brought to the physician because of a 1-month history of migraine-like headaches, vomiting, and multiple left-sided focal seizures. She has had hearing loss since the age of 11 years. Her mother and maternal grandmother have high-tone deafness. Physical examination shows loss of vision in one half of the visual field of the right eye and weakness of the right upper and lower extremities. Serum and cerebrospinal fluid concentrations of lactic acid are increased. This patient most likely has a mutation of which of the following?",
+          "info": "A new antiplatelet agent is developed for the prevention of recurrence of stroke. In a large randomized clinical trial with equal numbers of men and women, the rates of stroke are lower in patients receiving the new agent than in patients receiving the standard treatment. Results are shown below.",
+          "infoImages": [
+            {
+              "path": "/images/nbme20/s1/results.png",
+              "alt": "Clinical trial results showing stroke rates"
+            }
+          ],
+          "stem": "Which of the following is the primary site of the pathophysiologic process in this patient?",
           "options": [
             {
               "id": "A",
@@ -153,6 +160,96 @@
           ],
           "correctOptionId": "B",
           "explanation": "Page 267. Lead-time bias occurs when earlier detection is mistaken for improved survival, but true survival is unchanged. Screening makes it appear patients live longer, even though disease course and mortality are unaffected."
+        },
+        {
+          "qid": "s1q6",
+          "number": 6,
+          "info": "A new antiplatelet agent is developed for the prevention of recurrence of stroke. In a large randomized clinical trial with equal numbers of men and women, the rates of stroke are lower in patients receiving the new agent than in patients receiving the standard treatment. Results are shown below.",
+          "infoImages": [
+            {
+              "path": "/images/nbme20/s1/results.png",
+              "alt": "Clinical trial results showing stroke rates"
+            }
+          ],
+          "stem": "Which of the following is the primary site of the pathophysiologic process in this patient?",
+          "options": [
+            {
+              "id": "A",
+              "text": "8%"
+            },
+            {
+              "id": "B",
+              "text": "12%"
+            },
+            {
+              "id": "C",
+              "text": "16%"
+            },
+            {
+              "id": "D",
+              "text": "33%"
+            },
+            {
+              "id": "E",
+              "text": "50%"
+            },
+            {
+              "id": "F",
+              "text": "62%"
+            },
+            {
+              "id": "G",
+              "text": "67%"
+            },
+            {
+              "id": "H",
+              "text": "75%"
+            }
+          ],
+          "correctOptionId": "A",
+          "explanation": "This is a sample question demonstrating the new info structure with clinical trial data and results image."
+        },
+        {
+          "qid": "s1q7",
+          "number": 7,
+          "info": "A study is conducted to evaluate the effectiveness of a new drug for treating hypertension. The study includes 500 patients randomly assigned to either the new drug or placebo. The primary endpoint is reduction in systolic blood pressure after 12 weeks of treatment.",
+          "infoImages": [
+            {
+              "path": "/images/nbme20/s1/study_design.png",
+              "alt": "Study design flowchart showing patient randomization"
+            }
+          ],
+          "stem": "Based on the study results shown above, what is the most likely mechanism of action of this new drug?",
+          "image": [
+            {
+              "path": "/images/nbme20/s1/drug_mechanism.png",
+              "alt": "Diagram showing drug mechanism of action"
+            }
+          ],
+          "options": [
+            {
+              "id": "A",
+              "text": "ACE inhibitor"
+            },
+            {
+              "id": "B",
+              "text": "Beta blocker"
+            },
+            {
+              "id": "C",
+              "text": "Calcium channel blocker"
+            },
+            {
+              "id": "D",
+              "text": "Diuretic"
+            },
+            {
+              "id": "E",
+              "text": "Vasodilator"
+            }
+          ],
+          "correctOptionId": "C",
+          "explanation": "This question demonstrates both info images (study design) and question images (drug mechanism)."
         }
       ]
     },
@@ -194,58 +291,115 @@
           "number": 2,
           "stem": "A 56-year-old man is brought to the emergency department 30 minutes after the onset of severe chest pain while mowing his lawn. His pulse is 110/min, respirations are 20/min, and blood pressure is 105/70 mm Hg. Physical examination shows cool, clammy, diaphoretic skin. Two hours after admission, pulmonary catheterization shows a pulmonary artery pressure of 40/25 mm Hg; the left atrial pressure is 25 mm Hg. Compared with a healthy person, which of the following sets of pulmonary pressure changes is most likely in this patient?",
           "matrix": {
-          "columns": ["Capillary Hydrostatic", "Interstitial Hydrostatic", "Interstitial Oncotic"],
-        "rows": [
-          {
-            "name": "A",
-            "options": [
-              { "id": "A1", "text": "↑" },
-              { "id": "A2", "text": "↑" },
-              { "id": "A3", "text": "↑" }
+            "columns": [
+              "Capillary Hydrostatic",
+              "Interstitial Hydrostatic",
+              "Interstitial Oncotic"
+            ],
+            "rows": [
+              {
+                "name": "A",
+                "options": [
+                  {
+                    "id": "A1",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "A2",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "A3",
+                    "text": "↑"
+                  }
+                ]
+              },
+              {
+                "name": "B",
+                "options": [
+                  {
+                    "id": "B1",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "B2",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "B3",
+                    "text": "↓"
+                  }
+                ]
+              },
+              {
+                "name": "C",
+                "options": [
+                  {
+                    "id": "C1",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "C2",
+                    "text": "↓"
+                  },
+                  {
+                    "id": "C3",
+                    "text": "↑"
+                  }
+                ]
+              },
+              {
+                "name": "D",
+                "options": [
+                  {
+                    "id": "D1",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "D2",
+                    "text": "↓"
+                  },
+                  {
+                    "id": "D3",
+                    "text": "↓"
+                  }
+                ]
+              },
+              {
+                "name": "E",
+                "options": [
+                  {
+                    "id": "E1",
+                    "text": "↓"
+                  },
+                  {
+                    "id": "E2",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "E3",
+                    "text": "↑"
+                  }
+                ]
+              },
+              {
+                "name": "F",
+                "options": [
+                  {
+                    "id": "F1",
+                    "text": "↓"
+                  },
+                  {
+                    "id": "F2",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "F3",
+                    "text": "↓"
+                  }
+                ]
+              }
             ]
-          },
-          {
-            "name": "B",
-            "options": [
-              { "id": "B1", "text": "↑" },
-              { "id": "B2", "text": "↑" },
-              { "id": "B3", "text": "↓" }
-            ]
-          },
-          {
-            "name": "C",
-            "options": [
-              { "id": "C1", "text": "↑" },
-              { "id": "C2", "text": "↓" },
-              { "id": "C3", "text": "↑" }
-            ]
-          },
-          {
-            "name": "D",
-            "options": [
-              { "id": "D1", "text": "↑" },
-              { "id": "D2", "text": "↓" },
-              { "id": "D3", "text": "↓" }
-            ]
-          },
-          {
-            "name": "E",
-            "options": [
-              { "id": "E1", "text": "↓" },
-              { "id": "E2", "text": "↑" },
-              { "id": "E3", "text": "↑" }
-            ]
-          },
-          {
-            "name": "F",
-            "options": [
-              { "id": "F1", "text": "↓" },
-              { "id": "F2", "text": "↑" },
-              { "id": "F3", "text": "↓" }
-            ]
-          }
-        ]
-
           },
           "correctOptionId": "B",
           "explanation": "Page 331 discusses shock. Page 313 discusses capillary fluid exchange. This patient has cardiogenic shock. Poor forward flow decreases CO increases the SVR, PCWP, and CVP. The extra blood increases capillary hydrostatic pressure, driving fluid into the interstitial space. Compared to the alveoli, the interstitial space now has more fluid so there is more hydrostatic pressure and less oncotic pressure. Now, fluid moves into the alveoli, causing pulmonary edema."

@@ -28,6 +28,9 @@ interface Question {
   id: string
   stem: string
   number: number
+  info?: string
+  infoImages?: { path: string; alt: string } | { path: string; alt: string }[]
+  image?: { path: string; alt: string } | { path: string; alt: string }[]
   options: Array<{
     id: string
     text: string
@@ -502,6 +505,8 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
   const questionForDisplay = {
     number: currentQuestion.number,
     stem: currentQuestion.stem,
+    info: (currentQuestion as any).info || undefined,
+    infoImages: (currentQuestion as any).infoImages || undefined,
     options: currentQuestion.options.map(opt => ({ id: opt.letter, text: opt.text })),
     matrix: (currentQuestion as any).matrix || undefined,
     image: (currentQuestion as any).images || undefined,

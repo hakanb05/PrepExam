@@ -102,6 +102,8 @@ export async function GET(
                 id: q.id,
                 number: q.number,
                 stem: q.stem,
+                info: (q as any).info || undefined,
+                infoImages: (q as any).infoImages || undefined,
                 images: (q as any).images || undefined,
                 matrix: (q as any).matrix || undefined,
                 categories: undefined,

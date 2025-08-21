@@ -32,6 +32,8 @@ async function main() {
         update: {
           number: q.number,
           stem: q.stem,
+          info: q.info ?? null,
+          infoImages: q.infoImages ? (Array.isArray(q.infoImages) ? q.infoImages : [q.infoImages]) : null,
           images: q.image ? (Array.isArray(q.image) ? q.image : [q.image]) : null,
           correctOptionId: q.correctOptionId ?? null,
           explanation: q.explanation ?? null,
@@ -43,6 +45,8 @@ async function main() {
           qid: q.qid,
           number: q.number,
           stem: q.stem,
+          info: q.info ?? null,
+          infoImages: q.infoImages ? (Array.isArray(q.infoImages) ? q.infoImages : [q.infoImages]) : null,
           images: q.image ? (Array.isArray(q.image) ? q.image : [q.image]) : null,
           correctOptionId: q.correctOptionId ?? null,
           explanation: q.explanation ?? null,
@@ -86,37 +90,43 @@ async function main() {
   }
 
   // 4) Testuser + purchase (1 jaar geldig)
-// prisma/seed.ts (user stuk)
-const user = await prisma.user.upsert({
-  where: { email: "hakanbektas934@gmail.com" },
-  update: {
-    name: "Hakan Bektas",
-    image: null,
-  },
-  create: {
-    email: "hakanbektas934@gmail.com",
-    password: await hash("Kaas38!", 10),
-    name: "Hakan Bektas",
-    image: null,
-    verified: true,
-  },
-})
+  // prisma/seed.ts (user stuk)
+  const user = await prisma.user.upsert({
+    where: { email: "hakanbektas934@gmail.com" },
+    update: {
+      name: "Hakan Bektas",
+      image: null,
+    },
+    create: {
+      email: "hakanbektas934@gmail.com",
+      password: await hash("Kaas38!", 10),
+      name: "Hakan Bektas",
+      image: null,
+      verified: true,
+    },
+  })
 
   const purchaseDate = new Date()
   const validUntil = new Date(purchaseDate)
   validUntil.setFullYear(validUntil.getFullYear() + 1)
 
-await prisma.purchase.upsert({
-  where: {
-    userId_examId_purchaseDate: {
+  await prisma.purchase.upsert({
+    where: {
+      userId_examId: {
+        userId: user.id,
+        examId: dbExam.id,
+      },
+    },
+    update: {},
+    create: {
       userId: user.id,
       examId: dbExam.id,
-      purchaseDate,
+      purchasedAt: purchaseDate,
+      expiresAt: validUntil,
+      amount: 2500,
+      currency: 'usd'
     },
-  },
-  update: {},
-  create: { userId: user.id, examId: dbExam.id, purchaseDate, validUntil },
-})
+  })
 
 
 

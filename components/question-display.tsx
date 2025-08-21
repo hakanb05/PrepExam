@@ -222,12 +222,24 @@ export function QuestionDisplay({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Info Section (if exists) */}
+          {question.info && (
+            <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Information</h3>
+              <div className="prose prose-sm max-w-none text-blue-700 dark:text-blue-300">
+                <p className="whitespace-pre-wrap">{question.info}</p>
+              </div>
+              {/* Info Images */}
+              {question.infoImages && renderImage(question.infoImages)}
+            </div>
+          )}
+
           {/* Question Stem */}
           <div className="prose prose-sm max-w-none">
             <p className="whitespace-pre-wrap">{question.stem}</p>
           </div>
 
-          {/* Images */}
+          {/* Question Images */}
           {question.image && renderImage(question.image)}
 
           {/* Answer Options */}
