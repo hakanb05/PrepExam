@@ -16,12 +16,13 @@ export async function GET(
         const { examId } = await params
         const userId = session.user.id
 
-        // Check for unfinished attempts
+        // Check for unfinished attempts that are paused (indicating "come back later" was used)
         const attempt = await prisma.attempt.findFirst({
             where: {
                 userId,
                 examId,
                 finishedAt: null,
+                isPaused: true, // Only show resume for paused attempts
             },
             include: {
                 sections: {

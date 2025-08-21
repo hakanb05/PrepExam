@@ -95,19 +95,37 @@ export default function SectionBreakPage() {
   }
 
   const handleLeaveForNow = async () => {
-    // Ensure exam is paused when leaving from break page
-    if (attempt) {
-      await fetch(`/api/exam/${examId}/attempt`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'pause',
-          elapsedSeconds: attempt.elapsedSeconds || 0
-        }),
-      })
-    }
+    try {
+      // Save progress for next section (question 1) if there is a next section
+      if (nextSection && attempt) {
+        // Create or update the next section attempt
+        await fetch(`/api/exam/${examId}/section/${nextSection.sectionId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'progress',
+            currentQuestionIndex: 0 // Start at question 1 of next section
+          }),
+        })
+      }
 
-    router.push("/")
+      // Pause in database with current elapsed time (exact same as section page)
+      if (attempt) {
+        await fetch(`/api/exam/${examId}/attempt`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'pause',
+            elapsedSeconds: attempt.elapsedSeconds || 0
+          }),
+        })
+      }
+
+      router.push("/")
+    } catch (error) {
+      console.error('Error pausing exam:', error)
+      router.push("/") // Still navigate away even if pause fails
+    }
   }
 
   const completedSections = 0

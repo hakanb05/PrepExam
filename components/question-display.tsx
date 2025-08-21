@@ -1,10 +1,12 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, XCircle } from "lucide-react"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { CheckCircle, XCircle, ZoomIn, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { ExamQuestion } from "@/lib/types"
 
@@ -27,30 +29,40 @@ export function QuestionDisplay({
   struckThroughOptions = [], // Default empty array for strikethrough options
   onToggleStrikethrough,
 }: QuestionDisplayProps) {
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null)
   const renderImage = (image: { path: string; alt: string } | { path: string; alt: string }[]) => {
     const images = Array.isArray(image) ? image : [image]
 
     return (
       <div className="space-y-4">
-        {images.map((img, index) => (
-          <div key={index} className="border rounded-lg p-4">
-            <img
-              src={
-                img.path.startsWith("path")
-                  ? `/placeholder.svg?height=200&width=300&query=${encodeURIComponent(img.alt)}`
-                  : img.path
-              }
-              alt={img.alt}
-              className="max-w-full h-auto rounded"
-              onError={(e) => {
-                // Fallback to placeholder if image fails to load
-                const target = e.target as HTMLImageElement
-                target.src = `/placeholder.svg?height=200&width=300&query=${encodeURIComponent(img.alt)}`
-              }}
-            />
-            <p className="text-sm text-muted-foreground mt-2">{img.alt}</p>
-          </div>
-        ))}
+        {images.map((img, index) => {
+          const imageSrc = img.path.startsWith("path")
+            ? `/placeholder.svg?height=200&width=300&query=${encodeURIComponent(img.alt)}`
+            : img.path
+
+          return (
+            <div key={index} className="border rounded-lg p-4">
+              <div className="relative group">
+                <img
+                  src={imageSrc}
+                  alt={img.alt}
+                  className="w-64 h-auto rounded cursor-pointer transition-transform hover:scale-105"
+                  onClick={() => setZoomedImage(imageSrc)}
+                  onError={(e) => {
+                    // Fallback to placeholder if image fails to load
+                    const target = e.target as HTMLImageElement
+                    target.src = `/placeholder.svg?height=200&width=300&query=${encodeURIComponent(img.alt)}`
+                  }}
+                />
+                {/* Zoom icon overlay */}
+                <div className="absolute top-2 right-2 bg-black/50 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ZoomIn className="h-4 w-4 text-white" />
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">{img.alt}</p>
+            </div>
+          )
+        })}
       </div>
     )
   }
@@ -197,43 +209,67 @@ export function QuestionDisplay({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          Question {question.number}
-          {isReviewMode && (
-            <Badge variant="outline" className="ml-2">
-              Review Mode
-            </Badge>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Question Stem */}
-        <div className="prose prose-sm max-w-none">
-          <p className="whitespace-pre-wrap">{question.stem}</p>
-        </div>
-
-        {/* Images */}
-        {question.image && renderImage(question.image)}
-
-        {/* Answer Options */}
-        <div>
-          {question.options && renderMCQOptions()}
-          {question.matrix && renderMatrixOptions()}
-        </div>
-
-        {/* Categories */}
-        {question.categories && (
-          <div className="flex flex-wrap gap-2">
-            {question.categories.map((category) => (
-              <Badge key={category} variant="secondary">
-                {category}
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            Question {question.number}
+            {isReviewMode && (
+              <Badge variant="outline" className="ml-2">
+                Review Mode
               </Badge>
-            ))}
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Question Stem */}
+          <div className="prose prose-sm max-w-none">
+            <p className="whitespace-pre-wrap">{question.stem}</p>
           </div>
-        )}
-      </CardContent>
-    </Card>
+
+          {/* Images */}
+          {question.image && renderImage(question.image)}
+
+          {/* Answer Options */}
+          <div>
+            {question.options && renderMCQOptions()}
+            {question.matrix && renderMatrixOptions()}
+          </div>
+
+          {/* Categories */}
+          {question.categories && (
+            <div className="flex flex-wrap gap-2">
+              {question.categories.map((category) => (
+                <Badge key={category} variant="secondary">
+                  {category}
+                </Badge>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Image Zoom Dialog */}
+      <Dialog open={!!zoomedImage} onOpenChange={() => setZoomedImage(null)}>
+        <DialogContent className="max-w-7xl w-[95vw] max-h-[95vh] p-1">
+          <DialogTitle className="sr-only">Enlarged Image View</DialogTitle>
+          <div className="relative">
+            <button
+              onClick={() => setZoomedImage(null)}
+              className="absolute top-2 right-2 z-10 bg-black/50 rounded-full p-2 text-white hover:bg-black/70 transition-colors hover:cursor-pointer"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            {zoomedImage && (
+              <img
+                src={zoomedImage}
+                alt="Zoomed image"
+                className="w-full h-auto max-h-[90vh] object-contain rounded"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
