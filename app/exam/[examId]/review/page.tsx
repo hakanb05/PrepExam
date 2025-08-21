@@ -214,7 +214,7 @@ export default function ExamReview({ params }: ExamReviewProps) {
                         sectionIdx === currentSectionIndex && questionIdx === currentQuestionIndex
 
                       return (
-                        <div key={question.qid} className="relative">
+                        <div key={question.qid} className="relative mt-1">
                           <Button
                             variant="outline"
                             size="sm"
@@ -243,11 +243,11 @@ export default function ExamReview({ params }: ExamReviewProps) {
                           </div>
                           {/* Question Statistics */}
                           {questionStats[question.id] && (
-                            <div className="absolute -bottom-1 -right-1">
+                            <div className="absolute -bottom-1 -right-1 ">
                               {/* Success Rate */}
-                              <Badge className={`text-xs px-1 py-0 h-4 ${getSuccessRateColor(questionStats[question.id].percentage)}`}>
+                              {/* <Badge className={`text-xs px-1 py-0 h-4 ${getSuccessRateColor(questionStats[question.id].percentage)}`}>
                                 {questionStats[question.id].percentage}%
-                              </Badge>
+                              </Badge> */}
                             </div>
                           )}
                         </div>

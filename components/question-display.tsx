@@ -30,7 +30,7 @@ export function QuestionDisplay({
   onToggleStrikethrough,
 }: QuestionDisplayProps) {
   const [zoomedImage, setZoomedImage] = useState<string | null>(null)
-  const renderImage = (image: { path: string; alt: string } | { path: string; alt: string }[]) => {
+  const renderImage = (image: { path: string; alt: string } | { path: string; alt: string }[], isInfoImage: boolean = false) => {
     const images = Array.isArray(image) ? image : [image]
 
     return (
@@ -46,18 +46,20 @@ export function QuestionDisplay({
                 <img
                   src={imageSrc}
                   alt={img.alt}
-                  className="w-64 h-auto rounded cursor-pointer transition-transform hover:scale-105"
-                  onClick={() => setZoomedImage(imageSrc)}
+                  className={`rounded ${isInfoImage ? 'w-full h-auto' : 'w-64 h-auto cursor-pointer transition-transform hover:scale-105'}`}
+                  onClick={isInfoImage ? undefined : () => setZoomedImage(imageSrc)}
                   onError={(e) => {
                     // Fallback to placeholder if image fails to load
                     const target = e.target as HTMLImageElement
                     target.src = `/placeholder.svg?height=200&width=300&query=${encodeURIComponent(img.alt)}`
                   }}
                 />
-                {/* Zoom icon overlay */}
-                <div className="absolute top-2 right-2 bg-black/50 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ZoomIn className="h-4 w-4 text-white" />
-                </div>
+                {/* Zoom icon overlay - only for non-info images */}
+                {!isInfoImage && (
+                  <div className="absolute top-2 right-2 bg-black/50 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ZoomIn className="h-4 w-4 text-white" />
+                  </div>
+                )}
               </div>
               <p className="text-sm text-muted-foreground mt-2">{img.alt}</p>
             </div>
@@ -230,7 +232,7 @@ export function QuestionDisplay({
                 <p className="whitespace-pre-wrap">{question.info}</p>
               </div>
               {/* Info Images */}
-              {question.infoImages && renderImage(question.infoImages)}
+              {question.infoImages && renderImage(question.infoImages, true)}
             </div>
           )}
 
@@ -240,7 +242,7 @@ export function QuestionDisplay({
           </div>
 
           {/* Question Images */}
-          {question.image && renderImage(question.image)}
+          {question.image && renderImage(question.image, false)}
 
           {/* Answer Options */}
           <div>
