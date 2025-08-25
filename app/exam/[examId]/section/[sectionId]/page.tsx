@@ -18,6 +18,7 @@ import { Flag, StickyNote, Send, Clock, Play, Pause, Home, Eye, EyeOff } from "l
 import { QuestionDisplay } from "@/components/question-display"
 import { QuestionNavigation } from "@/components/question-navigation"
 import { useAuth } from "@/lib/auth-context"
+import { useGlobalRefresh } from "@/hooks/use-global-refresh"
 import { useQuestionStats } from "@/hooks/use-question-stats"
 
 interface ExamRunnerProps {
@@ -60,16 +61,20 @@ interface SectionData {
     startedAt: string
     pausedAt?: string
     totalPausedTime?: number
+    elapsedSeconds: number
+    isPaused: boolean
   }
   sectionAttempt: {
     id: string
     responses: Response[]
+    currentQuestionIndex: number
   }
 }
 
 export default function ExamRunner({ params }: ExamRunnerProps) {
   const router = useRouter()
   const { isAuthenticated, isLoading: authLoading } = useAuth()
+  const { triggerDashboardRefresh } = useGlobalRefresh()
 
   const [examId, setExamId] = useState<string>("")
   const [sectionId, setSectionId] = useState<string>("")
@@ -85,6 +90,7 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
   const [isPaused, setIsPaused] = useState(false)
   const [struckThroughOptions, setStruckThroughOptions] = useState<{ [questionId: string]: string[] }>({}) // Track strikethrough per question
   const [showStatistics, setShowStatistics] = useState(false) // Toggle for question statistics
+  const [responses, setResponses] = useState<Response[]>([]) // Track all responses
 
   // Get question statistics
   const { questionStats } = useQuestionStats(examId)
@@ -100,6 +106,29 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
     } else {
       return `${minutes}:${secs.toString().padStart(2, '0')}`
     }
+  }
+
+  // TEST FUNCTION: Auto-answer all questions with option E
+  const autoAnswerAllWithE = () => {
+    if (!sectionData) return
+
+    const allResponses: Response[] = []
+
+    sectionData.section.questions.forEach((question) => {
+      // Find option E
+      const optionE = question.options.find(opt => opt.id === 'E')
+      if (optionE) {
+        allResponses.push({
+          questionId: question.id,
+          optionId: optionE.id,
+          answer: optionE
+        })
+      }
+    })
+
+    // Update responses state
+    setResponses(allResponses)
+    console.log('All questions auto-answered with option E')
   }
 
   // Helper function to get color classes based on success rate
@@ -138,20 +167,29 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
         const data = await sectionResponse.json()
         setSectionData(data)
 
-        // Set initial timer state from database
+        // Set initial timer state from database - this preserves time across sections
         setElapsedSeconds(data.attempt.elapsedSeconds || 0)
-        setIsPaused(data.attempt.isPaused || false)
 
-        // If exam is paused, auto-resume when user returns
+        // Always start the timer when entering the exam (don't auto-pause)
+        setIsPaused(false)
+
+        // If exam was paused, resume it in the database
         if (data.attempt.isPaused) {
-          const resumeResponse = await fetch(`/api/exam/${examId}/attempt`, {
+          const resumeResponse = await fetch(`/api/exam/${examId}/section/${sectionId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'resume' }),
           })
 
           if (resumeResponse.ok) {
-            setIsPaused(false)
+            // Update the local sectionData to reflect the resumed state
+            setSectionData(prev => prev ? {
+              ...prev,
+              attempt: {
+                ...prev.attempt,
+                isPaused: false
+              }
+            } : null)
           }
         }
 
@@ -169,10 +207,9 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
     fetchSectionData()
   }, [examId, sectionId, isAuthenticated])
 
-  // Timer effect - only runs when NOT paused and attempt is NOT paused in database
-  // Simple timer effect - just count seconds
+  // Timer effect - simple increment based timer that continues from stored value
   useEffect(() => {
-    if (isPaused) return
+    if (isPaused || !sectionData) return
 
     const timer = setInterval(() => {
       setElapsedSeconds(prev => {
@@ -180,7 +217,7 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
 
         // Save to database every 10 seconds to reduce API calls
         if (newSeconds % 10 === 0) {
-          fetch(`/api/exam/${examId}/attempt`, {
+          fetch(`/api/exam/${examId}/section/${sectionId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -195,7 +232,7 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [isPaused, examId])
+  }, [isPaused, examId, sectionId, sectionData])
 
 
 
@@ -228,10 +265,15 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
       const existingIndex = newResponses.findIndex(r => r.questionId === questionId)
 
       if (existingIndex >= 0) {
-        (newResponses[existingIndex] as any).optionId = answerId
-          ; (newResponses[existingIndex] as any).answer = answerId
+        newResponses[existingIndex] = {
+          ...newResponses[existingIndex],
+          answer: answerId
+        } as any
       } else {
-        newResponses.push({ questionId, optionId: answerId } as any)
+        newResponses.push({
+          questionId,
+          answer: answerId
+        } as any)
       }
 
       return {
@@ -403,8 +445,8 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
       // Save current progress
       await updateSection('progress', { currentQuestionIndex })
 
-      // Pause in database with current elapsed time
-      await fetch(`/api/exam/${examId}/attempt`, {
+      // Pause the attempt in database by setting isPaused to true
+      const response = await fetch(`/api/exam/${examId}/section/${sectionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -413,10 +455,25 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
         }),
       })
 
+      if (response.ok) {
+        // Update local state to reflect the pause
+        setSectionData(prev => prev ? {
+          ...prev,
+          attempt: {
+            ...prev.attempt,
+            isPaused: true
+          }
+        } : null)
+      }
+
+      // Trigger dashboard refresh to update resume status
+      triggerDashboardRefresh()
       router.push("/")
     } catch (error) {
       console.error('Error pausing exam:', error)
-      router.push("/") // Still navigate away even if pause fails
+      // Still trigger refresh and navigate away even if pause fails
+      triggerDashboardRefresh()
+      router.push("/")
     }
   }
 
@@ -428,7 +485,7 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
       setIsPaused(newPausedState)
 
       // Save to database
-      const response = await fetch(`/api/exam/${examId}/attempt`, {
+      const response = await fetch(`/api/exam/${examId}/section/${sectionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -440,6 +497,15 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
       if (!response.ok) {
         // Revert UI if database save failed
         setIsPaused(!newPausedState)
+      } else {
+        // Update local state to reflect the change
+        setSectionData(prev => prev ? {
+          ...prev,
+          attempt: {
+            ...prev.attempt,
+            isPaused: newPausedState
+          }
+        } : null)
       }
     } catch (err) {
       console.error('Error toggling pause:', err)
@@ -499,17 +565,32 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
   }
 
   const currentQuestion = sectionData.section.questions[currentQuestionIndex]
+
+  // Safety check: if currentQuestion is undefined, reset to first question
+  if (!currentQuestion) {
+    setCurrentQuestionIndex(0)
+    return null // Return early to trigger re-render
+  }
+
   const currentResponse = sectionData.sectionAttempt.responses.find(r => r.questionId === currentQuestion.id)
 
   // Create compatibility objects for existing components
   const questionForDisplay = {
+    id: currentQuestion.id,
     number: currentQuestion.number,
     stem: currentQuestion.stem,
     info: (currentQuestion as any).info || undefined,
     infoImages: (currentQuestion as any).infoImages || undefined,
-    options: currentQuestion.options.map(opt => ({ id: opt.letter, text: opt.text })),
+    images: (currentQuestion as any).images || undefined,
+    options: currentQuestion.options.map(opt => ({
+      id: opt.id,
+      letter: opt.letter,
+      text: opt.text
+    })),
     matrix: (currentQuestion as any).matrix || undefined,
-    image: (currentQuestion as any).images || undefined,
+    correctOptionId: (currentQuestion as any).correctOptionId || undefined,
+    explanation: (currentQuestion as any).explanation || undefined,
+    categories: (currentQuestion as any).categories || undefined,
   } as any
 
   const answersForNav = sectionData.section.questions.reduce((acc, q) => {
@@ -600,6 +681,7 @@ export default function ExamRunner({ params }: ExamRunnerProps) {
                 <Send className="mr-2 h-4 w-4" />
                 Submit Section
               </Button>
+
               <div className="pt-4 border-t">
                 <Button
                   variant="ghost"

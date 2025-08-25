@@ -1,0 +1,263 @@
+{
+    "examId": "nbme21",
+    "title": "NBME 21 Practice Exam",
+    "description": "Practice exam for medical students",
+    "sections": [
+        {
+            "sectionId": "s1",
+            "title": "Section 1: Basic Sciences",
+            "questions": [
+                {
+                    "qid": "s1q1",
+                    "number": 1,
+                    "stem": "A 25-year-old man presents with chest pain and shortness of breath. Which of the following is the most likely cause?",
+                    "options": [
+                        {
+                            "id": "A",
+                            "text": "Myocardial infarction"
+                        },
+                        {
+                            "id": "B",
+                            "text": "Pneumonia"
+                        },
+                        {
+                            "id": "C",
+                            "text": "Anxiety attack"
+                        },
+                        {
+                            "id": "D",
+                            "text": "Pulmonary embolism"
+                        },
+                        {
+                            "id": "E",
+                            "text": "Gastroesophageal reflux"
+                        }
+                    ],
+                    "correctOptionId": "D",
+                    "explanation": "Pulmonary embolism is common in young patients and presents with chest pain and dyspnea."
+                },
+                {
+                    "qid": "s1q2",
+                    "number": 2,
+                    "stem": "Which of the following is the primary function of the liver?",
+                    "options": [
+                        {
+                            "id": "A",
+                            "text": "Production of insulin"
+                        },
+                        {
+                            "id": "B",
+                            "text": "Filtration of blood"
+                        },
+                        {
+                            "id": "C",
+                            "text": "Metabolism and detoxification"
+                        },
+                        {
+                            "id": "D",
+                            "text": "Production of antibodies"
+                        },
+                        {
+                            "id": "E",
+                            "text": "Storage of calcium"
+                        }
+                    ],
+                    "correctOptionId": "C",
+                    "explanation": "The liver's primary functions include metabolism, detoxification, and protein synthesis."
+                }
+            ]
+        },
+        {
+            "sectionId": "s2",
+            "title": "Section 2: Clinical Medicine",
+            "questions": [
+                {
+                    "qid": "s2q1",
+                    "number": 1,
+                    "stem": "A 45-year-old woman has a blood pressure of 160/95 mmHg. What is the most appropriate next step?",
+                    "options": [
+                        {
+                            "id": "A",
+                            "text": "Immediate hospitalization"
+                        },
+                        {
+                            "id": "B",
+                            "text": "Lifestyle modifications"
+                        },
+                        {
+                            "id": "C",
+                            "text": "Surgical intervention"
+                        },
+                        {
+                            "id": "D",
+                            "text": "Emergency medication"
+                        },
+                        {
+                            "id": "E",
+                            "text": "Wait and monitor"
+                        }
+                    ],
+                    "correctOptionId": "B",
+                    "explanation": "Stage 1 hypertension should first be managed with lifestyle modifications."
+                },
+                {
+                    "qid": "s2q2",
+                    "number": 2,
+                    "stem": "Which of the following is a common side effect of statins?",
+                    "options": [
+                        {
+                            "id": "A",
+                            "text": "Hypoglycemia"
+                        },
+                        {
+                            "id": "B",
+                            "text": "Myopathy"
+                        },
+                        {
+                            "id": "C",
+                            "text": "Hypertension"
+                        },
+                        {
+                            "id": "D",
+                            "text": "Hyperkalemia"
+                        },
+                        {
+                            "id": "E",
+                            "text": "Bradycardia"
+                        }
+                    ],
+                    "correctOptionId": "B",
+                    "explanation": "Myopathy is a well-known side effect of statin therapy."
+                }
+            ]
+        },
+        {
+            "sectionId": "s3",
+            "title": "Section 3: Pharmacology",
+            "questions": [
+                {
+                    "qid": "s3q1",
+                    "number": 1,
+                    "stem": "What is the mechanism of action of beta-blockers?",
+                    "options": [
+                        {
+                            "id": "A",
+                            "text": "Block calcium channels"
+                        },
+                        {
+                            "id": "B",
+                            "text": "Block beta-adrenergic receptors"
+                        },
+                        {
+                            "id": "C",
+                            "text": "Inhibit ACE"
+                        },
+                        {
+                            "id": "D",
+                            "text": "Block sodium channels"
+                        },
+                        {
+                            "id": "E",
+                            "text": "Inhibit prostaglandin synthesis"
+                        }
+                    ],
+                    "correctOptionId": "B",
+                    "explanation": "Beta-blockers competitively block beta-adrenergic receptors."
+                },
+                {
+                    "qid": "s3q2",
+                    "number": 2,
+                    "stem": "Which antibiotic class is most likely to cause ototoxicity?",
+                    "options": [
+                        {
+                            "id": "A",
+                            "text": "Penicillins"
+                        },
+                        {
+                            "id": "B",
+                            "text": "Cephalosporins"
+                        },
+                        {
+                            "id": "C",
+                            "text": "Aminoglycosides"
+                        },
+                        {
+                            "id": "D",
+                            "text": "Macrolides"
+                        },
+                        {
+                            "id": "E",
+                            "text": "Tetracyclines"
+                        }
+                    ],
+                    "correctOptionId": "C",
+                    "explanation": "Aminoglycosides are well-known for their ototoxic and nephrotoxic effects."
+                }
+            ]
+        },
+        {
+            "sectionId": "s4",
+            "title": "Section 4: Emergency Medicine",
+            "questions": [
+                {
+                    "qid": "s4q1",
+                    "number": 1,
+                    "stem": "What is the first step in ACLS for a patient in cardiac arrest?",
+                    "options": [
+                        {
+                            "id": "A",
+                            "text": "Administer epinephrine"
+                        },
+                        {
+                            "id": "B",
+                            "text": "Check pulse"
+                        },
+                        {
+                            "id": "C",
+                            "text": "Start chest compressions"
+                        },
+                        {
+                            "id": "D",
+                            "text": "Defibrillate"
+                        },
+                        {
+                            "id": "E",
+                            "text": "Intubate"
+                        }
+                    ],
+                    "correctOptionId": "C",
+                    "explanation": "High-quality chest compressions should begin immediately for cardiac arrest."
+                },
+                {
+                    "qid": "s4q2",
+                    "number": 2,
+                    "stem": "Which of the following is the most common cause of syncope in young adults?",
+                    "options": [
+                        {
+                            "id": "A",
+                            "text": "Cardiac arrhythmia"
+                        },
+                        {
+                            "id": "B",
+                            "text": "Vasovagal syncope"
+                        },
+                        {
+                            "id": "C",
+                            "text": "Seizure disorder"
+                        },
+                        {
+                            "id": "D",
+                            "text": "Pulmonary embolism"
+                        },
+                        {
+                            "id": "E",
+                            "text": "Aortic dissection"
+                        }
+                    ],
+                    "correctOptionId": "B",
+                    "explanation": "Vasovagal syncope is the most common cause of syncope in young, otherwise healthy adults."
+                }
+            ]
+        }
+    ]
+}

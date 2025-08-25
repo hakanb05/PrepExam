@@ -1,55 +1,47 @@
-import { useState, useEffect } from 'react'
-import { useAuth } from '@/lib/auth-context'
+"use client"
 
-interface PreviousAttempt {
+import { useState, useEffect } from "react"
+
+export interface PreviousAttempt {
     id: string
+    examId: string
     completedAt: string
     completedTime: string
     duration: string
-    totalQuestions: number
-    correctAnswers: number
+    score: number
     percentage: number
-    score: string
 }
 
 export function usePreviousAttempts(examId: string) {
     const [attempts, setAttempts] = useState<PreviousAttempt[]>([])
     const [loading, setLoading] = useState(true)
-    const { isAuthenticated, isLoading: authLoading } = useAuth()
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        if (!examId) {
-            setLoading(false)
-            return
-        }
-
-        // Wait for auth to finish loading
-        if (authLoading) {
-            return
-        }
-
-        if (!isAuthenticated) {
-            setLoading(false)
-            return
-        }
-
         const fetchAttempts = async () => {
             try {
-                const response = await fetch(`/api/exam/${examId}/attempts`)
+                setLoading(true)
+                setError(null)
 
-                if (response.ok) {
-                    const data = await response.json()
-                    setAttempts(data.attempts || [])
+                const url = examId === 'all' ? '/api/attempts' : `/api/exam/${examId}/attempts`
+                const response = await fetch(url)
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch attempts')
                 }
-            } catch (error) {
-                console.error('Failed to fetch previous attempts:', error)
+
+                const data = await response.json()
+                setAttempts(data.attempts || [])
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to fetch attempts')
+                setAttempts([])
             } finally {
                 setLoading(false)
             }
         }
 
         fetchAttempts()
-    }, [examId, isAuthenticated, authLoading])
+    }, [examId])
 
-    return { attempts, loading }
+    return { attempts, loading, error }
 }

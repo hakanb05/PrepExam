@@ -10,12 +10,22 @@ export async function GET(
     try {
         const session = await getServerSession(authOptions)
 
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
         const { examId } = await params
-        const userId = session.user.id
+
+        // Get user ID from email
+        const user = await prisma.user.findUnique({
+            where: { email: session.user.email }
+        })
+
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 })
+        }
+
+        const userId = user.id
 
         // Get all completed attempts for this exam
         const attempts = await prisma.attempt.findMany({
@@ -63,14 +73,13 @@ export async function GET(
                 }
             }
 
-            // Calculate duration
+            // Calculate duration using elapsedSeconds instead of totalPausedTime
             const startTime = new Date(attempt.startedAt).getTime()
             const endTime = new Date(attempt.finishedAt!).getTime()
-            const totalPausedTime = attempt.totalPausedTime || 0
-            const duration = endTime - startTime - totalPausedTime
+            const actualDuration = attempt.elapsedSeconds * 1000 // Convert seconds to milliseconds
 
-            const hours = Math.floor(duration / 3600000)
-            const minutes = Math.floor((duration % 3600000) / 60000)
+            const hours = Math.floor(actualDuration / 3600000)
+            const minutes = Math.floor((actualDuration % 3600000) / 60000)
             const durationDisplay = hours > 0
                 ? `${hours}h ${minutes}m`
                 : `${minutes}m`
@@ -79,6 +88,7 @@ export async function GET(
 
             return {
                 id: attempt.id,
+                examId: attempt.examId, // Add examId to identify which exam this attempt belongs to
                 completedAt: attempt.finishedAt,
                 completedTime: new Date(attempt.finishedAt!).toLocaleTimeString('en-US', {
                     hour: '2-digit',

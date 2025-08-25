@@ -9,20 +9,30 @@ export async function GET(
 ) {
     try {
         const session = await getServerSession(authOptions)
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
         const { examId } = await params
-        const userId = session.user.id
 
-        // Check for unfinished attempts that are paused (indicating "come back later" was used)
+        // Get user ID from email
+        const user = await prisma.user.findUnique({
+            where: { email: session.user.email }
+        })
+
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 })
+        }
+
+        const userId = user.id
+
+        // Check for unfinished attempts (both paused and unpaused can be resumed)
         const attempt = await prisma.attempt.findFirst({
             where: {
                 userId,
                 examId,
                 finishedAt: null,
-                isPaused: true, // Only show resume for paused attempts
+                // Remove isPaused requirement - any unfinished attempt can be resumed
             },
             include: {
                 sections: {

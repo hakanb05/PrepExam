@@ -33,24 +33,18 @@ export async function POST(request: NextRequest) {
         }
 
         // Extract metadata
-        const userId = checkoutSession.metadata?.userId
         const examId = checkoutSession.metadata?.examId
         const examTitle = checkoutSession.metadata?.examTitle
 
-        if (!userId || !examId) {
+        if (!examId) {
             return NextResponse.json({
                 success: false,
-                error: 'Missing metadata'
+                error: 'Missing exam ID in metadata'
             })
         }
 
-        // Verify the user matches
-        if (userId !== session.user.id) {
-            return NextResponse.json({
-                success: false,
-                error: 'User mismatch'
-            })
-        }
+        // Use the current user's ID
+        const userId = session.user.id
 
         // Check if purchase already exists (including expired ones)
         const existingPurchase = await prisma.purchase.findFirst({

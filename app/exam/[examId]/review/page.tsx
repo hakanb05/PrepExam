@@ -26,7 +26,10 @@ interface ReviewData {
       qid: string
       number: number
       stem: string
+      info?: string
+      infoImages?: any
       images?: any
+      explanationImage?: any
       matrix?: any
       options: { id: string; letter: string; text: string }[]
       correctOptionId: string
@@ -284,7 +287,7 @@ export default function ExamReview({ params }: ExamReviewProps) {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-2">Explanation:</p>
-              <p>{currentQuestion.explanation}</p>
+              <p className="whitespace-pre-wrap">{currentQuestion.explanation}</p>
             </CardContent>
           </Card>
         </div>

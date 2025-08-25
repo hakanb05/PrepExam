@@ -109,7 +109,8 @@ model Question {
   stem            String
   info            String?            // Info/context text (e.g., "A new antiplatelet agent...")
   infoImages      Json?              // Images for info section (e.g., results.png)
-  images          Json?              // Images for the main question
+  images          Json?              // Images for the main question (shown during exam)
+  explanationImage Json?             // Images for explanation only (shown during review)
   correctOptionId String?
   explanation     String?
   matrix          Json?
@@ -131,6 +132,8 @@ model Option {
   value      Int?
   questionId String
   question   Question @relation(fields: [questionId], references: [id])
+
+  @@unique([questionId, letter])
 }
 
 model Category {

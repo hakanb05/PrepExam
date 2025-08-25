@@ -1,6 +1,7 @@
 "use client"
 
 import { Home, BookOpen, BarChart3, User, Settings } from "lucide-react"
+import { usePathname } from "next/navigation"
 import {
   Sidebar,
   SidebarContent,
@@ -42,9 +43,17 @@ const items = [
 
 export function AppSidebar() {
   const { isAuthenticated } = useAuth()
+  const pathname = usePathname()
 
   if (!isAuthenticated) {
     return null
+  }
+
+  const isActive = (url: string) => {
+    if (url === "/") {
+      return pathname === "/"
+    }
+    return pathname.startsWith(url)
   }
 
   return (
@@ -55,7 +64,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
                     <a href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>

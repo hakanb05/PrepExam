@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options"
+import { authOptions } from "../../auth/[...nextauth]/auth-options"
 import { prisma } from "@/lib/prisma"
 import { writeFile, mkdir, unlink } from "fs/promises"
 import path from "path"
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions)
 
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
@@ -31,15 +31,18 @@ export async function POST(request: NextRequest) {
         }
 
         // Get current user to remove old avatar file
-        const userId = session.user.id
-        const currentUser = await prisma.user.findUnique({
-            where: { id: userId },
-            select: { image: true }
+        const user = await prisma.user.findUnique({
+            where: { email: session.user.email },
+            select: { id: true, image: true }
         })
+
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 })
+        }
 
         // Create filename
         const fileExtension = file.name.split('.').pop()
-        const fileName = `${userId}-${Date.now()}.${fileExtension}`
+        const fileName = `${user.id}-${Date.now()}.${fileExtension}`
 
         // Ensure uploads directory exists
         const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'avatars')
@@ -52,8 +55,8 @@ export async function POST(request: NextRequest) {
         await writeFile(filePath, buffer)
 
         // Remove old file if it exists and is not default
-        if (currentUser?.image && currentUser.image.startsWith('/uploads/avatars/')) {
-            const oldFilePath = path.join(process.cwd(), 'public', currentUser.image)
+        if (user.image && user.image.startsWith('/uploads/avatars/')) {
+            const oldFilePath = path.join(process.cwd(), 'public', user.image)
             try {
                 await unlink(oldFilePath)
             } catch (err) {
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
         // Update user in database
         const imageUrl = `/uploads/avatars/${fileName}`
         const updatedUser = await prisma.user.update({
-            where: { id: userId },
+            where: { email: session.user.email },
             data: { image: imageUrl },
             select: {
                 id: true,
@@ -82,22 +85,22 @@ export async function POST(request: NextRequest) {
         })
 
     } catch (error) {
-        console.error("Error uploading avatar:", error)
+        console.error('Error uploading avatar:', error)
         return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }
 
-export async function DELETE() {
+export async function DELETE(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions)
 
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
         // Get current user to find existing image
         const currentUser = await prisma.user.findUnique({
-            where: { id: session.user.id },
+            where: { email: session.user.email },
             select: { image: true }
         })
 
@@ -114,7 +117,7 @@ export async function DELETE() {
 
         // Remove avatar from database (set to null)
         const updatedUser = await prisma.user.update({
-            where: { id: session.user.id },
+            where: { email: session.user.email },
             data: { image: null },
             select: {
                 id: true,
@@ -130,7 +133,7 @@ export async function DELETE() {
         })
 
     } catch (error) {
-        console.error("Error removing avatar:", error)
+        console.error('Error removing avatar:', error)
         return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }

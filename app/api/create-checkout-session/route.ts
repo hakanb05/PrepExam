@@ -4,14 +4,14 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options'
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2024-12-18.acacia',
+    apiVersion: '2025-07-30.basil',
 })
 
 export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions)
 
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
@@ -38,9 +38,8 @@ export async function POST(request: NextRequest) {
                 },
             ],
             mode: 'payment',
-            customer_email: session.user.email, // This will send receipt emails automatically
+            customer_email: session.user.email,
             metadata: {
-                userId: session.user.id,
                 examId,
                 examTitle,
             },

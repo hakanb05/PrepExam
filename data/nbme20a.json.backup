@@ -1,0 +1,1246 @@
+{
+  "examId": "nbme20a",
+  "title": "NBME 20A Practice Exam",
+  "version": 1,
+  "sections": [
+    {
+      "sectionId": "s1",
+      "title": "Section 1",
+      "questions": [
+        {
+          "qid": "s1q1",
+          "number": 1,
+          "info": "A new antiplatelet agent is developed for the prevention of recurrence of stroke. In a large randomized clinical trial with equal numbers of men and women, the rates of stroke are lower in patients receiving the new agent than in patients receiving the standard treatment. Results are shown below.",
+          "infoImages": [
+            {
+              "path": "/images/nbme20/s1/results.png",
+              "alt": "Clinical trial results showing stroke rates"
+            }
+          ],
+          "stem": "Which of the following is the primary site of the pathophysiologic process in this patient?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Endoplasmic reticulum glycosyltransferase"
+            },
+            {
+              "id": "B",
+              "text": "Lysosomal α-glucosidase"
+            },
+            {
+              "id": "C",
+              "text": "Mitochondrial tRNA Leu"
+            },
+            {
+              "id": "D",
+              "text": "Nuclear proteasome activator"
+            },
+            {
+              "id": "E",
+              "text": "Peroxisomal catalase"
+            }
+          ],
+          "correctOptionId": "C",
+          "explanation": "Page 59 discusses MELAS. Mutations in MT-TL1 (Mitochondrially encoded tRNA leucine 1). A common mutation is A3243G. Can result in multiple mitochondrial deficiencies and associated disorders. It is associated with: Mitochondrial encephalomyopathy, Lactic acidosis, Stroke-like episodes (MELAS). MELAS is a rare mitochondrial disorder known to affect many parts of the body, especially the nervous system and the brain. Symptoms of MELAS include: Recurrent severe headaches, Muscle weakness (myopathy), Hearing loss, Stroke-like episodes with a loss of consciousness, seizures, and other problems affecting the nervous system."
+        },
+        {
+          "qid": "s1q2",
+          "number": 2,
+          "stem": "A 32-year-old woman has had fecal incontinence since giving birth to her first child 1 year ago. Which of the following is the most likely cause of the fecal incontinence in this patient?",
+          "image": [
+            {
+              "path": "/images/nbme20/s1/obstetric.png",
+              "alt": "Types of obstetric lacerations"
+            },
+            {
+              "path": "/images/nbme20/s1/female_pelvic.png",
+              "alt": "Female pelvic floor anatomy"
+            }
+          ],
+          "options": [
+            {
+              "id": "A",
+              "text": "Damage to the anal sphincter"
+            },
+            {
+              "id": "B",
+              "text": "Achalasia of the internal anal sphincter"
+            },
+            {
+              "id": "C",
+              "text": "Increased pressure of the anal sphincter"
+            },
+            {
+              "id": "D",
+              "text": "Spastic contraction of the puborectalis muscle"
+            },
+            {
+              "id": "E",
+              "text": "Spastic external anal sphincter"
+            }
+          ],
+          "correctOptionId": "A",
+          "explanation": "UWORLD = 28yo woman, g1p0, goes into labor at 38 weeks gestation. During the second stage, as the patient is pushing, the fetus develops a non-reassuring fetal heart rate. A midline episiotomy is performed to expedite delivery. A vertical, midline incision is made at the posterior vaginal opening through the vaginal and subvaginal mucosa. Which structure is most likely involved in this incision? Perineal body. It is essential to the integrity of the pelvic floor and cut in a midline episiotomy. AMBOSS explains that fecal incontinence is a common complication of 3rd degree perineal lacerations from the posterior vaginal wall to the external anal sphincter, and in severe cases possibly the internal anal sphincter. Injury to the pudendal nerve (S2-S4) is also related."
+        },
+        {
+          "qid": "s1q3",
+          "number": 3,
+          "stem": "A 17-year-old girl comes to the emergency department because of a swollen tender ankle. An x-ray of the ankle is strongly suggestive of osteosarcoma. She and her parents are told only that 'further evaluation is needed.' Which of the following next steps is most appropriate?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Request that an oncologist discuss the findings with them immediately"
+            },
+            {
+              "id": "B",
+              "text": "Request the presence of the hospital chaplain, then discuss the findings"
+            },
+            {
+              "id": "C",
+              "text": "Speak with the parents alone about the findings"
+            },
+            {
+              "id": "D",
+              "text": "Speak with the patient alone about the findings"
+            },
+            {
+              "id": "E",
+              "text": "Speak with the patient and her parents about the findings"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Physicians should always encourage healthy minor-guardian communication. Also you're going to do some serious things to cure this girl's disease, leading up to amputation. You can't hide that from her."
+        },
+        {
+          "qid": "s1q4",
+          "number": 4,
+          "stem": "An otherwise healthy 16-year-old girl comes to the physician because of a 2-month history of episodes of wheezing and shortness of breath while participating in track meets with her high school team. Her respirations are 12/min. Physical examination shows no abnormalities. A diagnosis of exercise-induced asthma is made. Exposure to which of the following is most likely to precipitate a similar episode in this patient in the future?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Cold, dry air"
+            },
+            {
+              "id": "B",
+              "text": "Cold, moist air"
+            },
+            {
+              "id": "C",
+              "text": "Warm, dry air"
+            },
+            {
+              "id": "D",
+              "text": "Warm, moist air"
+            }
+          ],
+          "correctOptionId": "A",
+          "explanation": "Page 744 PDF. This girl has exercise induced asthma. It is not well understood why it happens but the triggers are recognized. Normally when breathing occurs, the nasal passages and turbinates act to humidify/warm the air. During exercise, mouth breathing predominates, bypassing this warming/humidifying step. Cold, dry air is the strongest external trigger of exercise-induced asthma."
+        },
+        {
+          "qid": "s1q5",
+          "number": 5,
+          "stem": "A study is conducted to assess the effect of a new screening test on the mortality rate of prostate cancer. Prior to implementation of screening, the overall 5-year survival rate was 70%. After initiating the screening in the randomly selected study population, the 5-year survival rate increases to 85%. During this time, there were no changes in the treatment of prostate cancer. The apparent decrease in mortality could be due to which of the following types of bias?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Compliance"
+            },
+            {
+              "id": "B",
+              "text": "Lead-time"
+            },
+            {
+              "id": "C",
+              "text": "Recall"
+            },
+            {
+              "id": "D",
+              "text": "Selection"
+            }
+          ],
+          "correctOptionId": "B",
+          "explanation": "Page 267. Lead-time bias occurs when earlier detection is mistaken for increased survival, but survival was not impacted at all and patients should be compared by looking at their disease severity."
+        },
+        {
+          "qid": "s1q6",
+          "number": 6,
+          "info": "A new antiplatelet agent is developed for the prevention of recurrence of stroke. In a large randomized clinical trial with equal numbers of men and women, the rates of stroke are lower in patients receiving the new agent than in patients receiving the standard treatment. Results are shown below.",
+          "infoImages": [
+            {
+              "path": "/images/nbme20/s1/results.png",
+              "alt": "Clinical trial results showing stroke rates"
+            }
+          ],
+          "stem": "Which of the following is the primary site of the pathophysiologic process in this patient?",
+          "options": [
+            {
+              "id": "A",
+              "text": "8%"
+            },
+            {
+              "id": "B",
+              "text": "12%"
+            },
+            {
+              "id": "C",
+              "text": "16%"
+            },
+            {
+              "id": "D",
+              "text": "33%"
+            },
+            {
+              "id": "E",
+              "text": "50%"
+            },
+            {
+              "id": "F",
+              "text": "62%"
+            },
+            {
+              "id": "G",
+              "text": "67%"
+            },
+            {
+              "id": "H",
+              "text": "75%"
+            }
+          ],
+          "correctOptionId": "A",
+          "explanation": "Absolute risk: the difference in risk (not the proportion) attributable to the intervention as compared to a control. (.12) - (.04) = .08ARR = 8%."
+        },
+
+        {
+          "qid": "s1q7",
+          "number": 7,
+          "stem": "A previously healthy 32-year-old woman is brought to the emergency department because of a 2-hour history of severe epigastric pain, nausea, and vomiting blood. Her temperature is 37°C (98.6°F), pulse is 125/min, respirations are 18/min, and blood pressure is 85/45 mm Hg. Physical examination shows cool skin and a tender abdomen. A decrease in which of the following hemodynamic parameters is the most likely cause of this patient’s hypotension?",
+          "options": [
+            { "id": "A", "text": "Heart rate" },
+            { "id": "B", "text": "Left ventricular compliance" },
+            { "id": "C", "text": "Left ventricular contractility" },
+            { "id": "D", "text": "Preload" },
+            { "id": "E", "text": "Systemic arterial resistance" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Vomiting blood and cool skin indicates this is a type of hypovolemic shock. To understand shock, remember that;\n\nBP = TPR x CO  2) CO = SV x HR  3) SV = EDV - ESV\n\nIn hypovolemic shock, you are losing fluid, so stroke volume is decreased and end diastolic volume is decreased.\nDecreased EDV means that the \"filling volume\" is decreased, which also means the preload will be decreased.\nAlso, skin is cool because you're decreasing SV → decreased CO → Ang II/ADH/etc is released to vasoconstrict increasing resistance.\nSince there is increased resistance, there is less blood flow causing skin to be cold/clammy.\n\nBP = TPR x ((EDV - ESV) x HR)"
+        },
+        {
+          "qid": "s1q8",
+          "number": 8,
+          "stem": "A 31-year-old man has a large, yellow, soft mass deeply infiltrating the gluteus maximus muscle. Microscopic examination of the excised mass shows irregular vacuolated cells and clear cells with frequent mitoses. Which of the following is the most likely diagnosis?",
+          "options": [
+            { "id": "A", "text": "Fibroma" },
+            { "id": "B", "text": "Fibrosarcoma" },
+            { "id": "C", "text": "Lipoma" },
+            { "id": "D", "text": "Liposarcoma" },
+            { "id": "E", "text": "Rhabdomyoma" },
+            { "id": "F", "text": "Rhabdomyosarcoma" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Lipomas/Liposarcomas are the most common soft tissue fat tumors. Benign tumors are usually well-differentiated and well-demarcated, with low mitotic activity, no metastases, and no necrosis.\nMalignant tumors (cancers) may show poor differentiation, erratic growth, local invasion, metastasis, and apoptosis. High mitotic activity.\nFat tumors:\nLipoma: benign, low mitotic activity\nLiposarcoma: malignant, increased mitotic activity"
+        },
+        {
+          "qid": "s1q9",
+          "number": 9,
+          "stem": "A 25-year-old woman has a flu-like illness (fever, myalgias, fatigue) that is followed by decreased exercise tolerance and shortness of breath, particularly when lying down. Findings on examination of tissue obtained on myocardial biopsy are suggestive of a viral infection. Which of the following is the most likely cause of her illness?",
+          "options": [
+            { "id": "A", "text": "Adenovirus" },
+            { "id": "B", "text": "Herpesvirus" },
+            { "id": "C", "text": "Myxovirus" },
+            { "id": "D", "text": "Orthomyxovirus" },
+            { "id": "E", "text": "Picornavirus" }
+          ],
+          "correctOptionId": "E",
+          "explanation": "This patient has symptoms of viral myocarditis, which is most commonly caused by Coxsackie, a picornavirus."
+        },
+        {
+          "qid": "s1q10",
+          "number": 10,
+          "stem": "A 10-year-old boy with mild mental retardation is brought to the physician by his parents because of a 2-week history of frequent staring spells. Examination of the skin shows pale oval-shaped areas on the trunk. A CT scan of the head without contrast shows multiple calcified subependymal and cortical lesions. Which of the following is the most likely diagnosis?",
+          "options": [
+            { "id": "A", "text": "Cysticercosis" },
+            { "id": "B", "text": "Hyperparathyroidism" },
+            { "id": "C", "text": "Metachromatic leukodystrophy" },
+            { "id": "D", "text": "Oligodendroglioma" },
+            { "id": "E", "text": "Tuberous sclerosis" }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Tuberous sclerosis has HAMARTOMAS, Angiofibromas, Mitral regurgitation, Ash leaf spots, Rhabdomyomas, tuberous sclerosis, Officially dominant, mental retardation, agiomyolipomas, and seizures.\nTS is known to have more subependymal astrocytomas and ungual fibromas in the nails."
+        },
+        {
+          "qid": "s1q11",
+          "number": 11,
+          "stem": "A patient is found to have increased hemoglobin concentration and hematocrit. Arterial oxygen saturation is decreased, and erythropoietin concentration is increased. Which of the following is the most likely explanation?",
+          "image": [
+            {
+              "path": "/images/nbme20/s1/cell.png",
+              "alt": "Peripheral blood smear"
+            }
+          ],
+          "options": [
+            { "id": "A", "text": "Aplastic anemia" },
+            { "id": "B", "text": "Appropriate (secondary) polycythemia" },
+            { "id": "C", "text": "Polycythemia vera" },
+            { "id": "D", "text": "Primary myelofibrosis" },
+            { "id": "E", "text": "Thalassemia major" }
+          ],
+          "correctOptionId": "B",
+          "explanation": "This is reactive/appropriate polycythemia vera, which is due to high altitude or lung disease. SaO2 is low, and EPO is increased.\nAnother way to approach the question is looking at the blood smear. It's pretty normal (no megakaryocytes, no increased number of platelets, no rods, nothing blue, etc). A blood smear from a COPD patient will be normal. Just an increased number of RBCs due to the increased EPO leading to increased Hgb.\nMyelofibrosis — also called agnogenic myeloid metaplasia (AMM), myelosclerosis, chronic idiopathic myelofibrosis, idiopathic myelofibrosis, and myelosclerosis with myeloid metaplasia — is a form of cancer that arises in the bone marrow."
+        },
+        {
+          "qid": "s1q12",
+          "number": 12,
+          "stem": "At a postnatal checkup, a 6-week-old female newborn weighs 20 ounces less than at delivery. Her mother says she vomits and regurgitates bile-tinged fluid after every feeding. Which of the following is the most likely cause of this abnormality?",
+          "options": [
+            { "id": "A", "text": "Annular pancreas" },
+            { "id": "B", "text": "Hiatal hernia" },
+            { "id": "C", "text": "Meckel diverticulum" },
+            { "id": "D", "text": "Pyloric stenosis" },
+            { "id": "E", "text": "Tracheoesophageal fistula" }
+          ],
+          "correctOptionId": "A",
+          "explanation": "Annular pancreas is the only answer that accounts for the bile in the vomit; of the choices, it is the only obstruction distal to the 2nd part of the duodenum, where the bile enters the GIT. Meckel diverticulum would require more for the diagnosis, such as ectopic gastric tissue, hematochezia, or RLQ pain."
+        },
+        {
+          "qid": "s1q13",
+          "number": 13,
+          "stem": "A 55-year-old man comes to the physician because of constipation since starting an over-the-counter medication 2 weeks ago for a chronic, persistent cough and sinus congestion. Which of the following ingredients in this medication is the most likely cause of this patient’s new symptom?",
+          "options": [
+            { "id": "A", "text": "Acetaminophen" },
+            { "id": "B", "text": "Dextromethorphan" },
+            { "id": "C", "text": "Guaifenesin" },
+            { "id": "D", "text": "Loratadine" },
+            { "id": "E", "text": "Phenylephrine" }
+          ],
+          "correctOptionId": "B",
+          "explanation": "Dextromethorphan is an opium alkaloid derivative. Dextromethorphan is a drug of abuse. The main risks associated with dextromethorphan are ataxia, central nervous system (CNS) stimulation, dizziness, lethargy and psychotic behavior. Less frequently with large doses seizures and respiratory depression can occur. Nausea, vomiting, constipation and tachycardia may also occur. (toxnet.nlm.nih.gov)."
+        },
+        {
+          "qid": "s1q14",
+          "number": 14,
+          "stem": "A 19-year-old man who is a college student is brought to the emergency department because of the sudden onset of right-sided chest pain and difficulty breathing after an accident in which he was thrown from his bicycle. He has difficulty walking and cannot climb stairs because of pain and shortness of breath. He is slightly cyanotic, afebrile, and tachypneic. Which of the following is most suggestive that fractured ribs caused the respiratory problem?",
+          "options": [
+            { "id": "A", "text": "Bronchophony" },
+            { "id": "B", "text": "Expiratory stridor" },
+            { "id": "C", "text": "Inspiratory stridor" },
+            { "id": "D", "text": "Subcutaneous crepitus" },
+            { "id": "E", "text": "Succussion splash" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Bronchophony = pneumonia\nExpiratory stridor = tracheobronchial obstruction (mass/foreign body)\nInspiratory stridor = laryngeal obstruction\nSuccussion splash = test for pyloric stenosis\nWhen there is a fractured rib it will cause a trauma pneumothorax which can cause air to escape and become trapped under the skin leading to crepitus"
+        },
+        {
+          "qid": "s1q15",
+          "number": 15,
+          "stem": "A 66-year-old man is brought to the emergency department 30 minutes after sustaining injuries in a motor vehicle collision. He is pronounced dead on arrival. A photograph of the left kidney and a photomicrograph of a section of the distal left ureter taken at autopsy are shown. Examination of the right kidney and ureter shows no abnormalities. Which of the following was the most likely predisposing factor in the development of the ureteral lesion in this patient?",
+          "image": [
+            { "path": "/images/nbme20/s1/idk.png", "alt": "Gross photograph of kidney/ureter" },
+            { "path": "/images/nbme20/s1/idk2.png", "alt": "Histology of ureter lesion" }
+          ],
+          "options": [
+            { "id": "A", "text": "Alcoholism" },
+            { "id": "B", "text": "Arylamine exposure" },
+            { "id": "C", "text": "Cigarette smoking" },
+            { "id": "D", "text": "Radiation exposure" },
+            { "id": "E", "text": "Schistosomiasis" },
+            { "id": "F", "text": "Vinyl chloride exposure" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "It's transitional cell carcinoma, which smoking is a common risk factor for; it can involve the renal pelvis/calyces. The histology shows the papillary nature of the tumor, but it can also be flat or nodular according to Pathoma.\nAlso known as urothelial carcinoma. Most common tumor of urinary tract system (can occur in renal calyces, renal pelvis, ureters, and bladder). Can be suggested by painless hematuria (no casts).\nArylamine is an amine. Aromatic amines are related to the textile industry and cigarette smoke and can also lead to transitional cell carcinoma, but there is no indication to pick arylamine exposure over cigarette smoking.\nVinyl chloride is related to PVC pipes and affects the liver of plumbers, leading to angiosarcoma."
+        },
+        {
+          "qid": "s1q16",
+          "number": 16,
+          "stem": "A 12-year-old girl is brought to the physician by her mother after the dentist found many unerupted and supernumerary teeth. Physical examination shows frontal bossing, hypertelorism, and retained deciduous teeth. The patient can place her shoulders together anteriorly. Serum studies show decreased alkaline phosphatase activity. A chest x-ray shows hypoplasia of the clavicles. Skull x-rays show open sutures and multiple Wormian bones. Genetic testing shows a mutation in the CBFA1 gene. Which of the following cell types is directly affected by the mutation in this patient?",
+          "options": [
+            { "id": "A", "text": "Chondroblasts" },
+            { "id": "B", "text": "Chondroclasts" },
+            { "id": "C", "text": "Chondrocytes" },
+            { "id": "D", "text": "Osteoblasts" },
+            { "id": "E", "text": "Osteoclasts" },
+            { "id": "F", "text": "Osteocytes" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "A big thing here too is noticing that the ALP is decreased. Osteoblast activity is measured by bone ALP. I think that was the main focus here and not that you necessarily need to know the CBFA1 gene mutation.\nThis is a conditional called craniocleidodysplasia. The kid on Stranger Things with the lisp has the disorder. No collar bones, too many teeth, frontal bossing => craniocleidodysplasia. CBFA1 is a gene highly implicated in osteoblast function.\nDustin, or Gaten Matarazzo from Stranger Things = https://www.huffpost.com/entry/gaten-matarazzo-dustin-stranger-things-speaks-about-disability_n_57eadeb1e4b024a52d2b53b9\nAlso relevant = https://en.wikipedia.org/wiki/Wormian_bones which are intrasutural bones, extra bone pieces within a suture."
+        },
+        {
+          "qid": "s1q17",
+          "number": 17,
+          "stem": "A 70-year-old woman is transferred to a rehabilitative service 2 days after operative repair of a fracture of the right femur. She weighs 65 kg (143 lb). Findings on physical and mental status examinations are unremarkable. Which of the following is the most important predictor of success in the rehabilitation of this patient?",
+          "options": [
+            { "id": "A", "text": "Activity level before the fracture" },
+            { "id": "B", "text": "Age" },
+            { "id": "C", "text": "Postoperative hemoglobin concentration" },
+            { "id": "D", "text": "Serum calcium concentration" },
+            { "id": "E", "text": "Serum vitamin D concentration" }
+          ],
+          "correctOptionId": "A",
+          "explanation": "This is indirectly asking about peak bone density. That whole thing about weight-bearing exercises, eating right, yada yada, before and during that down-slope phase of life for bone density. All about reducing that 1% per year age-related bone density loss as best as we can. Level of activity is precisely like weight-bearing exercise. (Consider: no activity, bed-ridden -- say goodbye to your bones; highly active, runs every other day -- good amount of weight-bearing / stress to induce remodeling and maintain integrity of the bones.)\nSomeone did make a good point saying -- \"sympathetikey Yeah, I was thinking about that while taking the exam. Just got thrown off because I don't see how that matters, now that they've fractured the femur. How do prior increases in bone density allow for better chances of bone healing?\" and unfortunately thats the nature of these questions. Cant do anything about age. Calcium and Vitamin D are relevant but activity level is most significant."
+        },
+        {
+          "qid": "s1q18",
+          "number": 18,
+          "stem": "A physician prescribes a newly marketed drug to 45 patients. Over the next several weeks, she notes that the drug has good therapeutic efficacy, but it increased serum liver enzyme activities three times the normal value in 5 of the 45 patients. The physician cannot find any official data linking the new drug with liver dysfunction. Which of the following is the most appropriate action by the physician?",
+          "options": [
+            { "id": "A", "text": "Continue the drug in all patients but inform the drug company about the association" },
+            { "id": "B", "text": "Discontinue the drug in all patients but study the results again to identify other possible causes of the abnormal findings" },
+            { "id": "C", "text": "Discontinue the new drug in affected patients and file MedWatch reports on the FDA’s Web site" },
+            { "id": "D", "text": "Discontinue the new drug in all patients and take no further action" },
+            { "id": "E", "text": "Do nothing, since the drug company most likely previously conducted all necessary research" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "https://www.fda.gov/safety/medwatch-fda-safety-information-and-adverse-event-reporting-program\nWhen a trial drug comes in, you must report any weird side effects and discontinue the drug in those experiencing it. However, by this point the drug has already gone through clinical trials and should be fine in the remaining 40 patients, but we will still be monitoring them too.\nThe point of this is to find any adverse effects that were not found before."
+        },
+        {
+          "qid": "s1q19",
+          "number": 19,
+          "stem": "A sedentary 50-year-old man with hypertension comes to the physician because of a 6-week history of depression, anxiety, difficulty sleeping, fatigue, decreased appetite, and poor memory and concentration. He had an anterior wall myocardial infarction 3 months ago. He has one glass of wine each evening. He is 165 cm (5 ft 5 in) tall and weighs 67 kg (148 lb); BMI is 25 kg/m². His pulse is 104/min, respirations are 16/min, and blood pressure is 177/89 mm Hg. ECG is unchanged. Labs show hemoglobin 13.8 g/dL, LDL cholesterol 127 mg/dL, serum LDL cholesterol 117 mg/dL. Which of the following is most likely to decrease this patient’s risk for mortality over the next 2 years?",
+          "options": [
+            { "id": "A", "text": "Abstinence from alcohol" },
+            { "id": "B", "text": "Diet high in omega-3 fatty acids" },
+            { "id": "C", "text": "Low-calorie diet" },
+            { "id": "D", "text": "Antidepressant therapy" },
+            { "id": "E", "text": "Anxiolytic treatment" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Most of the pts values were normal. Drinking wasn't outrageous, LDL was mild, BMI has fine. He did have HTN though.\nThe biggest risk factors are the fact that he had suffered an MI and started suffering severe depression (weight loss/anxiety). Thus, he is more at risk for suicide."
+        },
+        {
+          "qid": "s1q20",
+          "number": 20,
+          "stem": "A 23-year-old woman has had fever, hypotension, and disseminated intravascular coagulation for 24 hours. She has a history of splenectomy following trauma. Which of the following bacteria is the most likely cause of this overwhelming sepsis?",
+          "options": [
+            { "id": "A", "text": "Escherichia coli" },
+            { "id": "B", "text": "Listeria monocytogenes" },
+            { "id": "C", "text": "Pseudomonas aeruginosa" },
+            { "id": "D", "text": "Staphylococcus aureus" },
+            { "id": "E", "text": "Streptococcus pneumoniae" }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Encapsulated organisms run rampant in patients who have no spleen, whether physically or functionally. (Recall the wide-array of sequalae sickle cell patients experience thanks to their functional autosplenectomy.)\nE coli and Pseudomonas are also encapsulated. And if this woman had a splenectomy, she was probably vaccinated against the encapsulated bugs so this question is pretty much bullshit. Under strep pneumo they talk about how this causes sepsis in asplenic patients. But the test writer fucked up if this question was just a basics question on Strep pneumo."
+        },
+        {
+          "qid": "s1q21",
+          "number": 21,
+          "stem": "A 44-year-old woman comes to the physician for a follow-up examination after two separate Pap smears showed atypical squamous cells of undetermined significance. Results of a molecular diagnostic test show the presence of the viral E6 protein of human papillomavirus. This protein is known to promote cell growth and malignancy by causing cellular p53 protein degradation. This degradation most likely begins when the p53 protein is targeted to which of the following types of cellular enzymes?",
+          "options": [
+            { "id": "A", "text": "Lysine acetyltransferase" },
+            { "id": "B", "text": "Lysosomal protease" },
+            { "id": "C", "text": "Serine protease" },
+            { "id": "D", "text": "Tyrosine kinase" },
+            { "id": "E", "text": "Ubiquitin ligase" }
+          ],
+          "correctOptionId": "E",
+          "explanation": "In eukaryotic cells, two major pathways—the ubiquitin-proteasome pathway and lysosomal proteolysis—mediate protein degradation.\nThe major pathway of selective protein degradation in eukaryotic cells uses ubiquitin as a marker that targets cytosolic and nuclear proteins for rapid proteolysis.\nThe other major pathway of protein degradation in eukaryotic cells involves the uptake of proteins by lysosomes and digestion by proteases.\n"Certain viruses have evolved to recruit the cellular E3 ligases to induce the degradation of cellular proteins that might have harmful effects on the viral life cycle. For instance, the protein E6 of Human papillomavirus (HPV) recruits the cellular E3 ubiquitin ligase E6-AP to induce ubiquitination and degradation of p53, thereby allowing viral replication." from: https://www.mdpi.com/1999-4915/9/11/322/htm\nBORTEZOMIB"
+        },
+        {
+          "qid": "s1q22",
+          "number": 22,
+          "stem": "A 43-year-old woman, gravida 2, para 1, at 10 weeks' gestation comes to the physician for an initial prenatal visit. Physical examination shows a uterus consistent in size with a 10-week gestation. This patient is at increased risk for a child with Down syndrome if she has which of the following sets of ultrasound and serum findings?",
+          "matrix": {
+            "columns": [
+              "Fetal Ultrasound Nuchal Translucency",
+              "Maternal Serum Pregnancy-associated Plasma Protein",
+              "Human Chorionic Gonadotropin"
+            ],
+            "rows": [
+              { "name": "A", "options": [ { "id": "A1", "text": "↑" }, { "id": "A2", "text": "↑" }, { "id": "A3", "text": "↑" } ] },
+              { "name": "B", "options": [ { "id": "B1", "text": "↑" }, { "id": "B2", "text": "↓" }, { "id": "B3", "text": "↑" } ] },
+              { "name": "C", "options": [ { "id": "C1", "text": "↑" }, { "id": "C2", "text": "↓" }, { "id": "C3", "text": "↓" } ] },
+              { "name": "D", "options": [ { "id": "D1", "text": "↓" }, { "id": "D2", "text": "↑" }, { "id": "D3", "text": "↑" } ] },
+              { "name": "E", "options": [ { "id": "E1", "text": "↓" }, { "id": "E2", "text": "↑" }, { "id": "E3", "text": "↓" } ] },
+              { "name": "F", "options": [ { "id": "F1", "text": "↓" }, { "id": "F2", "text": "↓" }, { "id": "F3", "text": "↑" } ] }
+            ]
+          },
+          "correctOptionId": "B",
+          "explanation": "Down Syndrome Labs: High HI, hCG and Inhibin.\n\nIncreased nuchal translucency\nIncreased hCG\nIncreased inhibin\nDecreased AFP\nDecreased PAPPA (pregnancy associated plasma protein A)"
+        },
+        {
+          "qid": "s1q23",
+          "number": 23,
+          "stem": "A 36-year-old woman comes to the office because of a 1-month history of joint pain, frequent headaches, and fatigue. Her temperature is 37.6 °C (99.6 °F). Physical examination shows edema of the upper and lower extremities. An abdominal CT scan is shown. Which of the following additional findings was most likely seen in this patient?",
+          "options": [
+            { "id": "A", "text": "Enlarged liver" },
+            { "id": "B", "text": "Gallstones" },
+            { "id": "C", "text": "Gastric perforation" },
+            { "id": "D", "text": "Pancreatic mass" },
+            { "id": "E", "text": "Splenomegaly" }
+          ],
+          "correctOptionId": "E",
+          "image": [
+            { "path": "/images/nbme20/s1/normal.png", "alt": "Normal CT scan" },
+            { "path": "/images/nbme20/s1/patient.png", "alt": "Patient CT scan" }
+          ],
+          "explanation": "This patient has Felty syndrome, an extraarticular manifestation of RA. Symptoms include a triad of RA, splenomegaly and neutropenia."
+        },
+        {
+          "qid": "s1q24",
+          "number": 24,
+          "stem": "A 25-year-old woman comes to the physician because of a 2-day history of fever, malaise, and a rash. She had a single painless lesion on her labia 3 weeks ago, but it resolved spontaneously. She is sexually active, but she and her partner do not use condoms consistently. Her temperature is 38°C (100.4°F). Physical examination shows a diffuse erythematous rash that includes the palms and soles. A sensitive but nonspecific rapid serologic screening test that uses which of the following reagents is most likely to support a diagnosis?",
+          "options": [
+            { "id": "A", "text": "Antitreponemal antibody on beads" },
+            { "id": "B", "text": "Dead commensal treponemes on beads" },
+            { "id": "C", "text": "Live Treponema pallidum on glass slides" },
+            { "id": "D", "text": "A phospholipid (cardiolipin) on charcoal particles" },
+            { "id": "E", "text": "Soluble fluorescent treponemal antibodies" },
+            { "id": "F", "text": "Treponemal antigens on ELISA plates" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Palms and soles rashe is seen in CARS, Coxsackie A, Rickettsia, and Syphilis.\nShe gas syphillis which can be tested for with VDRL/RPR or more specifically with FTA-ABS.\n\nThis question wants the sensitive but nonspecific rapid RPR. RPR and VDRL both test for antibodies against cardiolipin, while FTA tests for anitbodies against syphilis antigens (and this test remains positive for life since anti-treponemal therapy wont get rid of the antigens).\n\nThe cardiolipin can be a false positive with pregnancy, lupus, and many other things."
+        },
+        {
+          "qid": "s1q25",
+          "number": 25,
+          "stem": "An 80-year-old man with type 2 diabetes mellitus is brought to the physician because of a 2-month history of severe constipation. Use of over-the-counter laxatives has not relieved his symptoms. Abdominal examination shows distention. Colonoscopy shows no abnormalities. This patient most likely has dysfunction of which of the following nerves?",
+          "options": [
+            { "id": "A", "text": "Hypogastric" },
+            { "id": "B", "text": "Inferior rectal" },
+            { "id": "C", "text": "Pelvic splanchnic" },
+            { "id": "D", "text": "Perineal" },
+            { "id": "E", "text": "Sacral sympathetic" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "Fecal incontinence is usually related to the pudendal nerve (S2-S4) so many people might pick E, but eating and digesting are not sympathetic activities. Passing feces requires parasympathetic innervation. The GIT chapter discusses that the hindgut parasympathetics are from the pelvic splanchnic innervation. The foregut and midgut get vagal parasympathetic innervation.\n\nThe hypogastric nerve is for sympathetic stimulation of emission during sex. The pudendal nerve also has a part here and helps with expulsion. The pudendal nerve is also important for the external anal sphincter and damage can lead to fecal incontinence."
+        },
+        {
+          "qid": "s1q26",
+          "number": 26,
+          "stem": "Following a wedding reception attended by 75 people, 25 adults develop low-grade fever, abdominal cramping, vomiting, and diarrhea. The symptoms begin 24 to 36 hours after the event and resolve without treatment in 3 to 4 days. Studies of stool specimens show no occult blood, no leukocytes, and cultures grow no pathogens. Several family members exhibit similar symptoms 3 days after the initial outbreak. Which of the following is the most likely causal organism?",
+          "options": [
+            { "id": "A", "text": "Giardia lamblia" },
+            { "id": "B", "text": "Norovirus" },
+            { "id": "C", "text": "Rotavirus" },
+            { "id": "D", "text": "Shigella dysenteriae" },
+            { "id": "E", "text": "Staphylococcus aureus" }
+          ],
+          "correctOptionId": "B",
+          "explanation": "The speed of onset (24-36 hours), lack of blood, lack of pathogens, and self resolving nature all depict that this is a viral gastroenteritis. The norovirus is a positive RNA calicivirus that causes outbreaks commonly on cruises, leading to watery diarrhea. It is mainly transmitted via shellfish and can have concomitant HepA infection. Its incubation can take 1-2 days and self-resolves!\n\nRotavirus is a dsRNA reoviridae that causes infantile gastroenteritis but most people are vaccinated. Staph aureus is related to nonbloody food poisoning within 2-6 hours from preformed toxin. The others can cause blood. And bacteria would show up as pathogens."
+        },
+        {
+          "qid": "s1q27",
+          "number": 27,
+          "info": "An investigator compares the DNA sequences of newborns with achondroplasia with the sequences of healthy newborns. DNA sequence analysis shows a G→C mutation in the fibroblast growth factor 3 (FGFR3) gene on chromosome 4. The sequences are shown below.",
+          "infoImages": [
+            {
+              "path": "/images/nbme20/s1/stats.png",
+              "alt": "DNA sequence comparison showing achondroplasia mutation"
+            }
+          ],
+          "stem": "As a result of this mutation, an MspI restriction enzyme site is created. Which of the following sequences most likely represents the substrate specificity of MspI?",
+          "options": [
+            { "id": "A", "text": "5′ AATT" },
+            { "id": "B", "text": "5′ ACCG" },
+            { "id": "C", "text": "5′ AGGG" },
+            { "id": "D", "text": "5′ CCGG" },
+            { "id": "E", "text": "5′ GGCC" },
+            { "id": "F", "text": "5′ TACC" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Most restriction enzymes bind palindromes and 5'CCGG or 3'GGCC would both be acceptable answers here to bind to the underlined segment."
+        },
+        {
+          "qid": "s1q28",
+          "number": 28,
+          "stem": "A female newborn delivered at 36 weeks' gestation is in respiratory distress. Apgar scores are 3 and 5 at 1 and 5 minutes, respectively. Physical examination shows cyanosis. Endotracheal and nasogastric tubes are placed. The x-ray shown depicts the nasogastric tube in the left hemithorax, displacement of the mediastinum to the right, and absence of bowel gas in the abdomen. This condition most likely results from which of the following embryologic events?",
+          "image": [
+            {
+              "path": "/images/nbme20/s1/scan.png",
+              "alt": "X-ray showing congenital diaphragmatic hernia"
+            }
+          ],
+          "options": [
+            { "id": "A", "text": "Failure of epimere to migrate" },
+            { "id": "B", "text": "Failure of hypomere to migrate" },
+            { "id": "C", "text": "Hypoplasia of the lungs" },
+            { "id": "D", "text": "Incomplete formation of pleuroperitoneal membrane" },
+            { "id": "E", "text": "Malrotation of bowel" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "This patient has a congenital diaphragmatic hernia, causing abdominal contents to pop up in the left thorax, since the right is safe thanks to the liver. The lungs get compressed leading to hypoplasia. This is due to D and can also be due to trauma. Choices A and B are embryology related. The myotome is divided into 2 sections, the epimere and hypomere, which form the epaxial and hypaxial muscles. The epaxial muscles are the erector spinae and small intervertebral muscles, while the hypaxial muscles are everything else including those of the limbs, innervated by ventral rami."
+        },
+        {
+          "qid": "s1q29",
+          "number": 29,
+          "stem": "An 82-year-old woman is brought to the physician because of a 1-week history of episodes of light-headedness and fainting. She has hypertension currently treated with propranolol. Her pulse is 45/min, and blood pressure is 90/50 mm Hg. Physical examination shows no other abnormalities. An ECG shows normal, regular P waves followed by normal QRS complexes. The physician decreases the dose of propranolol. Five days later, the patient's pulse is 80/min, and her symptoms have resolved. Which of the following is the most likely explanation for this patient's low pulse while taking the higher dose of propranolol?",
+          "options": [
+            { "id": "A", "text": "Decreased activation of fast sodium channels" },
+            { "id": "B", "text": "Decreased rate of repolarization phase" },
+            { "id": "C", "text": "Decreased slope of diastolic depolarization" },
+            { "id": "D", "text": "Increased calcium influx during late phase of slow depolarization" },
+            { "id": "E", "text": "Increased potassium influx during rapid depolarization phase" },
+            { "id": "F", "text": "Increased sodium efflux during early repolarization phase" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "BBs work by decreasing cAMP and Ca2+ thereby slowing SAN & AVN activity. This prolongs phase 4 of depolarization. Therefore, they are known to increase the duration of diastole (predominantly) causing both a rise in heart coronary perfusion and reduction in heart rate."
+        },
+        {
+          "qid": "s1q30",
+          "number": 30,
+          "stem": "A 30-year-old man comes to the physician because of a 3-month history of pain in his jaw and left arm. He also has had intense thirst and increased urination during this period. He was found to have peptic ulcer disease 2 months ago. Physical examination shows no abnormalities. Serum studies show a calcium concentration of 13.5 mg/dL and an intact parathyroid hormone concentration of 110 pg/mL (N=10–65). An x-ray of the left humerus shows no abnormalities. Which of the following biologic mechanisms best explains the impaired calcium homeostasis in this patient?",
+          "options": [
+            { "id": "A", "text": "Decreased calcium reabsorption by renal tubules" },
+            { "id": "B", "text": "Decreased expression of parathyroid hormone receptors on osteoblasts" },
+            { "id": "C", "text": "Decreased hydroxylation of vitamin D by renal tubule epithelial cells" },
+            { "id": "D", "text": "Increased calcitonin secretion by thyroid gland" },
+            { "id": "E", "text": "Increased motility of monocytes in bone marrow" },
+            { "id": "F", "text": "Increased osteoclast maturation and activity" }
+          ],
+          "correctOptionId": "F",
+          "explanation": "This patient has primary hyperparathyroidism caused by parathyroid adenoma. Addition of the peptic ulcer suggest Zollinger ---> MEN1 but none of that is important because that's not what they are asking. All they are asking for is the function of PTH. PTH promotes osteoclast activity of breaking bone hydroxyapatite into calcium and phosphate. But osteoclasts do not have a PTH receptor. PTH binds osteoblasts, which then secrete RANK-L to bind RANK receptors of osteoclasts and activate them."
+        },
+        {
+          "qid": "s1q31",
+          "number": 31,
+          "info": "An 18-year-old woman comes to the physician because she has never had a menstrual period. Physical examination shows a 1-cm invagination where the vagina would normally be present. No uterus is palpable on rectal examination. Laboratory studies of serum show: Follicle-stimulating hormone 8.3 mIU/mL, Luteinizing hormone 6.7 mIU/mL, Estradiol 200 pg/mL (N=30–400), Testosterone 3 nmol/L (N≤3.5).",
+          "infoImages": [
+            {
+              "path": "/images/nbme20/s1/stats2.png",
+              "alt": "Hormone levels in primary amenorrhea with absent uterus"
+            }
+          ],
+          "stem": "Which of the following structures is most likely normal in this patient?",
+          "options": [
+            { "id": "A", "text": "Cervix" },
+            { "id": "B", "text": "Ductus deferens" },
+            { "id": "C", "text": "Ovaries" },
+            { "id": "D", "text": "Round ligament" },
+            { "id": "E", "text": "Testes" },
+            { "id": "F", "text": "Uterus" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "The mullerian paramesonephric duct becomes the female internal structures; fallopian tubes, uterus, and upper vagina (lower portion comes from the urogenital sinus). Mayer Rokitansky Kuster Hauser syndrome presents with primary amenorrhea due to the lack of a uterus in females with full secondary sexual characteristics thanks to functional ovaries. This is often compared to Androgen insensitivity where the LH and testosterone will be high due to a lack of negative feedback, and the patient will have no pubic hair. So a 46, XY male will appear as a female with female external genitalia, a rudimentary vagina, but no uterus or fallopian tubes. These patients will have normal functioning testes in the labia majora, and they must surgically remove it in case of malignancy. AIS is an X-linked defect."
+        },
+        {
+          "qid": "s1q32",
+          "number": 32,
+          "stem": "A 27-year-old woman comes to the physician because of a 3-month history of intermittent headaches and palpitations. Her initial blood pressure is 125/80 mm Hg while she sits in a chair. When asked to sit on the examination table, she has facial flushing, and her blood pressure increases to 185/115 mm Hg. Physical examination shows no other abnormalities. Which of the following is the most likely diagnosis?",
+          "options": [
+            { "id": "A", "text": "Coarctation of the aorta" },
+            { "id": "B", "text": "Hyperthyroidism" },
+            { "id": "C", "text": "Pheochromocytoma" },
+            { "id": "D", "text": "Primary aldosteronism" },
+            { "id": "E", "text": "Renovascular hypertension" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "This is a very unorthodox question scenario. But, the other choices do not fit in at all. Coarctation of the aorta (pg 317) would have a brachial femoral delay with increased risk of berry aneurysms, both due to increased blood flow to the head. Hyperthyroidism does not cause this, neither does aldosteronism. Renovascular HTN would just have HTN. This patient has a normal BP initially because pheos have a relapsing pattern. When people stand up, a lot of sympathetics fire off to prevent orthostatic hypotension, but in pheo she probably released too many catecholamines in her moment of standing."
+        },
+        {
+          "qid": "s1q33",
+          "number": 33,
+          "stem": "Purified serum antibodies elicited by immunization with protein X are adsorbed to microtiter wells. The graph shows the amount of radiolabeled protein X that is bound by the solid-phase anti-X antibodies in the presence of varying concentrations of protein Y. With respect to the anti-X serum, which of the following interpretations regarding the epitopes expressed by proteins X and Y is correct?",
+          "image": [
+            {
+              "path": "/images/nbme20/s1/graph.png", 
+              "alt": "Competitive binding assay graph of protein X and protein Y"
+            }
+          ],
+          "options": [
+            { "id": "A", "text": "Proteins X and Y express the same epitopes" },
+            { "id": "B", "text": "Proteins X and Y have no epitopes in common" },
+            { "id": "C", "text": "Protein X expresses all of the epitopes expressed by protein Y, but protein Y does not express all of the epitopes expressed by protein X" },
+            { "id": "D", "text": "Protein Y expresses all of the epitopes expressed by protein X, but protein X does not express all of the epitopes expressed by protein Y" }
+          ],
+          "correctOptionId": "D",
+          "explanation": ""
+        },
+        {
+          "qid": "s1q34",
+          "number": 34,
+          "stem": "A patient with a 1-week history of diarrhea has reduced tissue turgor. Arterial pH is 7.3; serum bicarbonate concentration is 15 mEq/L. This patient is also likely to have which of the following?",
+          "options": [
+            { "id": "A", "text": "Decreased arterial PCO2" },
+            { "id": "B", "text": "Decreased circulating level of ADH (vasopressin)" },
+            { "id": "C", "text": "Decreased circulating level of aldosterone" },
+            { "id": "D", "text": "Increased circulating level of atrial natriuretic peptide" },
+            { "id": "E", "text": "Increased serum anion gap" }
+          ],
+          "correctOptionId": "A",
+          "explanation": "This patient has a low pH and low HCO3. The chronic diarrhea will be compensated by respiratory hyperventilation leading to decreased CO2. Adrenal insufficiency (low aldosterone) has low Na HCO3, leading to metabolic acidosis. The HCO3/Cl exchanger increases Cl in exchange for HCO3, and K and H will be high. High NaHCO3 and low HkCl."
+        },
+        {
+          "qid": "s1q35",
+          "number": 35,
+          "info": "A 28-year-old man has excessive thirst and polyuria. The following laboratory data are obtained: Baseline serum osmolality is 310 mOsm/kg, urine osmolality is 175 mOsm/kg. With 12 h water deprivation, urine osmolality is 185 mOsm/kg. With ADH (vasopressin) after water deprivation, urine osmolality increases to 315 mOsm/kg.",
+          "infoImages": [
+            { "path": "/images/nbme20/s1/stats3.png", "alt": "Serum and urine osmolality chart with ADH response" }
+          ],
+          "stem": "Which of the following is the primary site of the pathophysiologic process in this patient?",
+          "options": [
+            { "id": "A", "text": "Adrenal cortex" },
+            { "id": "B", "text": "Aortic baroreceptors" },
+            { "id": "C", "text": "Cerebral cortex" },
+            { "id": "D", "text": "Hypothalamus" },
+            { "id": "E", "text": "Renal tubules" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Giving ADH increased urine osmolality. This means ADH is not being made but the kidney responds to ADH fine. The baseline urine osmolality is low (peeing a lot of water) so the patient is thirsty. When water is deprived, nothing changes significantly (so its not psychogenic polydipsia where the serum osmolality would normalize because their ADH works fine). ADH is synthesized in the supraoptic nucleus of the hypothalamus."
+        },
+        {
+          "qid": "s1q36",
+          "number": 36,
+          "info": "A 38-year-old African American man with recently diagnosed hypertension comes to the physician for a follow-up examination. At his last visit 1 month ago, the patient agreed to initiate a regimen including increased physical activity, a low-sodium diet, and pharmacotherapy. He has had no weight loss since then. He is 175 cm (5 ft 9 in) tall and weighs 82 kg (180 lb); BMI is 27 kg/m². His blood pressure is 150/95 mm Hg. Physical examination shows no other abnormalities.",
+          "stem": "Which of the following best describes the role of ethnicity when the appropriate medication is selected for this patient?",
+          "options": [
+            {
+              "id": "A",
+              "text": "It should not play a role because cost, patient adherence, and adverse effects are of primary importance"
+            },
+            {
+              "id": "B",
+              "text": "It should not play a role because use of ethnicity could lead to stereotyping"
+            },
+            {
+              "id": "C",
+              "text": "It should not play a role because the variability of response to medications within a single ethnic group is greater than the different responses among ethnicities"
+            },
+            {
+              "id": "D",
+              "text": "It should play a role because the adverse effect profiles differ by ethnicity"
+            },
+            {
+              "id": "E",
+              "text": "It should play a role because the efficacy of certain classes of medications varies among different ethnicities"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "According to UTD, it is said that for the young patient, ACEI, ARB, beta-blocker are of better efficacy for primary hypertension as a monotherapy, however, CCB and thiazide are better for the elderly and the black patients. \"only pharmacokinetic processes which are biologically or biochemically mediated have the potential to exhibit differences between racial or ethnic groups. Thus, the pharmacokinetic factors which can be expected to potentially exhibit racial differences are (1) bioavailability for drugs which undergo gut or hepatic first-pass metabolism, (2) protein binding, (3) volume of distribution, (4) hepatic metabolism, and (5) renal tubular secretion. Absorption (unless active), filtration at the glomerulus, and passive tubular reabsorption would not be expected to exhibit racial differences.\""
+        },
+        {
+          "qid": "s1q37",
+          "number": 37,
+          "stem": "A 35-year-old man comes to the physician to discuss donating a kidney to his 39-year-old sister who has type 1 diabetes mellitus and chronic renal failure. He has no history of major medical illness, and physical examination shows no abnormalities. Which of the following best describes the likelihood that this donor’s human leukocyte antigen type will match that of his sister?",
+          "options": [
+            { "id": "A", "text": "1:1" },
+            { "id": "B", "text": "1:2" },
+            { "id": "C", "text": "1:4" },
+            { "id": "D", "text": "1:6" },
+            { "id": "E", "text": "1:8" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "Two siblings have a 25% chance of being genotypically HLA identical, a 50% chance of being HLA haploidentical (sharing one haplotype), and a 25% chance that they share no HLA haplotypes. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2628004/"
+        },
+        {
+          "qid": "s1q38",
+          "number": 38,
+          "stem": "A male newborn is found to have a decreased blood thyroxine (T4) concentration on newborn screening. Physical examination shows no abnormalities. Serum studies show decreased concentrations of triiodothyronine (T3) and T4. His serum free T4 and thyroid-stimulating hormone (TSH) concentrations are within the reference ranges. Which of the following best explains these findings?",
+          "options": [
+            { "id": "A", "text": "Maternal antithyroid antibodies" },
+            { "id": "B", "text": "Organification defect in T3 and T4 synthesis" },
+            { "id": "C", "text": "Thyroid dysgenesis" },
+            { "id": "D", "text": "Thyroid hormone–binding globulin deficiency" },
+            { "id": "E", "text": "TSH deficiency" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "A low total but high free T4 indicates a loss of thyroid binding globulin. Bound T3/T4 is inactive and you can have high TBG in pregnancy and OCP use, since estrogen increases TBG. Alternatively, hepatic failure, steroid use, and nephrotic syndrome decreases TBG. \"Thyroxine-binding globulin deficiency — Thyroxine-binding globulin (TBG) deficiency is characterized by low serum total T4 but normal free T4 and TSH; the diagnosis is confirmed by measuring TBG concentrations. These infants have normal thyroid function and do not require treatment.\" - uptodate"
+        },
+        {
+          "qid": "s1q39",
+          "number": 39,
+          "stem": "A 29-year-old man comes to the physician because of a 1-week history of fever, muscle aches, sore throat, and nonproductive cough. His temperature is 38.9°C (102°F). Rhonchi are heard on auscultation of the chest. A chest x-ray shows bronchopneumonia of the right lower lobe. Symptoms persist after 7 days of amoxicillin therapy. A test result for cold agglutinins is positive. Which of the following features of the causal organism best explains the ineffectiveness of the pharmacotherapy in this patient?",
+          "options": [
+            { "id": "A", "text": "Absence of peptidoglycan" },
+            { "id": "B", "text": "Alteration of penicillin-binding proteins" },
+            { "id": "C", "text": "Impermeable outer membrane" },
+            { "id": "D", "text": "Production of a β-lactamase that inactivates amoxicillin" },
+            { "id": "E", "text": "Requirement of sterols for growth" }
+          ],
+          "correctOptionId": "A",
+          "explanation": "Mycoplasma pneumoniae. Cold IgM agglutinins. No response to amoxicillin due to the lack of a pepitidoglycan cell wall. Classic cause of atypical “walking” pneumonia (insidious onset, headache, nonproductive cough, patchy or diffuse interstitial infiltrate). X-ray looks worse than patient. High titer of cold agglutinins (IgM), which can agglutinate or lyse RBCs. Grown on Eaton agar. Treatment: macrolides, doxycycline, or fluoroquinolone (penicillin ineffective since Mycoplasma have no cell wall). ABC = Africa, Blindness, Chronic infection. D–K = everything else. Neonatal disease can be acquired during passage through infected birth canal. No cell wall. Not seen on Gram stain. Pleomorphic A. Bacterial membrane contains sterols for stability. Mycoplasmal pneumonia is more common in patients < 30 years old. Frequent outbreaks in military recruits and prisons. Mycoplasma gets cold without a coat (cell wall)."
+        },
+        {
+          "qid": "s1q40",
+          "number": 40,
+          "info": "A 70-year-old man has a 3-month history of weakness and a 10-kg (22-lb) weight loss. He has smoked 2 packs of cigarettes daily for 50 years. An x-ray of the chest shows a 4-cm lesion in the right upper lobe. Serum calcium concentration is 13.5 mg/dL. There are no bone metastases. A malignant lesion arising in a segmental bronchus is seen during lobectomy.",
+          "stem": "Which of the following is the most likely diagnosis?",
+          "options": [
+            { "id": "A", "text": "Adenocarcinoma" },
+            { "id": "B", "text": "Carcinoid" },
+            { "id": "C", "text": "Leiomyosarcoma" },
+            { "id": "D", "text": "Small cell carcinoma" },
+            { "id": "E", "text": "Squamous cell carcinoma" }
+          ],
+          "correctOptionId": "E",
+          "explanation": "He has a characteristic lesion of SqCC and the PTHrP is causing hypercalcemia. This cancer histologically presents with keratin pearls and intercellular bridges, and is often related to cavitation and cigarettes. It is also found centrally. Small cell carcinoma can actually produce ACTH, cause SIADH, or cause Lambert Eaton via antibodies against Ca channels. These show neuroendocrine findings of chromogranin A, NSE, synaptophysin, and NCAM/CD56."
+        },    
+        {
+          "qid": "s1q41",
+          "number": 41,
+          "info": "A 78-year-old man is brought to the emergency department by his neighbor because of a 3-week history of severe weakness and fatigue; he also has had a 7.3-kg (16-lb) weight loss during this period. He lives alone, and he says that his daughter usually visits him once or twice weekly to bring him groceries. However, he has eaten nothing but small quantities of saltine crackers and black coffee since his daughter left for vacation 1 month ago. He is 173 cm (5 ft 8 in) tall and now weighs 56 kg (124 lb); BMI is 19 kg/m2. His pulse is 92/min, and blood pressure is 108/76 mm Hg. Physical examination shows generalized muscle weakness. Serum studies in this patient are most likely to show an increased concentration of which of the following hormones?",
+          "stem": "Serum studies in this patient are most likely to show an increased concentration of which of the following hormones?",
+          "options": [
+            { "id": "A", "text": "Cortisol" },
+            { "id": "B", "text": "Insulin" },
+            { "id": "C", "text": "Insulin-like growth factor-I" },
+            { "id": "D", "text": "Testosterone" },
+            { "id": "E", "text": "Triiodothyronine (T3)" }
+          ],
+          "correctOptionId": "A",
+          "explanation": "This patient is in a period of stress. Cortisol's is a hormone necessary for life because it helps manage such situations. He is not eating enough and cortisol functions in maintaining his BP as well as keeping him alive via gluconeogenesis, lipolysis, and proteolysis to replenish what hes not eating."
+        },            
+        {
+          "qid": "s1q42",
+          "number": 42,
+          "stem": "An 18-year-old boy has just been diagnosed with schizophrenia. His identical twin brother is unaffected, but he and his parents are concerned about his likelihood of developing the disorder. Which of the following best represents the brother’s risk for developing schizophrenia?",
+          "options": [
+            { "id": "A", "text": "10%" },
+            { "id": "B", "text": "25%" },
+            { "id": "C", "text": "50%" },
+            { "id": "D", "text": "75%" },
+            { "id": "E", "text": "100%" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "While the lifetime risk in the general population is just below 1%, it is 6.5% in first-degree relatives of patients and it rises to more than 40% in monozygotic twins of affected people. Analyzing classic studies of the genetics of schizophrenia done as early as in 1930s, Fischer concludes that a concordance rate for psychosis of about 50% in monozygotic twins seems to be a realistic estimate, which is significantly higher than that in dizygotic twins of about 10–19%. (ncbi.nlm.nih.gov/pmc/articles/PMC4623659/#ref3)"
+        },
+        {
+          "qid": "s1q43",
+          "number": 43,
+          "stem": "A 25-year-old man comes to the physician 8 hours after the onset of severe pain of his low back that radiates down his left leg. He started a weight-lifting regimen earlier in the day during which he tried to lift a bar loaded with 91 kg (200 lb) from the ground to over his head. The pain began almost immediately after this attempt. Which of the following is the most likely cause of this patient’s pain?",
+          "options": [
+            { "id": "A", "text": "A fracture of a lumbar vertebra" },
+            { "id": "B", "text": "Rupture of the deltoid tendon" },
+            { "id": "C", "text": "Rupture of an intervertebral disc" },
+            { "id": "D", "text": "A tear in the sciatic nerve" },
+            { "id": "E", "text": "A torn muscle in the low back" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "Common knowledge amongst my family has always been \"lifting heavy weights will cause a disc herniation.\" So I just thought of that. But in all reality, the other answer choices can be removed. He probably has a disc herniation at L5-S1, causing sciatica. He cannot have a lumbar fracture because he is young and there is no indication for a weak lumbar area in him. The deltoid rupture would not cause back pain. The sciatic nerve is very thick and will not \"tear\" but it is being compressed here due to the herniation. A torn muscle in the lower back would not have back pain."
+        },
+        {
+          "qid": "s1q44",
+          "number": 44,
+          "stem": "A 25-year-old woman comes to the physician 2 days after noticing a mass in her right axilla. She also has a 1-week history of malaise, headaches, and night sweats. The patient says that she recently adopted a kitten and has sustained several bite and scratch marks. Her temperature is 37.8°C (100°F). Physical examination shows edema and tenderness of the right axillary lymph node. The skin over the node is erythematous, tough, and warm. There are scratches and bite marks of various ages over the upper extremities and hands. The result of an indirect fluorescent antibody test for Bartonella henselae is positive. A biopsy specimen of this lymph node is most likely to show which of the following histologic patterns?",
+          "options": [
+            { "id": "A", "text": "Diffuse neutrophil infiltration" },
+            { "id": "B", "text": "Granulomas containing stellate microabscesses" },
+            { "id": "C", "text": "Large activated lymphocytes with occasional plasma cells" },
+            { "id": "D", "text": "Serous inflammation with abundant intravascular fibrin and few inflammatory cells" },
+            { "id": "E", "text": "Vascular proliferation with fibrosis" }
+          ],
+          "correctOptionId": "B",
+          "explanation": "Cat scratch disease (Bartonella infection in immunocompetent hosts) causes lymphadenitis (especially in the axillary region) characterized by sarcoid-like non-caseating granulomas filled with neutrophils.\n\nhttps://en.wikipedia.org/wiki/Cat-scratch_disease\nhttps://www.researchgate.net/figure/Typical-stellate-microabscess-of-cat-scratch-disease-A-Small-necrotizing-granulomas_fig1_51750307"
+        },        
+        {
+          "qid": "s1q45",
+          "number": 45,
+          "stem": "A 65-year-old man is brought to the emergency department because of substernal chest pain, nausea, and sweating for 1 hour. He has a 10-year history of type 2 diabetes mellitus and hypertension. His pulse is 120/min, respirations are 24/min, and blood pressure is 98/60 mm Hg. Physical examination shows a jugular venous distention of 12 cm. Crackles are heard halfway up the lung fields posteriorly. Which of the following ECG findings is most likely in this patient?",
+          "image": {
+            "path": "/images/nbme20/s1/aVF.png",
+            "alt": "ECG infarct localization"
+          },
+          "options": [
+            { "id": "A", "text": "PR-segment depression" },
+            { "id": "B", "text": "PR-segment elevation" },
+            { "id": "C", "text": "QRS widening" },
+            { "id": "D", "text": "QT-interval prolongation" },
+            { "id": "E", "text": "QT-interval shortening" },
+            { "id": "F", "text": "ST-segment elevation" }
+          ],
+          "correctOptionId": "F",
+          "explanation": "This man is showing symptoms of an MI.\n\nInitial phase of myocardial infarction leads to subendocardial necrosis involving < 50% of the myocardial thickness (subendocardial infarction); EKG shows ST-segment depression.\n\nContinued or severe ischemia (>20 minutes) leads to transmural necrosis involving most of the myocardial wall (transmural infarction); EKG shows ST-segment elevation.\n\nThe PR segment is usually isoelectric. A depression or elevation should evoke the diagnosis of acute pericarditis or atrial infarction.\nQT interval (ventricular depolarization and repolarization) prolongation can be due to drugs and predisposes to torsades.\nShort QT syndrome is an autosomal dominant disorder of the electrical system and can lead to SCD if not treated with an ICD."
+        },        
+        {
+          "qid": "s1q46",
+          "number": 46,
+          "stem": "Three elderly residents of an assisted living facility in rural Pennsylvania are admitted to the hospital within 3 days of one another because of pneumonia. All three patients have a history of chronic obstructive pulmonary disease and returned home from a weekend retreat at a residence hall 4 to 7 days ago. Forty-three other individuals attended the retreat. Two other attendees developed pneumonia shortly after returning home, but they did not require hospital admission; they were a 37-year-old woman with systemic lupus erythematosus treated with corticosteroids and a 46-year-old man with severe asthma. No other retreat attendees, including nine children under the age of 5 years, developed a respiratory illness. None of the other residents of the assisted living facility have any symptoms of respiratory illness. Which of the following infectious agents is the most likely cause of these findings?",
+          "options": [
+            { "id": "A", "text": "Adenovirus" },
+            { "id": "B", "text": "Influenza virus" },
+            { "id": "C", "text": "Legionella pneumophila" },
+            { "id": "D", "text": "Respiratory syncytial virus" },
+            { "id": "E", "text": "Streptococcus pneumoniae" }
+          ],
+          "correctOptionId": "C",
+          "explanation": "Legionnaires is an atypical pneumonia commonly seen in smokers and COPD patients. In this question only the immunocompromised and elderly were affected.\n\nAdenovirus would make all the kids sick and also cause conjunctivitis and diarrhea and much more.\nInfluenza would also make many people sick and hospitalize them.\nRSV really just causes pneumonia in infants.\nStrep pneumoniae would also infect many other people not just the older and immunocompromised."
+        },
+        {
+          "qid": "s1q47",
+          "number": 47,
+          "stem": "A 56-year-old woman has frequently burned herself while cooking over the past several months. Examination shows loss of pain and temperature sensation in both upper extremities and in a portion of her trunk from the clavicles to just below the nipples. Touch, vibratory sensation, and proprioception are normal. There is some wasting of the small muscles of her hands. Which of the following findings is most likely on MRI of the head and spine?",
+          "options": [
+            { "id": "A", "text": "Dilated third ventricle causing damage to both sides of the thalamus" },
+            { "id": "B", "text": "Edema in the postcentral gyri on both sides secondary to multiple strokes" },
+            { "id": "C", "text": "Sclerotic plaques bilaterally in the anterolateral white matter of the spinal cord" },
+            { "id": "D", "text": "Syrinx of the central region of the spinal cord from C-4 to T-5" },
+            { "id": "E", "text": "Tumors compressing the lateral funiculi of the spinal cord at C-4" }
+          ],
+          "correctOptionId": "D",
+          "explanation": "She has the classic presentation often seen in questions."
+        },
+        {
+          "qid": "s1q48",
+          "number": 48,
+          "stem": "Which of the following changes in the cardiovascular system occurs with normal aging?",
+          "image": {
+            "path": "public/images/nbme20/s1/heart.png",
+            "alt": "Cardiovascular aging changes"
+          },
+          "options": [
+            { "id": "A", "text": "Development of coronary atherosclerosis" },
+            { "id": "B", "text": "Development of mitral stenosis" },
+            { "id": "C", "text": "Increased basal heart rate" },
+            { "id": "D", "text": "Increased basal systolic blood pressure" },
+            { "id": "E", "text": "Increased cardiac muscle mass" },
+            { "id": "F", "text": "Increased compliance of arteries" }
+          ],
+          "correctOptionId": "D",
+          "explanation": ""
+        },
+        {
+          "qid": "s1q49",
+          "number": 49,
+          "stem": "A 28-year-old woman of Eastern European Jewish decent comes to the office 2 days after she noticed a lump in her left breast. Her maternal grandmother was diagnosed with ovarian cancer at the age of 54 years and died at the age of 60 years; her maternal aunt and mother were diagnosed with breast cancer at the ages of 36 and 40 years, respectively. The aunt died as a result of the disease at the age of 50 years. The patient is concerned that she may have inherited a genetic mutation that would predispose her to breast and/or ovarian cancer. Genetic testing of this patient and her mother are most likely to show a germline mutation in a component of which of the following pathways?",
+          "options": [
+            { "id": "A", "text": "DNA mismatch repair" },
+            { "id": "B", "text": "DNA polymerase proofreading" },
+            { "id": "C", "text": "DNA base excision repair" },
+            { "id": "D", "text": "DNA nucleotide excision repair" },
+            { "id": "E", "text": "Recombinational double-stranded DNA break repair" }
+          ],
+          "correctOptionId": "E",
+          "explanation": "BRCA gene mutation leads to defective homologous recombination. BRCA involves the breast, ovaries, and pancreas (while HER2 involves the breast stomach). BRCA1 is usually the culprit, although in men its usually BRCA2 mutations. HER2 is a oncogene (turn her on) while BRCA is a tumor suppressor."
+        },
+        {
+          "qid": "s2q5",
+          "number": 50,
+          "stem": "A 50-year-old woman with a restrictive pulmonary disorder with no obstructive component is most likely to have which of the following sets of pulmonary volumes?",
+          "matrix": {
+            "columns": [
+              "Functional Residual Capacity (L)",
+              "Residual Volume (L)",
+              "Vital Capacity (L)"
+            ],
+            "rows": [
+              {
+                "name": "A",
+                "options": [
+                  { "id": "A1", "text": "↓" },
+                  { "id": "A2", "text": "↓" },
+                  { "id": "A3", "text": "↓" }
+                ]
+              },
+              {
+                "name": "B",
+                "options": [
+                  { "id": "B1", "text": "↓" },
+                  { "id": "B2", "text": "↓" },
+                  { "id": "B3", "text": "normal" }
+                ]
+              },
+              {
+                "name": "C",
+                "options": [
+                  { "id": "C1", "text": "↓" },
+                  { "id": "C2", "text": "normal" },
+                  { "id": "C3", "text": "↓" }
+                ]
+              },
+              {
+                "name": "D",
+                "options": [
+                  { "id": "D1", "text": "Normal" },
+                  { "id": "D2", "text": "↓" },
+                  { "id": "D3", "text": "↓" }
+                ]
+              },
+              {
+                "name": "E",
+                "options": [
+                  { "id": "E1", "text": "↑" },
+                  { "id": "E2", "text": "↑" },
+                  { "id": "E3", "text": "↓" }
+                ]
+              }
+            ]
+          },
+          "correctOptionId": "A",
+          "explanation": "Restrictive lung diseases have a decrease in everything because you restrict how much the lung can expand. The ratio of FEV1/FVC may be normal or high because everything decreased proportionately. Obstructive lung diseases have more RV, FRC, and TLC because of air trapping in lungs due to the obstruction, and the decreased FEV1/FVC is a hallmark, although a ratio of RV/TLC >35% seems to be a better criterion for diagnosis."
+        }                                                 
+      ]
+    },
+    {
+      "sectionId": "s2",
+      "title": "Section 2",
+      "questions": [
+        {
+          "qid": "s2q1",
+          "number": 1,
+          "stem": "A 12-year-old girl is brought to the physician for a follow-up examination. Three months ago, she sustained a complex fracture of the left tibia, which required cast immobilization. The cast is removed. Examination of the left calf shows that it is smaller than the right calf. Which of the following processes in this patient's myocytes is the most likely cause of these findings?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Anaerobic glycolysis"
+            },
+            {
+              "id": "B",
+              "text": "Fatty acid degradation"
+            },
+            {
+              "id": "C",
+              "text": "Glycogenolysis"
+            },
+            {
+              "id": "D",
+              "text": "Oxidative phosphorylation"
+            },
+            {
+              "id": "E",
+              "text": "Polyubiquitination"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Atrophy is a decrease in tissue mass due to a decrease in size. She has increased cytoskeleton degradation via the ubiquitin-proteasome pathway and autophagy plus decreased protein synthesis. Causes include disuse (her case), denervation, loss of blood supply, loss of hormonal stimulation, or poor nutrition."
+        },
+        {
+          "qid": "s2q2",
+          "number": 2,
+          "stem": "A 56-year-old man is brought to the emergency department 30 minutes after the onset of severe chest pain while mowing his lawn. His pulse is 110/min, respirations are 20/min, and blood pressure is 105/70 mm Hg. Physical examination shows cool, clammy, diaphoretic skin. Two hours after admission, pulmonary catheterization shows a pulmonary artery pressure of 40/25 mm Hg; the left atrial pressure is 25 mm Hg. Compared with a healthy person, which of the following sets of pulmonary pressure changes is most likely in this patient?",
+          "matrix": {
+            "columns": [
+              "Capillary Hydrostatic",
+              "Interstitial Hydrostatic",
+              "Interstitial Oncotic"
+            ],
+            "rows": [
+              {
+                "name": "A",
+                "options": [
+                  {
+                    "id": "A1",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "A2",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "A3",
+                    "text": "↑"
+                  }
+                ]
+              },
+              {
+                "name": "B",
+                "options": [
+                  {
+                    "id": "B1",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "B2",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "B3",
+                    "text": "↓"
+                  }
+                ]
+              },
+              {
+                "name": "C",
+                "options": [
+                  {
+                    "id": "C1",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "C2",
+                    "text": "↓"
+                  },
+                  {
+                    "id": "C3",
+                    "text": "↑"
+                  }
+                ]
+              },
+              {
+                "name": "D",
+                "options": [
+                  {
+                    "id": "D1",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "D2",
+                    "text": "↓"
+                  },
+                  {
+                    "id": "D3",
+                    "text": "↓"
+                  }
+                ]
+              },
+              {
+                "name": "E",
+                "options": [
+                  {
+                    "id": "E1",
+                    "text": "↓"
+                  },
+                  {
+                    "id": "E2",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "E3",
+                    "text": "↑"
+                  }
+                ]
+              },
+              {
+                "name": "F",
+                "options": [
+                  {
+                    "id": "F1",
+                    "text": "↓"
+                  },
+                  {
+                    "id": "F2",
+                    "text": "↑"
+                  },
+                  {
+                    "id": "F3",
+                    "text": "↓"
+                  }
+                ]
+              }
+            ]
+          },
+          "correctOptionId": "B",
+          "explanation": "Page 331 discusses shock. Page 313 discusses capillary fluid exchange. This patient has cardiogenic shock. Poor forward flow decreases CO increases the SVR, PCWP, and CVP. The extra blood increases capillary hydrostatic pressure, driving fluid into the interstitial space. Compared to the alveoli, the interstitial space now has more fluid so there is more hydrostatic pressure and less oncotic pressure. Now, fluid moves into the alveoli, causing pulmonary edema."
+        }       
+      ]
+    },
+    {
+      "sectionId": "s3",
+      "title": "Section 3",
+      "questions": [
+        {
+          "qid": "s3q1",
+          "number": 1,
+          "stem": "A 50-year-old man is brought to the physician by his wife because of personality changes for 2 years and cognitive decline for 3 months. His wife says, 'He used to be such a kind and shy man, but now he screams at strangers for no apparent reason.' Neurologic examination shows a palmomental reflex and hyperreflexia throughout the upper and lower extremities. His mood appears normal except for occasional inappropriate cursing at the physician. His Mini-Mental State Examination score is 21/30. A CT scan of the head shows disproportionate atrophy of the frontal lobes bilaterally. Which of the following is the most likely diagnosis?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Dementia, Alzheimer type"
+            },
+            {
+              "id": "B",
+              "text": "Huntington disease"
+            },
+            {
+              "id": "C",
+              "text": "Multi-infarct (vascular) dementia"
+            },
+            {
+              "id": "D",
+              "text": "Parkinson disease"
+            },
+            {
+              "id": "E",
+              "text": "Pick disease"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Page 564 discusses Pick disease. Frontotemporal dementia (formerly known as Pick disease): Early changes in personality and behavior (behavioral variant), or aphasia (primary progressive aphasia). May have associated movement disorders (eg, parkinsonism)."
+        },
+        {
+          "qid": "s3q2",
+          "number": 2,
+          "stem": "A 72-year-old woman with dysphagia is undergoing surgical evaluation of a mass in the posterior mediastinum. During this procedure, the thoracic duct is inadvertently damaged near the mass. This injury is most likely to impair the normal lymphatic return of which of the following structures?",
+          "image": {
+            "path": "/images/nbme20/s3/thoracic.png",
+            "alt": "Thoracic duct anatomy"
+          },
+          "options": [
+            {
+              "id": "A",
+              "text": "Heart"
+            },
+            {
+              "id": "B",
+              "text": "Left breast"
+            },
+            {
+              "id": "C",
+              "text": "Left upper extremity"
+            },
+            {
+              "id": "D",
+              "text": "Right kidney"
+            },
+            {
+              "id": "E",
+              "text": "Right lung"
+            }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Page 96 discusses lymphatic drainage and the thoracic duct. The left upper extremity and breast are drained by the axillary lymph node. The kidney is drained by the thoracic duct."
+        }
+      ]
+    },
+    {
+      "sectionId": "s4",
+      "title": "Section 4",
+      "questions": [
+        {
+          "qid": "s4q1",
+          "number": 1,
+          "stem": "A 65-year-old woman who has a 25-year history of chronic alcoholism is brought to the emergency department because she is vomiting blood. She eats little more than an occasional sandwich. Examination of the legs shows perifollicular hyperkeratosis and hemorrhage. Abnormally decreased function of which of the following metabolic pathways is most likely in this patient?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Carboxylation of pyruvic acid"
+            },
+            {
+              "id": "B",
+              "text": "Decarboxylation of pyruvic acid"
+            },
+            {
+              "id": "C",
+              "text": "Decarboxylation of 2-ketoisocaproic acid"
+            },
+            {
+              "id": "D",
+              "text": "Hydroxylation of proline"
+            },
+            {
+              "id": "E",
+              "text": "Synthesis of porphyrin"
+            }
+          ],
+          "correctOptionId": "D",
+          "explanation": "Page 69 discusses Vitamin C deficiency. She has a vitamin C deficiency. Scurvy features swollen gums, easy bruising, petechiae, perifollicular and subperiosteal hemorrhages."
+        },
+        {
+          "qid": "s4q2",
+          "number": 2,
+          "stem": "A 33-year-old woman with HIV infection is brought to the emergency department 30 minutes after she had a generalized tonic-clonic seizure. She also has a 2-month history of daily headaches. Physical examination shows no signs of meningismus. Muscle strength is 3/5 in the left upper extremity and 5/5 in the right upper extremity. Serologic studies show a positive IgG antibody titer to Toxoplasma gondii. Treatment with pyrimethamine and sulfadiazine is initiated. Which of the following is the most likely cause of this mass?",
+          "options": [
+            {
+              "id": "A",
+              "text": "Bacterial abscess"
+            },
+            {
+              "id": "B",
+              "text": "Cerebral toxoplasmosis"
+            },
+            {
+              "id": "C",
+              "text": "Glioblastoma"
+            },
+            {
+              "id": "D",
+              "text": "Metastatic disease"
+            },
+            {
+              "id": "E",
+              "text": "Non-Hodgkin lymphoma"
+            }
+          ],
+          "correctOptionId": "E",
+          "explanation": "Page 462 discusses PCNSL. This is a primary central nervous system lymphoma. Most commonly associated with HIV/AIDS; pathogenesis involves EBV infection. Needs to be distinguished from toxoplasmosis via CSF analysis or other lab tests."
+        }
+      ]
+    }
+  ]
+}

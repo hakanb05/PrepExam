@@ -15,19 +15,21 @@ export interface PurchaseRecord {
 }
 
 export interface ExamQuestion {
+  id: string
   qid: string
   number: number
   stem: string
   info?: string
   infoImages?: { path: string; alt: string } | { path: string; alt: string }[]
-  image?: { path: string; alt: string } | { path: string; alt: string }[]
-  options?: { id: string; text: string }[]
+  images?: { path: string; alt: string } | { path: string; alt: string }[]
+  explanationImage?: { path: string; alt: string } | { path: string; alt: string }[]
+  options?: { id: string; letter: string; text: string }[]
   matrix?: {
     columns: string[]
     rows: { name: string; options: { id: string; text: string }[] }[]
   }
-  correctOptionId: string
-  explanation: string
+  correctOptionId?: string
+  explanation?: string
   categories?: string[]
 }
 

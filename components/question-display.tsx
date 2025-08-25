@@ -30,6 +30,7 @@ export function QuestionDisplay({
   onToggleStrikethrough,
 }: QuestionDisplayProps) {
   const [zoomedImage, setZoomedImage] = useState<string | null>(null)
+
   const renderImage = (image: { path: string; alt: string } | { path: string; alt: string }[], isInfoImage: boolean = false) => {
     const images = Array.isArray(image) ? image : [image]
 
@@ -77,15 +78,15 @@ export function QuestionDisplay({
         {" "}
         {/* Ensure empty string when no selection */}
         <div className="space-y-3">
-          {question.options.map((option) => {
-            const isSelected = selectedAnswer === option.id
-            const isCorrect = correctAnswer === option.id
+          {question.options.map((option, index) => {
+            const isSelected = selectedAnswer === option.letter
+            const isCorrect = correctAnswer === option.letter
             const isIncorrect = isReviewMode && isSelected && !isCorrect
-            const isStruckThrough = struckThroughOptions.includes(option.id)
+            const isStruckThrough = struckThroughOptions.includes(option.letter)
 
             return (
               <div
-                key={option.id}
+                key={`${option.letter}-${index}`}
                 className={cn(
                   "flex items-start space-x-3 p-3 rounded-lg transition-colors",
                   isReviewMode && isCorrect && "bg-green-50 border border-green-200",
@@ -93,11 +94,11 @@ export function QuestionDisplay({
                   !isReviewMode && "hover:bg-muted/50",
                 )}
               >
-                <RadioGroupItem value={option.id} id={option.id} className="mt-1 hover:cursor-pointer" disabled={isReviewMode} />
-                <Label htmlFor={option.id} className="flex-1 cursor-pointer">
+                <RadioGroupItem value={option.letter} id={`${option.letter}-${index}`} className="mt-1 hover:cursor-pointer" disabled={isReviewMode} />
+                <Label htmlFor={`${option.letter}-${index}`} className="flex-1 cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="font-medium mr-2">{option.id}.</span>
+                      <span className="font-medium mr-2">{option.letter}.</span>
                       <span
                         className={cn(
                           "cursor-pointer transition-colors",
@@ -106,7 +107,7 @@ export function QuestionDisplay({
                         onClick={(e) => {
                           e.preventDefault()
                           if (!isReviewMode && onToggleStrikethrough) {
-                            onToggleStrikethrough(option.id)
+                            onToggleStrikethrough(option.letter)
                           }
                         }}
                       >
@@ -146,7 +147,7 @@ export function QuestionDisplay({
                 </tr>
               </thead>
               <tbody>
-                {question.matrix.rows.map((row) => {
+                {question.matrix.rows.map((row, rowIndex) => {
                   const isSelected = selectedAnswer === row.name
                   const isCorrect = correctAnswer === row.name
                   const isIncorrect = isReviewMode && isSelected && !isCorrect
@@ -154,7 +155,7 @@ export function QuestionDisplay({
 
                   return (
                     <tr
-                      key={row.name}
+                      key={`${row.name}-${rowIndex}`}
                       className={cn(
                         isReviewMode && isCorrect && "bg-green-50",
                         isReviewMode && isIncorrect && "bg-red-50",
@@ -163,8 +164,8 @@ export function QuestionDisplay({
                       <td className="border border-border p-3">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value={row.name} id={row.name} className="hover:cursor-pointer" disabled={isReviewMode} />
-                            <Label htmlFor={row.name} className="font-medium cursor-pointer">
+                            <RadioGroupItem value={row.name} id={`${row.name}-${rowIndex}`} className="hover:cursor-pointer" disabled={isReviewMode} />
+                            <Label htmlFor={`${row.name}-${rowIndex}`} className="font-medium cursor-pointer">
                               <span
                                 className={cn(
                                   "cursor-pointer transition-colors",
@@ -185,9 +186,9 @@ export function QuestionDisplay({
                           {isReviewMode && isIncorrect && <XCircle className="h-5 w-5 text-red-600" />}
                         </div>
                       </td>
-                      {row.options.map((option, index) => (
+                      {row.options.map((option, optIndex) => (
                         <td
-                          key={index}
+                          key={`${row.name}-${rowIndex}-${optIndex}`}
                           className={cn(
                             "border border-border p-3 text-center text-lg font-bold",
                             isReviewMode && isCorrect && "text-green-800 dark:text-green-100",
@@ -242,13 +243,21 @@ export function QuestionDisplay({
           </div>
 
           {/* Question Images */}
-          {question.image && renderImage(question.image, false)}
+          {question.images && renderImage(question.images, false)}
 
           {/* Answer Options */}
           <div>
             {question.options && renderMCQOptions()}
             {question.matrix && renderMatrixOptions()}
           </div>
+
+          {/* Explanation Images - Only shown in review mode */}
+          {isReviewMode && question.explanationImage && (
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Explanation Images</h3>
+              {renderImage(question.explanationImage, true)}
+            </div>
+          )}
 
           {/* Categories */}
           {question.categories && (

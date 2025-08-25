@@ -9,12 +9,22 @@ export async function GET(
 ) {
     try {
         const session = await getServerSession(authOptions)
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
         const { examId, sectionId } = await params
-        const userId = session.user.id
+
+        // Get user ID from email
+        const user = await prisma.user.findUnique({
+            where: { email: session.user.email }
+        })
+
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 })
+        }
+
+        const userId = user.id
 
         // Get section data with questions
         const section = await prisma.section.findFirst({
@@ -105,6 +115,7 @@ export async function GET(
                 info: (q as any).info || undefined,
                 infoImages: (q as any).infoImages || undefined,
                 images: (q as any).images || undefined,
+                explanationImage: (q as any).explanationImage || undefined,
                 matrix: (q as any).matrix || undefined,
                 categories: undefined,
                 options: q.options.map((o) => ({ id: o.id, letter: o.letter, text: o.text })),
@@ -128,12 +139,22 @@ export async function POST(
 ) {
     try {
         const session = await getServerSession(authOptions)
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
         const { examId, sectionId } = await params
-        const userId = session.user.id
+
+        // Get user ID from email
+        const user = await prisma.user.findUnique({
+            where: { email: session.user.email }
+        })
+
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 })
+        }
+
+        const userId = user.id
         const body = await request.json()
         const { action, questionId, optionId, note, flag } = body
 
@@ -234,10 +255,123 @@ export async function POST(
                 })
                 break
 
+            case 'pause':
+                // Pause the attempt by setting isPaused to true and saving elapsed time
+                await prisma.attempt.update({
+                    where: { id: attempt.id },
+                    data: {
+                        isPaused: true,
+                        elapsedSeconds: body?.elapsedSeconds || 0
+                    },
+                })
+                break
+
+            case 'resume':
+                // Resume the attempt by setting isPaused to false
+                await prisma.attempt.update({
+                    where: { id: attempt.id },
+                    data: {
+                        isPaused: false
+                    },
+                })
+                break
+
+            case 'updateTime':
+                // Update elapsed time
+                await prisma.attempt.update({
+                    where: { id: attempt.id },
+                    data: {
+                        elapsedSeconds: body?.elapsedSeconds || 0
+                    },
+                })
+                break
+
             case 'complete':
                 await prisma.attemptSection.update({
                     where: { id: sectionAttempt.id },
                     data: { finishedAt: new Date() },
+                })
+                break
+
+            default:
+                return NextResponse.json({ error: "Invalid action" }, { status: 400 })
+        }
+
+        return NextResponse.json({ success: true })
+
+    } catch (error) {
+        console.error("Error updating section:", error)
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    }
+}
+
+export async function PATCH(
+    request: NextRequest,
+    { params }: { params: Promise<{ examId: string; sectionId: string }> }
+) {
+    try {
+        const session = await getServerSession(authOptions)
+        if (!session?.user?.email) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
+
+        const { examId, sectionId } = await params
+
+        // Get user ID from email
+        const user = await prisma.user.findUnique({
+            where: { email: session.user.email }
+        })
+
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 })
+        }
+
+        const userId = user.id
+        const body = await request.json()
+        const { action, elapsedSeconds } = body
+
+        // Get current attempt
+        const attempt = await prisma.attempt.findFirst({
+            where: {
+                userId,
+                examId,
+                finishedAt: null,
+            },
+        })
+
+        if (!attempt) {
+            return NextResponse.json({ error: "No active attempt found" }, { status: 404 })
+        }
+
+        switch (action) {
+            case 'pause':
+                // Pause the attempt by setting isPaused to true and saving elapsed time
+                await prisma.attempt.update({
+                    where: { id: attempt.id },
+                    data: {
+                        isPaused: true,
+                        elapsedSeconds: elapsedSeconds || 0
+                    },
+                })
+                break
+
+            case 'resume':
+                // Resume the attempt by setting isPaused to false
+                await prisma.attempt.update({
+                    where: { id: attempt.id },
+                    data: {
+                        isPaused: false
+                    },
+                })
+                break
+
+            case 'updateTime':
+                // Update elapsed time
+                await prisma.attempt.update({
+                    where: { id: attempt.id },
+                    data: {
+                        elapsedSeconds: elapsedSeconds || 0
+                    },
                 })
                 break
 

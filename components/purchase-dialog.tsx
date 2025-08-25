@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -31,31 +30,13 @@ export function PurchaseDialog({ open, onOpenChange, examId, examTitle, onPurcha
   const handlePurchase = async () => {
     setIsProcessing(true)
     try {
-      // Create payment intent
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          examId,
-          examTitle,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create payment intent')
-      }
-
-      const { clientSecret } = await response.json()
-
-      // Redirect to Stripe Checkout
+      // Get Stripe instance
       const stripe = await getStripe()
       if (!stripe) {
         throw new Error('Stripe failed to load')
       }
 
-      // Create checkout session instead of using payment intent directly
+      // Create checkout session
       const checkoutResponse = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -122,7 +103,7 @@ export function PurchaseDialog({ open, onOpenChange, examId, examTitle, onPurcha
             <CardTitle className="text-lg">{examTitle}</CardTitle>
             <CardDescription>Full access to all sections and questions</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span>Exam Access</span>
@@ -133,27 +114,28 @@ export function PurchaseDialog({ open, onOpenChange, examId, examTitle, onPurcha
                 Lifetime access
               </div>
             </div>
+
+            {/* Buttons now inside the card */}
+            <div className="flex flex-col gap-2 pt-2">
+              <Button onClick={handlePurchase} disabled={isProcessing} className="w-full" size="lg">
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing Payment...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    Purchase for ${price}
+                  </>
+                )}
+              </Button>
+              <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isProcessing} className="w-full">
+                Cancel
+              </Button>
+            </div>
           </CardContent>
         </Card>
-
-        <DialogFooter className="flex flex-col gap-2 mt-4">
-          <Button onClick={handlePurchase} disabled={isProcessing} className="w-full" size="lg">
-            {isProcessing ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Processing Payment...
-              </>
-            ) : (
-              <>
-                <CreditCard className="mr-2 h-4 w-4" />
-                Purchase for ${price}
-              </>
-            )}
-          </Button>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isProcessing} className="w-full">
-            Cancel
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

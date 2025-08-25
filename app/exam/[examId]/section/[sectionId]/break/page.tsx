@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Clock, Coffee, ArrowRight, Home, BookOpen, Play } from "lucide-react"
+import { useGlobalRefresh } from "@/hooks/use-global-refresh"
 
 // Break page now uses server state via API rather than local storage
 
 export default function SectionBreakPage() {
   const params = useParams()
   const router = useRouter()
+  const { triggerDashboardRefresh } = useGlobalRefresh()
   const examId = params.examId as string
   const currentSectionId = params.sectionId as string
 
@@ -68,7 +70,7 @@ export default function SectionBreakPage() {
 
         // Ensure the exam attempt is paused when on break page
         if (!data.attempt.isPaused) {
-          await fetch(`/api/exam/${examId}/attempt`, {
+          await fetch(`/api/exam/${examId}/section/${currentSectionId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -84,11 +86,15 @@ export default function SectionBreakPage() {
 
   const handleContinue = async () => {
     // resume attempt timer
-    await fetch(`/api/exam/${examId}/attempt`, {
+    const response = await fetch(`/api/exam/${examId}/section/${nextSection?.sectionId || currentSectionId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'resume' }),
     })
+
+    if (!response.ok) {
+      console.error('Failed to resume attempt')
+    }
 
     if (nextSection) router.push(`/exam/${examId}/section/${nextSection.sectionId}`)
     else router.push(`/exam/${examId}/results`)
@@ -111,7 +117,7 @@ export default function SectionBreakPage() {
 
       // Pause in database with current elapsed time (exact same as section page)
       if (attempt) {
-        await fetch(`/api/exam/${examId}/attempt`, {
+        const response = await fetch(`/api/exam/${examId}/section/${nextSection?.sectionId || currentSectionId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -119,12 +125,20 @@ export default function SectionBreakPage() {
             elapsedSeconds: attempt.elapsedSeconds || 0
           }),
         })
+
+        if (!response.ok) {
+          console.error('Failed to pause attempt')
+        }
       }
 
+      // Trigger dashboard refresh to update resume status
+      triggerDashboardRefresh()
       router.push("/")
     } catch (error) {
       console.error('Error pausing exam:', error)
-      router.push("/") // Still navigate away even if pause fails
+      // Still trigger refresh and navigate away even if pause fails
+      triggerDashboardRefresh()
+      router.push("/")
     }
   }
 
@@ -171,10 +185,10 @@ export default function SectionBreakPage() {
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                 Your progress will be stored for when you come back
               </p>
-              <Button variant="outline" onClick={handleLeaveForNow} className="w-full bg-transparent hover:cursor-pointer" size="sm">
+              {/* <Button variant="outline" onClick={handleLeaveForNow} className="w-full bg-transparent hover:cursor-pointer" size="sm">
                 <Home className="mr-2 h-4 w-4" />
                 Come back later
-              </Button>
+              </Button> */}
             </div>
           </div>
         </CardContent>

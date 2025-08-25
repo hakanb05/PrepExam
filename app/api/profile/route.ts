@@ -1,33 +1,28 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options"
+import { authOptions } from "../auth/[...nextauth]/auth-options"
 import { prisma } from "@/lib/prisma"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions)
 
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
+        // Get user from database
         const user = await prisma.user.findUnique({
-            where: { id: session.user.id },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                image: true,
-                emailOptIn: true,
-                verified: true,
+            where: { email: session.user.email },
+            include: {
                 purchases: {
                     include: {
                         exam: true
                     }
                 },
                 attempts: {
-                    include: {
-                        exam: true
+                    where: {
+                        finishedAt: { not: null }
                     }
                 }
             }
@@ -38,25 +33,27 @@ export async function GET() {
         }
 
         // Calculate stats
-        const completedExams = user.attempts.filter(attempt => attempt.finishedAt).length
+        const completedExams = user.attempts.length
         const totalAttempts = user.attempts.length
+        const purchasedExams = user.purchases.length
 
-        return NextResponse.json({
+        const profileData = {
             id: user.id,
-            name: user.name,
+            name: user.name || '',
             email: user.email,
             image: user.image,
-            emailOptIn: user.emailOptIn,
-            verified: user.verified,
+            emailOptIn: user.emailOptIn || false,
+            verified: user.verified || false,
             stats: {
                 completedExams,
                 totalAttempts,
-                purchasedExams: user.purchases.length
+                purchasedExams
             }
-        })
+        }
 
+        return NextResponse.json(profileData)
     } catch (error) {
-        console.error("Error fetching profile:", error)
+        console.error('Error fetching profile:', error)
         return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }
@@ -65,22 +62,24 @@ export async function PATCH(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions)
 
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
-        const { name, emailOptIn } = await request.json()
+        const body = await request.json()
+        const { name, emailOptIn } = body
 
         // Validate input
-        if (!name || name.trim().length < 2) {
+        if (name && name.trim().length < 2) {
             return NextResponse.json({ error: "Name must be at least 2 characters long" }, { status: 400 })
         }
 
+        // Update user in database
         const updatedUser = await prisma.user.update({
-            where: { id: session.user.id },
+            where: { email: session.user.email },
             data: {
-                name: name.trim(),
-                emailOptIn: emailOptIn ?? true
+                ...(name && { name: name.trim() }),
+                ...(emailOptIn !== undefined && { emailOptIn })
             },
             select: {
                 id: true,
@@ -88,38 +87,39 @@ export async function PATCH(request: NextRequest) {
                 email: true,
                 image: true,
                 emailOptIn: true,
-                verified: true
+                emailVerified: true
             }
         })
 
-        return NextResponse.json({ success: true, user: updatedUser })
-
+        return NextResponse.json({
+            success: true,
+            user: updatedUser
+        })
     } catch (error) {
-        console.error("Error updating profile:", error)
+        console.error('Error updating profile:', error)
         return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }
 
-export async function DELETE() {
+export async function DELETE(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions)
 
-        if (!session?.user?.id) {
+        if (!session?.user?.email) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
         // Soft delete by setting deletedAt timestamp
         await prisma.user.update({
-            where: { id: session.user.id },
+            where: { email: session.user.email },
             data: {
                 deletedAt: new Date()
             }
         })
 
         return NextResponse.json({ success: true })
-
     } catch (error) {
-        console.error("Error deleting account:", error)
+        console.error('Error deleting account:', error)
         return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }

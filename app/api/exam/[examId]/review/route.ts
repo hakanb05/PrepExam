@@ -80,7 +80,10 @@ export async function GET(
                     qid: question.qid,
                     number: question.number,
                     stem: question.stem,
+                    info: question.info,
+                    infoImages: question.infoImages,
                     images: question.images,
+                    explanationImage: question.explanationImage,
                     matrix: question.matrix,
                     options: question.options.map(opt => ({
                         id: opt.letter,
